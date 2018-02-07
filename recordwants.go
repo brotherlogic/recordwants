@@ -55,7 +55,7 @@ func main() {
 	server.PrepServer()
 	server.Register = server
 
-	server.RegisterServer("recordalerting", false)
+	server.RegisterServer("recordwants", false)
 	server.Log("Starting!")
 	server.Serve()
 }
