@@ -10,6 +10,7 @@ import (
 
 	pbg "github.com/brotherlogic/goserver/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
+	pb "github.com/brotherlogic/recordwants/proto"
 )
 
 type recordGetter interface {
@@ -30,7 +31,7 @@ func Init() *Server {
 
 // DoRegister does RPC registration
 func (s *Server) DoRegister(server *grpc.Server) {
-	// Do nothing
+	pb.RegisterWantServiceServer(server, s)
 }
 
 // ReportHealth alerts if we're not healthy
