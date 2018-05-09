@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package recordalerting;
+package recordwants;
 
 message Spend {
   int32 month = 1;
