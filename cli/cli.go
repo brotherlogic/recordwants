@@ -5,12 +5,14 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
 
 	pbgs "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
+	pbt "github.com/brotherlogic/tracer/proto"
 
 	//Needed to pull in gzip encoding init
 	_ "google.golang.org/grpc/encoding/gzip"
@@ -38,9 +40,13 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
+		total := int32(0)
 		for _, v := range res.Spends {
 			fmt.Printf("%v = %v\n", v.Month, v.Spend)
+			total += v.Spend
 		}
+		fmt.Printf("TOTAL = %v\n", total)
 	}
 
+	utils.SendTrace(ctx, "End of CLI", time.Now(), pbt.Milestone_END, "recordwants-cli")
 }

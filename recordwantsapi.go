@@ -6,10 +6,12 @@ import (
 	"golang.org/x/net/context"
 
 	pb "github.com/brotherlogic/recordwants/proto"
+	pbt "github.com/brotherlogic/tracer/proto"
 )
 
 //GetSpending gets the spending over the course of months
 func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.SpendingResponse, error) {
+	s.LogTrace(ctx, "GetSpending", time.Now(), pbt.Milestone_START_FUNCTION)
 	r, err := s.recordGetter.getRecords()
 	if err != nil {
 		return nil, err
@@ -26,5 +28,6 @@ func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.
 		}
 	}
 
+	s.LogTrace(ctx, "GetSpending", time.Now(), pbt.Milestone_END_FUNCTION)
 	return resp, nil
 }
