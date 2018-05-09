@@ -9,21 +9,22 @@ import (
 	"time"
 
 	"github.com/brotherlogic/goserver"
+	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
 
 	pbg "github.com/brotherlogic/goserver/proto"
-	"github.com/brotherlogic/goserver/utils"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
+	pbt "github.com/brotherlogic/tracer/proto"
 )
 
 type recordGetter interface {
-	getRecords() ([]*pbrc.Record, error)
+	getRecords(ctx context.Context) ([]*pbrc.Record, error)
 }
 
 type prodGetter struct{}
 
-func (p *prodGetter) getRecords() ([]*pbrc.Record, error) {
+func (p *prodGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
 	ip, port, err := utils.Resolve("recordcollection")
 	if err != nil {
 		return nil, err
@@ -36,9 +37,7 @@ func (p *prodGetter) getRecords() ([]*pbrc.Record, error) {
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
-
+	utils.SendTrace(ctx, "Calling Get Records", time.Now(), pbt.Milestone_MARKER, "recordwants")
 	resp, err := client.GetRecords(ctx, &pbrc.GetRecordsRequest{Filter: &pbrc.Record{Metadata: &pbrc.ReleaseMetadata{}}}, grpc.MaxCallRecvMsgSize(1024*1024*1024))
 	if err != nil {
 		return nil, err
