@@ -1,3 +1,18 @@
 syntax = "proto3";
 
 package recordalerting;
+
+message Spend {
+  int32 month = 1;
+  int32 spend = 2;
+}
+
+message SpendingRequest {}
+
+message SpendingResponse {
+  repeated Spend spends = 1;
+}
+
+service WantService {
+  rpc GetSpending(SpendingRequest) returns (SpendingResponse) {};
+}

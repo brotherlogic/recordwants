@@ -9,11 +9,17 @@ import (
 	"google.golang.org/grpc"
 
 	pbg "github.com/brotherlogic/goserver/proto"
+	pbrc "github.com/brotherlogic/recordcollection/proto"
 )
+
+type recordGetter interface {
+	getRecords() ([]*pbrc.Record, error)
+}
 
 //Server main server type
 type Server struct {
 	*goserver.GoServer
+	recordGetter recordGetter
 }
 
 // Init builds the server
