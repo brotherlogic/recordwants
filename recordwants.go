@@ -1,20 +1,50 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"io/ioutil"
 	"log"
+	"strconv"
+	"time"
 
 	"github.com/brotherlogic/goserver"
 	"google.golang.org/grpc"
 
 	pbg "github.com/brotherlogic/goserver/proto"
+	"github.com/brotherlogic/goserver/utils"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 )
 
 type recordGetter interface {
 	getRecords() ([]*pbrc.Record, error)
+}
+
+type prodGetter struct{}
+
+func (p *prodGetter) getRecords() ([]*pbrc.Record, error) {
+	ip, port, err := utils.Resolve("recordcollection")
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	resp, err := client.GetRecords(ctx, &pbrc.GetRecordsRequest{Filter: &pbrc.Record{Metadata: &pbrc.ReleaseMetadata{}}}, grpc.MaxCallRecvMsgSize(1024*1024*1024))
+	if err != nil {
+		return nil, err
+	}
+	return resp.GetRecords(), nil
+
 }
 
 //Server main server type
@@ -26,6 +56,7 @@ type Server struct {
 // Init builds the server
 func Init() *Server {
 	s := &Server{GoServer: &goserver.GoServer{}}
+	s.recordGetter = &prodGetter{}
 	return s
 }
 
