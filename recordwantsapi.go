@@ -1,8 +1,9 @@
 package main
 
 import (
-	"context"
 	"time"
+
+	"golang.org/x/net/context"
 
 	pb "github.com/brotherlogic/recordwants/proto"
 )
