@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"io/ioutil"
 	"log"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
 	pbg "github.com/brotherlogic/goserver/proto"
