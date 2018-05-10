@@ -28,6 +28,13 @@ func (t *testRecordGetter) getRecords(ctx context.Context) ([]*pbrc.Record, erro
 	return []*pbrc.Record{&pbrc.Record{Metadata: &pbrc.ReleaseMetadata{DateAdded: 1515888000, Cost: 1234}}}, nil
 }
 
+func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
+	if t.fail {
+		return make([]*pbrc.Want, 0), fmt.Errorf("Built to fail")
+	}
+	return []*pbrc.Want{&pbrc.Want{}}, nil
+}
+
 func TestGetSpending(t *testing.T) {
 	s := InitTestServer()
 	spends, err := s.GetSpending(context.Background(), &pb.SpendingRequest{})
