@@ -1,9 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"testing"
+
+	"golang.org/x/net/context"
 
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
@@ -12,6 +13,7 @@ import (
 func InitTestServer() *Server {
 	s := Init()
 	s.recordGetter = &testRecordGetter{}
+	s.SkipLog = true
 	return s
 }
 
@@ -19,7 +21,7 @@ type testRecordGetter struct {
 	fail bool
 }
 
-func (t *testRecordGetter) getRecords() ([]*pbrc.Record, error) {
+func (t *testRecordGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
 	if t.fail {
 		return make([]*pbrc.Record, 0), fmt.Errorf("Built to fail")
 	}
