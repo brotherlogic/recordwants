@@ -11,7 +11,7 @@ import (
 
 //GetSpending gets the spending over the course of months
 func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.SpendingResponse, error) {
-	s.LogTrace(ctx, "GetSpending", time.Now(), pbt.Milestone_START_FUNCTION)
+	ctx = s.LogTrace(ctx, "GetSpending", time.Now(), pbt.Milestone_START_FUNCTION)
 	r, err := s.recordGetter.getRecords(ctx)
 	if err != nil {
 		return nil, err
