@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -13,6 +14,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
+	pbgh "github.com/brotherlogic/githubcard/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
@@ -23,6 +25,24 @@ const (
 	// KEY - where the wants are stored
 	KEY = "/github.com/brotherlogic/recordwants/config"
 )
+
+type alerter interface {
+	alert(ctx context.Context, want *pb.MasterWant)
+}
+
+type prodAlerter struct{}
+
+func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant) {
+	ip, port, _ := utils.Resolve("githubcard")
+	if port > 0 {
+		conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+		if err == nil {
+			defer conn.Close()
+			client := pbgh.NewGithubClient(conn)
+			client.AddIssue(ctx, &pbgh.Issue{Service: "recordwants", Title: fmt.Sprintf("Want Processing Needed!"), Body: fmt.Sprintf("%v", want)}, grpc.FailFast(false))
+		}
+	}
+}
 
 type recordGetter interface {
 	getRecords(ctx context.Context) ([]*pbrc.Record, error)
@@ -81,12 +101,17 @@ type Server struct {
 	*goserver.GoServer
 	recordGetter recordGetter
 	config       *pb.Config
+	alerter      alerter
 }
 
 // Init builds the server
 func Init() *Server {
-	s := &Server{GoServer: &goserver.GoServer{}}
-	s.recordGetter = &prodGetter{}
+	s := &Server{
+		&goserver.GoServer{},
+		&prodGetter{},
+		&pb.Config{},
+		&prodAlerter{},
+	}
 	return s
 }
 
