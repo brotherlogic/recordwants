@@ -11,6 +11,7 @@ message Config {
 message MasterWant {
   godiscogs.Release release = 1;
   int64 date_added = 2;
+  bool staged = 3;
 }
 
 message Spend {
