@@ -47,6 +47,7 @@ func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant) {
 type recordGetter interface {
 	getRecords(ctx context.Context) ([]*pbrc.Record, error)
 	getWants(ctx context.Context) ([]*pbrc.Want, error)
+	unwant(ctx context.Context, want *pb.MasterWant) error
 }
 
 type prodGetter struct{}
@@ -94,6 +95,23 @@ func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 
 	return resp.GetWants(), nil
 
+}
+
+func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
+	ip, port, err := utils.Resolve("recordcollection")
+	if err != nil {
+		return err
+	}
+
+	conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease(), Metadata: &pbrc.WantMetadata{Active: false}}})
+	return err
 }
 
 //Server main server type

@@ -35,6 +35,13 @@ func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 	return []*pbrc.Want{&pbrc.Want{}}, nil
 }
 
+func (t *testRecordGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
+	if t.fail {
+		return fmt.Errorf("Built to fail")
+	}
+	return nil
+}
+
 func TestGetSpending(t *testing.T) {
 	s := InitTestServer()
 	spends, err := s.GetSpending(context.Background(), &pb.SpendingRequest{})
