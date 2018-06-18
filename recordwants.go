@@ -110,7 +110,7 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	blah, err := client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease(), Metadata: &pbrc.WantMetadata{Active: false}}})
+	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease(), Metadata: &pbrc.WantMetadata{Active: false}}})
 	return err
 }
 
