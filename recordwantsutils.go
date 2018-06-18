@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	"golang.org/x/net/context"
@@ -11,7 +12,10 @@ import (
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
 		if !want.Staged {
-			s.recordGetter.unwant(ctx, want)
+			err := s.recordGetter.unwant(ctx, want)
+			if err != nil {
+				log.Fatalf("Bah: %v", err)
+			}
 			s.alerter.alert(ctx, want)
 		} else {
 			if overBudget {
