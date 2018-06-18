@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/brotherlogic/keystore/client"
 	"golang.org/x/net/context"
 
+	pbgd "github.com/brotherlogic/godiscogs"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 )
@@ -14,6 +16,7 @@ func InitTestServer() *Server {
 	s := Init()
 	s.recordGetter = &testRecordGetter{}
 	s.SkipLog = true
+	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	return s
 }
 
@@ -32,7 +35,10 @@ func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 	if t.fail {
 		return make([]*pbrc.Want, 0), fmt.Errorf("Built to fail")
 	}
-	return []*pbrc.Want{&pbrc.Want{}}, nil
+	return []*pbrc.Want{
+		&pbrc.Want{Release: &pbgd.Release{Id: 123}},
+		&pbrc.Want{Release: &pbgd.Release{Id: 124}},
+	}, nil
 }
 
 func (t *testRecordGetter) unwant(ctx context.Context, want *pb.MasterWant) error {

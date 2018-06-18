@@ -191,6 +191,7 @@ func main() {
 	server.Register = server
 
 	server.RegisterServer("recordwants", false)
+	server.RegisterRepeatingTask(server.updateWants, time.Hour)
 	server.Log("Starting!")
 	server.Serve()
 }
