@@ -22,6 +22,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 }
 
 func (s *Server) updateWants(ctx context.Context) {
+	s.lastRun = time.Now()
 	wants, err := s.recordGetter.getWants(ctx)
 	if err == nil {
 		for _, w := range wants {

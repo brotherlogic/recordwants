@@ -120,6 +120,7 @@ type Server struct {
 	recordGetter recordGetter
 	config       *pb.Config
 	alerter      alerter
+	lastRun      time.Time
 }
 
 // Init builds the server
@@ -129,6 +130,7 @@ func Init() *Server {
 		&prodGetter{},
 		&pb.Config{},
 		&prodAlerter{},
+		time.Now(),
 	}
 	return s
 }
@@ -173,6 +175,7 @@ func (s *Server) Mote(master bool) error {
 func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
+		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 	}
 }
 
@@ -191,7 +194,7 @@ func main() {
 	server.Register = server
 
 	server.RegisterServer("recordwants", false)
-	server.RegisterRepeatingTask(server.updateWants, time.Hour)
+	server.RegisterRepeatingTask(server.updateWants, time.Minute*5)
 	server.Log("Starting!")
 	server.Serve()
 }
