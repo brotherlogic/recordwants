@@ -171,6 +171,10 @@ func (s *Server) Mote(master bool) error {
 	return nil
 }
 
+func (s *Server) runUpdate(ctx context.Context) {
+	s.alertNoStaging(ctx, false)
+}
+
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{
@@ -195,6 +199,7 @@ func main() {
 
 	server.RegisterServer("recordwants", false)
 	server.RegisterRepeatingTask(server.updateWants, time.Minute*5)
+	server.RegisterRepeatingTask(server.runUpdate, time.Hour)
 	server.Log("Starting!")
 	server.Serve()
 }
