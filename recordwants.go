@@ -177,8 +177,15 @@ func (s *Server) runUpdate(ctx context.Context) {
 
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
+	c := 0
+	for _, w := range s.config.Wants {
+		if w.Staged {
+			c++
+		}
+	}
 	return []*pbg.State{
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
+		&pbg.State{Key: "stagedcount", Value: int64(c)},
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 	}
 }
