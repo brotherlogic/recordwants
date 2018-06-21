@@ -121,6 +121,7 @@ type Server struct {
 	config       *pb.Config
 	alerter      alerter
 	lastRun      time.Time
+	lastProc     int32
 }
 
 // Init builds the server
@@ -131,6 +132,7 @@ func Init() *Server {
 		&pb.Config{},
 		&prodAlerter{},
 		time.Now(),
+		-1,
 	}
 	return s
 }
@@ -187,6 +189,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
+		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
 	}
 }
 
