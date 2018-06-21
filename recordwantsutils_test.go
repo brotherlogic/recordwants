@@ -19,7 +19,7 @@ func (t *testAlerter) alert(ctx context.Context, want *pb.MasterWant) {
 
 func TestMainTest(t *testing.T) {
 	s := InitTestServer()
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Staged: false})
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Staged: false, Release: &pbgd.Release{Id: 123}})
 	ta := &testAlerter{}
 	s.alerter = ta
 	s.alertNoStaging(context.Background(), false)

@@ -12,6 +12,7 @@ message MasterWant {
   godiscogs.Release release = 1;
   int64 date_added = 2;
   bool staged = 3;
+  bool enable = 4;
 }
 
 message Spend {
@@ -25,6 +26,14 @@ message SpendingResponse {
   repeated Spend spends = 1;
 }
 
+message UpdateRequest {
+  godiscogs.Release want = 1;
+  bool keep_want = 2;
+}
+
+message UpdateResponse {}
+
 service WantService {
   rpc GetSpending(SpendingRequest) returns (SpendingResponse) {};
+  rpc Update(UpdateRequest) returns (UpdateResponse) {};
 }
