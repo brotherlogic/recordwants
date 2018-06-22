@@ -45,6 +45,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 			}
 			want.Staged = false
 			want.Enable = req.KeepWant
+			return nil, fmt.Errorf("BLAH")
 		}
 	}
 	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
