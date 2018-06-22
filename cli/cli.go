@@ -10,6 +10,7 @@ import (
 	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
 
+	pbgd "github.com/brotherlogic/godiscogs"
 	pbgs "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 	pbt "github.com/brotherlogic/tracer/proto"
@@ -46,6 +47,13 @@ func main() {
 			total += v.Spend
 		}
 		fmt.Printf("TOTAL = %v\n", total)
+	case "want":
+		iv, _ := strconv.Atoi(os.Args[2])
+		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, KeepWant: true})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+
 	}
 
 	utils.SendTrace(ctx, "End of CLI", time.Now(), pbt.Milestone_END, "recordwants-cli")
