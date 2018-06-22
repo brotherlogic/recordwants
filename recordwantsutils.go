@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"time"
 
 	"golang.org/x/net/context"
@@ -12,7 +11,6 @@ import (
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
 		if !want.Staged {
-			log.Printf("HERE %v", want)
 			s.lastProc = want.Release.Id
 			s.recordGetter.unwant(ctx, want)
 			s.alerter.alert(ctx, want)
