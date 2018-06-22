@@ -15,6 +15,7 @@ import (
 func InitTestServer() *Server {
 	s := Init()
 	s.recordGetter = &testRecordGetter{}
+	s.alerter = &testAlerter{}
 	s.SkipLog = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	return s
@@ -48,6 +49,13 @@ func (t *testRecordGetter) unwant(ctx context.Context, want *pb.MasterWant) erro
 	return nil
 }
 
+func (t *testRecordGetter) want(ctx context.Context, want *pb.MasterWant) error {
+	if t.fail {
+		return fmt.Errorf("Built to fail")
+	}
+	return nil
+}
+
 func TestGetSpending(t *testing.T) {
 	s := InitTestServer()
 	spends, err := s.GetSpending(context.Background(), &pb.SpendingRequest{})
@@ -69,4 +77,17 @@ func TestGetSpendingFail(t *testing.T) {
 	if err == nil {
 		t.Errorf("Did not fail")
 	}
+}
+
+func TestSimpleUpdate(t *testing.T) {
+	s := InitTestServer()
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
+	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true})
+}
+
+func TestSimpleUpdateFail(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{fail: true}
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
+	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true})
 }

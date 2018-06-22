@@ -31,3 +31,20 @@ func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.
 	s.LogTrace(ctx, "GetSpending", time.Now(), pbt.Milestone_END_FUNCTION)
 	return resp, nil
 }
+
+//Update updates a given want
+func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateResponse, error) {
+	for _, want := range s.config.Wants {
+		if want.GetRelease().Id == req.GetWant().Id {
+			if req.KeepWant {
+				err := s.recordGetter.want(ctx, &pb.MasterWant{Release: req.GetWant()})
+				if err != nil {
+					return nil, err
+				}
+			}
+			want.Staged = false
+			want.Enable = req.KeepWant
+		}
+	}
+	return &pb.UpdateResponse{}, nil
+}
