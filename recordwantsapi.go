@@ -47,5 +47,5 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 			want.Enable = req.KeepWant
 		}
 	}
-	return nil, fmt.Errorf("Not found")
+	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
 }
