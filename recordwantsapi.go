@@ -37,14 +37,7 @@ func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.
 func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateResponse, error) {
 	for _, want := range s.config.Wants {
 		if want.GetRelease().Id == req.GetWant().Id {
-			if req.KeepWant {
-				err := s.recordGetter.want(ctx, &pb.MasterWant{Release: req.GetWant()})
-				if err != nil {
-					return nil, err
-				}
-				want.Staged = true
-			}
-			want.Enable = req.KeepWant
+			want.Staged = true
 			return &pb.UpdateResponse{}, nil
 		}
 	}

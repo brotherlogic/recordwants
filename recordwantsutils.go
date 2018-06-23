@@ -17,6 +17,10 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 		} else {
 			if overBudget {
 				s.recordGetter.unwant(ctx, want)
+			} else {
+				if !want.Active {
+					s.recordGetter.want(ctx, want)
+				}
 			}
 		}
 	}
@@ -31,6 +35,7 @@ func (s *Server) updateWants(ctx context.Context) {
 			for _, mw := range s.config.Wants {
 				if mw.Release.Id == w.Release.Id {
 					found = true
+					mw.Active = w.GetMetadata().Active
 				}
 			}
 			if !found {

@@ -12,7 +12,7 @@ message MasterWant {
   godiscogs.Release release = 1;
   int64 date_added = 2;
   bool staged = 3;
-  bool enable = 4;
+  bool active = 4;
 }
 
 message Spend {
