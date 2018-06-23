@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -44,7 +45,8 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 				want.Staged = true
 			}
 			want.Enable = req.KeepWant
+			return &pb.UpdateResponse{}, nil
 		}
 	}
-	return &pb.UpdateResponse{}, nil
+	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
 }
