@@ -41,8 +41,8 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 				if err != nil {
 					return nil, err
 				}
+				want.Staged = true
 			}
-			want.Staged = false
 			want.Enable = req.KeepWant
 		}
 	}
