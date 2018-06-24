@@ -141,6 +141,7 @@ type Server struct {
 	lastRun      time.Time
 	lastProc     int32
 	lastPull     int32
+	pull         string
 }
 
 // Init builds the server
@@ -153,6 +154,7 @@ func Init() *Server {
 		time.Now(),
 		-1,
 		-1,
+		"",
 	}
 	return s
 }
@@ -219,6 +221,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
 		&pbg.State{Key: "found", Value: int64(found)},
 		&pbg.State{Key: "stat", Text: stat},
+		&pbg.State{Key: "pull", Text: s.pull},
 	}
 }
 
