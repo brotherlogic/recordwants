@@ -200,9 +200,13 @@ func (s *Server) runUpdate(ctx context.Context) {
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
 	c := 0
+	found := 0
 	for _, w := range s.config.Wants {
 		if w.Staged {
 			c++
+		}
+		if w.GetRelease().Id == 2813529 {
+			found++
 		}
 	}
 	return []*pbg.State{
@@ -211,6 +215,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
 		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
+		&pbg.State{Key: "found", Value: int64(found)},
 	}
 }
 
