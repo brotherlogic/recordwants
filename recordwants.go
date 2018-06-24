@@ -152,6 +152,7 @@ func Init() *Server {
 		&prodAlerter{},
 		time.Now(),
 		-1,
+		-1,
 	}
 	return s
 }
