@@ -206,7 +206,7 @@ func (s *Server) GetState() []*pbg.State {
 		if w.Staged {
 			c++
 		}
-		if w.GetRelease().Id == 2813529 {
+		if w.GetRelease().Id == 3379533 {
 			found++
 			stat = fmt.Sprintf("%v", w)
 		}
