@@ -210,6 +210,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
+		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
 	}
 }
 
