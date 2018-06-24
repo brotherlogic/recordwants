@@ -140,6 +140,7 @@ type Server struct {
 	alerter      alerter
 	lastRun      time.Time
 	lastProc     int32
+	lastPull     int32
 }
 
 // Init builds the server
