@@ -11,10 +11,12 @@ import (
 
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
-		if !want.Staged && want.Active {
-			s.lastProc = want.Release.Id
-			s.recordGetter.unwant(ctx, want)
-			s.alerter.alert(ctx, want)
+		if !want.Staged {
+			if want.Active {
+				s.lastProc = want.Release.Id
+				s.recordGetter.unwant(ctx, want)
+				s.alerter.alert(ctx, want)
+			}
 		} else {
 			if overBudget {
 				s.recordGetter.unwant(ctx, want)
