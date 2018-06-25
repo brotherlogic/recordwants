@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -35,9 +34,6 @@ func (s *Server) updateWants(ctx context.Context) {
 	s.lastPull = int32(len(wants))
 	if err == nil {
 		for _, w := range wants {
-			if w.Release.Id == 3379533 {
-				s.pull = fmt.Sprintf("%v", w)
-			}
 			found := false
 			for _, mw := range s.config.Wants {
 				if mw.Release.Id == w.Release.Id {
