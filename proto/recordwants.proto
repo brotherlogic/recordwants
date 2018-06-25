@@ -6,6 +6,7 @@ import "github.com/brotherlogic/godiscogs/godiscogs.proto";
 
 message Config {
   repeated MasterWant wants = 1;
+  int32 budget = 2;
 }
 
 message MasterWant {
