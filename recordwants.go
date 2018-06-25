@@ -213,6 +213,7 @@ func (s *Server) getBudget(ctx context.Context) {
 		}
 
 		s.config.Budget = 20000*3 - spendSum
+		s.save()
 	}
 }
 
