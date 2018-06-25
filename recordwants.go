@@ -196,7 +196,29 @@ func (s *Server) Mote(master bool) error {
 }
 
 func (s *Server) runUpdate(ctx context.Context) {
-	s.alertNoStaging(ctx, false)
+	s.alertNoStaging(ctx, s.config.Budget > 0)
+}
+
+func (s *Server) getBudget(ctx context.Context) {
+	spends, err := s.GetSpending(ctx, &pb.SpendingRequest{})
+
+	if err == nil {
+		mmonth := int32(1)
+		for _, sp := range spends.Spends {
+			if sp.Month > mmonth {
+				mmonth = sp.Month
+			}
+		}
+
+		spendSum := int32(0)
+		for _, sp := range spends.Spends {
+			if sp.Month > mmonth-3 {
+				spendSum += sp.Spend
+			}
+		}
+
+		s.config.Budget = 40000*3 - spendSum
+	}
 }
 
 // GetState gets the state of the server
@@ -222,6 +244,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "found", Value: int64(found)},
 		&pbg.State{Key: "stat", Text: stat},
 		&pbg.State{Key: "pull", Text: s.pull},
+		&pbg.State{Key: "budget", Value: int64(s.config.Budget)},
 	}
 }
 
@@ -242,6 +265,7 @@ func main() {
 	server.RegisterServer("recordwants", false)
 	server.RegisterRepeatingTask(server.updateWants, time.Minute*5)
 	server.RegisterRepeatingTask(server.runUpdate, time.Hour)
+	server.RegisterRepeatingTask(server.getBudget, time.Hour)
 	server.Log("Starting!")
 	server.Serve()
 }
