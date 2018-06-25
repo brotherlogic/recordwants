@@ -142,6 +142,7 @@ type Server struct {
 	lastProc     int32
 	lastPull     int32
 	pull         string
+	mmonth       int32
 }
 
 // Init builds the server
@@ -155,6 +156,7 @@ func Init() *Server {
 		-1,
 		-1,
 		"",
+		0,
 	}
 	return s
 }
@@ -203,16 +205,16 @@ func (s *Server) getBudget(ctx context.Context) {
 	spends, err := s.GetSpending(ctx, &pb.SpendingRequest{})
 
 	if err == nil {
-		mmonth := int32(0)
+		s.mmonth = int32(0)
 		for _, sp := range spends.Spends {
-			if sp.Spend > 0 && sp.Month > mmonth {
-				mmonth = sp.Month
+			if sp.Spend > 0 && sp.Month > s.mmonth {
+				s.mmonth = sp.Month
 			}
 		}
 
 		spendSum := int32(0)
 		for _, sp := range spends.Spends {
-			if sp.Month > mmonth-3 {
+			if sp.Month > s.mmonth-3 {
 				spendSum += sp.Spend
 			}
 		}
@@ -246,6 +248,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "stat", Text: stat},
 		&pbg.State{Key: "pull", Text: s.pull},
 		&pbg.State{Key: "budget", Value: int64(s.config.Budget)},
+		&pbg.State{Key: "month", Value: int64(s.mmonth)},
 	}
 }
 
