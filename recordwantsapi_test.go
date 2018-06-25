@@ -37,8 +37,8 @@ func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 		return make([]*pbrc.Want, 0), fmt.Errorf("Built to fail")
 	}
 	return []*pbrc.Want{
-		&pbrc.Want{Release: &pbgd.Release{Id: 123}},
-		&pbrc.Want{Release: &pbgd.Release{Id: 124}},
+		&pbrc.Want{Release: &pbgd.Release{Id: 123}, Metadata: &pbrc.WantMetadata{Active: true}},
+		&pbrc.Want{Release: &pbgd.Release{Id: 124}, Metadata: &pbrc.WantMetadata{Active: true}},
 	}, nil
 }
 

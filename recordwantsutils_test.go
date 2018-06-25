@@ -19,7 +19,7 @@ func (t *testAlerter) alert(ctx context.Context, want *pb.MasterWant) {
 
 func TestMainTest(t *testing.T) {
 	s := InitTestServer()
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Staged: false, Release: &pbgd.Release{Id: 123}})
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Staged: false, Release: &pbgd.Release{Id: 123}, Active: true})
 	ta := &testAlerter{}
 	s.alerter = ta
 	s.alertNoStaging(context.Background(), false)
@@ -43,7 +43,7 @@ func TestMainTestOverBudget(t *testing.T) {
 
 func TestUpdateWants(t *testing.T) {
 	s := InitTestServer()
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Active: true})
 	s.updateWants(context.Background())
 
 	if len(s.config.Wants) != 2 {
