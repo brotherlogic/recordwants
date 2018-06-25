@@ -203,7 +203,7 @@ func (s *Server) getBudget(ctx context.Context) {
 	spends, err := s.GetSpending(ctx, &pb.SpendingRequest{})
 
 	if err == nil {
-		mmonth = 6
+		mmonth := 6
 
 		spendSum := int32(0)
 		for _, sp := range spends.Spends {
