@@ -38,6 +38,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 	for _, want := range s.config.Wants {
 		if want.GetRelease().Id == req.GetWant().Id {
 			want.Staged = true
+			want.Demoted = !req.KeepWant
 			return &pb.UpdateResponse{}, nil
 		}
 	}

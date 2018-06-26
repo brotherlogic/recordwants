@@ -20,7 +20,10 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 				s.lastProc = want.Release.Id
 				s.recordGetter.unwant(ctx, want)
 			} else {
-				if !want.Active {
+				if want.Active && want.Demoted {
+					s.recordGetter.unwant(ctx, want)
+				}
+				if !want.Active && !want.Demoted {
 					s.recordGetter.want(ctx, want)
 				}
 			}

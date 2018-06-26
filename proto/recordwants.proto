@@ -14,6 +14,7 @@ message MasterWant {
   int64 date_added = 2;
   bool staged = 3;
   bool active = 4;
+  bool demoted = 5;
 }
 
 message Spend {
