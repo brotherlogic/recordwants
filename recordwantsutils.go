@@ -17,7 +17,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 				s.alerter.alert(ctx, want)
 			}
 		} else {
-			if overBudget {
+			if overBudget && want.Active {
 				s.recordGetter.unwant(ctx, want)
 			} else {
 				if !want.Active {
