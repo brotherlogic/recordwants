@@ -198,7 +198,7 @@ func (s *Server) Mote(master bool) error {
 }
 
 func (s *Server) runUpdate(ctx context.Context) {
-	s.alertNoStaging(ctx, s.config.Budget > 0)
+	s.alertNoStaging(ctx, s.config.Budget <= 0)
 }
 
 func (s *Server) getBudget(ctx context.Context) {
