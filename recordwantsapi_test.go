@@ -22,14 +22,16 @@ func InitTestServer() *Server {
 }
 
 type testRecordGetter struct {
-	fail bool
+	fail       bool
+	lastUnwant int32
+	lastWant   int32
 }
 
 func (t *testRecordGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
 	if t.fail {
 		return make([]*pbrc.Record, 0), fmt.Errorf("Built to fail")
 	}
-	return []*pbrc.Record{&pbrc.Record{Metadata: &pbrc.ReleaseMetadata{DateAdded: 1515888000, Cost: 1234}}}, nil
+	return []*pbrc.Record{&pbrc.Record{Release: &pbgd.Release{Id: 123}, Metadata: &pbrc.ReleaseMetadata{DateAdded: 1515888000, Cost: 1234}}}, nil
 }
 
 func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
@@ -46,6 +48,7 @@ func (t *testRecordGetter) unwant(ctx context.Context, want *pb.MasterWant) erro
 	if t.fail {
 		return fmt.Errorf("Built to fail")
 	}
+	t.lastUnwant = want.GetRelease().Id
 	return nil
 }
 
@@ -53,6 +56,7 @@ func (t *testRecordGetter) want(ctx context.Context, want *pb.MasterWant) error 
 	if t.fail {
 		return fmt.Errorf("Built to fail")
 	}
+	t.lastWant = want.GetRelease().Id
 	return nil
 }
 
@@ -90,4 +94,12 @@ func TestSimpleUpdateFail(t *testing.T) {
 	s.recordGetter = &testRecordGetter{fail: true}
 	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
 	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true})
+}
+
+func TestUpdateEmpty(t *testing.T) {
+	s := InitTestServer()
+	res, err := s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 1233455}})
+	if err == nil {
+		t.Errorf("Bad return: %v", res)
+	}
 }
