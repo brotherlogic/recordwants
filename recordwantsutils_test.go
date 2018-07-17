@@ -31,7 +31,7 @@ func TestMainTest(t *testing.T) {
 
 func TestMainTestOverBudget(t *testing.T) {
 	s := InitTestServer()
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Staged: true})
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Staged: true, Active: true, Release: &pbgd.Release{Id: 123}})
 	ta := &testAlerter{}
 	s.alerter = ta
 	s.alertNoStaging(context.Background(), true)
@@ -48,5 +48,27 @@ func TestUpdateWants(t *testing.T) {
 
 	if len(s.config.Wants) != 2 {
 		t.Errorf("No wants added!")
+	}
+}
+
+func TestUnwantActiveWhenDemoted(t *testing.T) {
+	s := InitTestServer()
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Active: true, Demoted: true, Staged: true})
+	s.alerter = &testAlerter{}
+	s.alertNoStaging(context.Background(), false)
+
+	if s.recordGetter.(*testRecordGetter).lastUnwant != 123 {
+		t.Errorf("Want has not been unwanted: %v", s.config)
+	}
+}
+
+func TestUnwantActiveWhenNotDemoted(t *testing.T) {
+	s := InitTestServer()
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Active: false, Demoted: false, Staged: true})
+	s.alerter = &testAlerter{}
+	s.alertNoStaging(context.Background(), false)
+
+	if s.recordGetter.(*testRecordGetter).lastWant != 123 {
+		t.Errorf("Want has not been unwanted: %v", s.config)
 	}
 }
