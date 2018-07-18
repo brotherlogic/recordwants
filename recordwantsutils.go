@@ -57,9 +57,9 @@ func (s *Server) updateWants(ctx context.Context) {
 	if err == nil {
 		for _, w := range s.config.Wants {
 			if !w.Demoted {
-				s.Log(fmt.Sprintf("Looking for %v", w.GetRelease().Id))
 				for _, r := range records {
 					if r.GetRelease().Id == w.GetRelease().Id {
+						s.Log(fmt.Sprintf("Looking for %v and Found it!", w.GetRelease().Id))
 						w.Demoted = true
 						break
 					}
