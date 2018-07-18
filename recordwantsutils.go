@@ -56,6 +56,7 @@ func (s *Server) updateWants(ctx context.Context) {
 	if err == nil {
 		for _, w := range s.config.Wants {
 			if !w.Demoted {
+				s.Log("Looking for %v", w.GetRelease().Id)
 				for _, r := range records {
 					if r.GetRelease().Id == w.GetRelease().Id {
 						w.Demoted = true
