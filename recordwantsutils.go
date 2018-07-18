@@ -55,6 +55,7 @@ func (s *Server) updateWants(ctx context.Context) {
 	// Demote any wants we already own
 	records, err := s.recordGetter.getRecords(ctx)
 	if err == nil {
+		s.Log(fmt.Sprintf("Comparing %v to %v", len(records), len(s.config.Wants)))
 		for _, w := range s.config.Wants {
 			if !w.Demoted {
 				for _, r := range records {
