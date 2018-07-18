@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -55,16 +54,12 @@ func (s *Server) updateWants(ctx context.Context) {
 	// Demote any wants we already own
 	records, err := s.recordGetter.getRecords(ctx)
 	if err == nil {
-		s.Log(fmt.Sprintf("Comparing %v to %v", len(records), len(s.config.Wants)))
 		for _, w := range s.config.Wants {
-			if w.GetRelease().Id == 512419 {
-				s.Log(fmt.Sprintf("FOUND %v", w))
-			}
 			if !w.Demoted {
 				for _, r := range records {
 					if r.GetRelease().Id == w.GetRelease().Id {
-						s.Log(fmt.Sprintf("Looking for %v and Found it!", w.GetRelease().Id))
 						w.Demoted = true
+						w.Staged = true
 						break
 					}
 				}
