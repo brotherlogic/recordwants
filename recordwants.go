@@ -67,12 +67,11 @@ func (p *prodGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	utils.SendTrace(ctx, "Calling Get Records", time.Now(), pbt.Milestone_MARKER, "recordwants")
-	resp, err := client.GetRecords(ctx, &pbrc.GetRecordsRequest{Strip: true, Filter: &pbrc.Record{Metadata: &pbrc.ReleaseMetadata{}}}, grpc.MaxCallRecvMsgSize(1024*1024*1024))
+	resp, err := client.GetRecords(ctx, &pbrc.GetRecordsRequest{Strip: true, Filter: &pbrc.Record{}}, grpc.MaxCallRecvMsgSize(1024*1024*1024))
 	if err != nil {
 		return nil, err
 	}
 	return resp.GetRecords(), nil
-
 }
 
 func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
