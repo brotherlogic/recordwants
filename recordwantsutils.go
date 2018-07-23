@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -12,6 +13,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
 		if !want.Staged {
 			if want.Active {
+				s.lastUnwant = fmt.Sprintf("Unwanting %v", want.Release.Id)
 				s.recordGetter.unwant(ctx, want)
 			}
 			if !want.Demoted {

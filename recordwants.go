@@ -143,6 +143,7 @@ type Server struct {
 	lastPull     int32
 	pull         string
 	mmonth       int32
+	lastUnwant   string
 }
 
 // Init builds the server
@@ -157,6 +158,7 @@ func Init() *Server {
 		-1,
 		"",
 		0,
+		"",
 	}
 	return s
 }
@@ -249,6 +251,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "pull", Text: s.pull},
 		&pbg.State{Key: "budget", Value: int64(s.config.Budget)},
 		&pbg.State{Key: "month", Value: int64(s.mmonth)},
+		&pbg.State{Key: "last_want", Text: s.lastUnwant},
 	}
 }
 
