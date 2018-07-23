@@ -18,6 +18,8 @@ func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.
 		return nil, err
 	}
 
+	s.Log(fmt.Sprintf("SPENDS %v", len(r)))
+
 	resp := &pb.SpendingResponse{Spends: make([]*pb.Spend, 0)}
 	for i := 0; i < 12; i++ {
 		resp.Spends = append(resp.Spends, &pb.Spend{Month: int32(i)})
