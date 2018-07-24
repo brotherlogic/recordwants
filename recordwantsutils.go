@@ -29,7 +29,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 				if want.Active && want.Demoted {
 					s.recordGetter.unwant(ctx, want)
 				}
-				if !want.Active && !want.Demoted {
+				if !want.Active && !want.Demoted && !overBudget {
 					s.recordGetter.want(ctx, want)
 				}
 			}
