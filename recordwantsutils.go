@@ -30,6 +30,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 					s.recordGetter.unwant(ctx, want)
 				}
 				if !want.Active && !want.Demoted && !overBudget {
+					s.Log(fmt.Sprintf("WANTING %v -> %v, %v, %v", want.Release.Id, want.Active, want.Demoted, overBudget))
 					s.recordGetter.want(ctx, want)
 				}
 			}
