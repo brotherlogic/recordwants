@@ -220,7 +220,7 @@ func (s *Server) getBudget(ctx context.Context) {
 			}
 		}
 
-		s.config.Budget = 20000*3 - spendSum
+		s.config.Budget = 40000*3 - spendSum
 		s.save()
 	} else {
 		s.Log(fmt.Sprintf("Error getting spending: %v", err))
