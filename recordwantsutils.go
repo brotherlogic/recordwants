@@ -74,5 +74,5 @@ func (s *Server) updateWants(ctx context.Context) {
 		}
 	}
 
-	s.save()
+	s.save(ctx)
 }

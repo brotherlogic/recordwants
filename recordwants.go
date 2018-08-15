@@ -162,13 +162,13 @@ func Init() *Server {
 	return s
 }
 
-func (s *Server) save() {
-	s.KSclient.Save(KEY, s.config)
+func (s *Server) save(ctx context.Context) {
+	s.KSclient.Save(ctx, KEY, s.config)
 }
 
-func (s *Server) load() error {
+func (s *Server) load(ctx context.Context) error {
 	config := &pb.Config{}
-	data, _, err := s.KSclient.Read(KEY, config)
+	data, _, err := s.KSclient.Read(ctx, KEY, config)
 
 	if err != nil {
 		return err
@@ -189,9 +189,9 @@ func (s *Server) ReportHealth() bool {
 }
 
 // Mote promotes/demotes this server
-func (s *Server) Mote(master bool) error {
+func (s *Server) Mote(ctx context.Context, master bool) error {
 	if master {
-		err := s.load()
+		err := s.load(ctx)
 		return err
 	}
 
@@ -221,7 +221,7 @@ func (s *Server) getBudget(ctx context.Context) {
 		}
 
 		s.config.Budget = 40000*3 - spendSum
-		s.save()
+		s.save(ctx)
 	} else {
 		s.Log(fmt.Sprintf("Error getting spending: %v", err))
 	}
