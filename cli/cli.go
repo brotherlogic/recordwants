@@ -32,7 +32,7 @@ func main() {
 	}
 
 	client := pb.NewWantServiceClient(conn)
-	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants-cli", pbgs.ContextType_LONG)
+	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants", pbgs.ContextType_LONG)
 	defer cancel()
 
 	switch os.Args[1] {
