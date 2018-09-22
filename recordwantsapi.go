@@ -37,6 +37,7 @@ func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.
 
 //Update updates a given want
 func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateResponse, error) {
+	ctx = s.LogTrace(ctx, "Update", time.Now(), pbt.Milestone_START_FUNCTION)
 	for _, want := range s.config.Wants {
 		if want.GetRelease().Id == req.GetWant().Id {
 			want.Staged = true
@@ -44,5 +45,6 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 			return &pb.UpdateResponse{}, nil
 		}
 	}
+	s.LogTrace(ctx, "Update", time.Now(), pbt.Milestone_END_FUNCTION)
 	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
 }
