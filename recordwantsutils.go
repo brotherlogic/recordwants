@@ -4,16 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"golang.org/x/net/context"
-
 	pb "github.com/brotherlogic/recordwants/proto"
+	"golang.org/x/net/context"
 )
 
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
-		if want.Release.Id == 70599 {
-			s.lastUnwant = fmt.Sprintf("Unwanting %v -> %v (%v)", want.Active, want.Staged, overBudget)
-		}
 		if !want.Staged {
 			if want.Active {
 				s.recordGetter.unwant(ctx, want)
