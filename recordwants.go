@@ -8,17 +8,16 @@ import (
 	"strconv"
 	"time"
 
+	pbgh "github.com/brotherlogic/githubcard/proto"
 	"github.com/brotherlogic/goserver"
+	pbg "github.com/brotherlogic/goserver/proto"
 	"github.com/brotherlogic/goserver/utils"
 	"github.com/brotherlogic/keystore/client"
-	"golang.org/x/net/context"
-	"google.golang.org/grpc"
-
-	pbgh "github.com/brotherlogic/githubcard/proto"
-	pbg "github.com/brotherlogic/goserver/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 	pbt "github.com/brotherlogic/tracer/proto"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 )
 
 const (
@@ -220,7 +219,7 @@ func (s *Server) getBudget(ctx context.Context) {
 			}
 		}
 
-		s.config.Budget = 40000*3 - spendSum
+		s.config.Budget = 30000*3 - spendSum
 		s.save(ctx)
 	} else {
 		s.Log(fmt.Sprintf("Error getting spending: %v", err))
