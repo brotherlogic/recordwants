@@ -271,7 +271,7 @@ func main() {
 
 	server.RegisterServer("recordwants", false)
 	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Minute*5)
-	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
+	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour*6)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Minute)
 	server.Log("Starting!")
 	server.Serve()
