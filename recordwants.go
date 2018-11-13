@@ -26,19 +26,19 @@ const (
 )
 
 type alerter interface {
-	alert(ctx context.Context, want *pb.MasterWant)
+	alert(ctx context.Context, want *pb.MasterWant, c, total int)
 }
 
 type prodAlerter struct{}
 
-func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant) {
+func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total int) {
 	ip, port, _ := utils.Resolve("githubcard")
 	if port > 0 {
 		conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
 		if err == nil {
 			defer conn.Close()
 			client := pbgh.NewGithubClient(conn)
-			client.AddIssue(ctx, &pbgh.Issue{Service: "recordwants", Title: fmt.Sprintf("Want Processing Needed!"), Body: fmt.Sprintf("%v", want)}, grpc.FailFast(false))
+			client.AddIssue(ctx, &pbgh.Issue{Service: "recordwants", Title: fmt.Sprintf("Want Processing Needed!"), Body: fmt.Sprintf("%v/%v - %v", c, total, want)}, grpc.FailFast(false))
 		}
 	}
 }

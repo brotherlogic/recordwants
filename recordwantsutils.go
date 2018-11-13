@@ -15,7 +15,14 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 				s.recordGetter.unwant(ctx, want)
 			}
 			if !want.Demoted {
-				s.alerter.alert(ctx, want)
+				c := 0
+				for _, w := range s.config.Wants {
+					if w.Staged {
+						c++
+					}
+				}
+
+				s.alerter.alert(ctx, want, c, len(s.config.Wants))
 			}
 		} else {
 			if overBudget && want.Active {

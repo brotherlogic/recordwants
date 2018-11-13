@@ -13,7 +13,7 @@ type testAlerter struct {
 	count int
 }
 
-func (t *testAlerter) alert(ctx context.Context, want *pb.MasterWant) {
+func (t *testAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total int) {
 	t.count++
 }
 
