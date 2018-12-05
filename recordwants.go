@@ -234,15 +234,9 @@ func (s *Server) getBudget(ctx context.Context) {
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
 	c := 0
-	found := 0
-	stat := ""
 	for _, w := range s.config.Wants {
 		if w.Staged {
 			c++
-		}
-		if w.GetRelease().Id == 1684101 {
-			found++
-			stat = fmt.Sprintf("%v", w)
 		}
 	}
 	return []*pbg.State{
@@ -251,8 +245,6 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
 		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
-		&pbg.State{Key: "found", Value: int64(found)},
-		&pbg.State{Key: "stat", Text: stat},
 		&pbg.State{Key: "pull", Text: s.pull},
 		&pbg.State{Key: "budget", Value: int64(s.config.Budget)},
 		&pbg.State{Key: "month", Value: int64(s.mmonth)},
