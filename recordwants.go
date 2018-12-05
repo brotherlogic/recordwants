@@ -142,6 +142,7 @@ type Server struct {
 	pull         string
 	mmonth       int32
 	lastUnwant   string
+	budgetPull   time.Duration
 }
 
 // Init builds the server
@@ -157,6 +158,7 @@ func Init() *Server {
 		"",
 		0,
 		"",
+		0,
 	}
 	return s
 }
@@ -202,6 +204,7 @@ func (s *Server) runUpdate(ctx context.Context) {
 }
 
 func (s *Server) getBudget(ctx context.Context) {
+	t := time.Now()
 	spends, err := s.GetSpending(ctx, &pb.SpendingRequest{})
 
 	if err == nil {
@@ -224,6 +227,8 @@ func (s *Server) getBudget(ctx context.Context) {
 	} else {
 		s.Log(fmt.Sprintf("Error getting spending: %v", err))
 	}
+
+	s.budgetPull = time.Now().Sub(t)
 }
 
 // GetState gets the state of the server
@@ -252,6 +257,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "budget", Value: int64(s.config.Budget)},
 		&pbg.State{Key: "month", Value: int64(s.mmonth)},
 		&pbg.State{Key: "last_want", Text: s.lastUnwant},
+		&pbg.State{Key: "budget_pull_time", Text: fmt.Sprintf("%v", s.budgetPull)},
 	}
 }
 
