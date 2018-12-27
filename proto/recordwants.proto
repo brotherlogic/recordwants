@@ -15,6 +15,7 @@ message MasterWant {
   bool staged = 3;
   bool active = 4;
   bool demoted = 5;
+  bool superwant = 6;
 }
 
 message Spend {
@@ -31,6 +32,7 @@ message SpendingResponse {
 message UpdateRequest {
   godiscogs.Release want = 1;
   bool keep_want = 2;
+  bool super = 3;
 }
 
 message UpdateResponse {}

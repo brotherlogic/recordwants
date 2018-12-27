@@ -42,6 +42,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 		if want.GetRelease().Id == req.GetWant().Id {
 			want.Staged = true
 			want.Demoted = !req.KeepWant
+			want.Superwant = req.Super
 			return &pb.UpdateResponse{}, nil
 		}
 	}
