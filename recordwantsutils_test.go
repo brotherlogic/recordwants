@@ -63,6 +63,17 @@ func TestUnwantActiveWhenDemoted(t *testing.T) {
 	}
 }
 
+func TestKeepWantActiveWhenDemoted(t *testing.T) {
+	s := InitTestServer()
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Active: true, Staged: true, Superwant: true})
+	s.alerter = &testAlerter{}
+	s.alertNoStaging(context.Background(), false)
+
+	if s.recordGetter.(*testRecordGetter).lastUnwant == 123 {
+		t.Errorf("Superwant has been unwanted: %v", s.config)
+	}
+}
+
 func TestUnwantActiveWhenNotDemoted(t *testing.T) {
 	s := InitTestServer()
 	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Active: false, Demoted: false, Staged: true})

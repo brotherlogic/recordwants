@@ -25,7 +25,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 				s.alerter.alert(ctx, want, c, len(s.config.Wants))
 			}
 		} else {
-			if overBudget && want.Active {
+			if overBudget && want.Active && !want.Superwant {
 				s.lastProc = want.Release.Id
 				s.recordGetter.unwant(ctx, want)
 			} else {
