@@ -103,3 +103,15 @@ func TestUpdateEmpty(t *testing.T) {
 		t.Errorf("Bad return: %v", res)
 	}
 }
+
+func TestAddWant(t *testing.T) {
+	s := InitTestServer()
+	_, err := s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 123, Superwant: true})
+	if err != nil {
+		t.Errorf("Error adding want: %v", err)
+	}
+
+	if len(s.config.Wants) != 1 {
+		t.Errorf("Want did not get added")
+	}
+}

@@ -37,7 +37,15 @@ message UpdateRequest {
 
 message UpdateResponse {}
 
+message AddWantRequest {
+  int32 release_id = 1;
+  bool superwant = 2;
+}
+
+message AddWantResponse {}
+
 service WantService {
   rpc GetSpending(SpendingRequest) returns (SpendingResponse) {};
   rpc Update(UpdateRequest) returns (UpdateResponse) {};
+  rpc AddWant(AddWantRequest) returns (AddWantResponse) {};
 }

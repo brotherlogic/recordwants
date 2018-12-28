@@ -6,9 +6,24 @@ import (
 
 	"golang.org/x/net/context"
 
+	pbgd "github.com/brotherlogic/godiscogs"
 	pb "github.com/brotherlogic/recordwants/proto"
 	pbt "github.com/brotherlogic/tracer/proto"
 )
+
+func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWantResponse, error) {
+	ctx = s.LogTrace(ctx, "AddWant", time.Now(), pbt.Milestone_START_FUNCTION)
+
+	s.config.Wants = append(s.config.Wants,
+		&pb.MasterWant{
+			Superwant: req.Superwant,
+			Release:   &pbgd.Release{Id: req.ReleaseId},
+		})
+
+	s.LogTrace(ctx, "AddWant", time.Now(), pbt.Milestone_END_FUNCTION)
+	return &pb.AddWantResponse{}, nil
+
+}
 
 //GetSpending gets the spending over the course of months
 func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.SpendingResponse, error) {
