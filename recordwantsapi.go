@@ -11,6 +11,7 @@ import (
 	pbt "github.com/brotherlogic/tracer/proto"
 )
 
+//AddWant adds a want into the system
 func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWantResponse, error) {
 	ctx = s.LogTrace(ctx, "AddWant", time.Now(), pbt.Milestone_START_FUNCTION)
 
