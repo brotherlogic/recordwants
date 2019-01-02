@@ -234,14 +234,20 @@ func (s *Server) getBudget(ctx context.Context) {
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
 	c := 0
+	super := int64(0)
 	for _, w := range s.config.Wants {
 		if w.Staged {
 			c++
+		}
+
+		if w.Superwant {
+			super++
 		}
 	}
 	return []*pbg.State{
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
+		&pbg.State{Key: "supercount", Value: super},
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
 		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
@@ -271,6 +277,6 @@ func main() {
 	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Minute*5)
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour*6)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Minute)
-	server.Log("Starting!")
+
 	server.Serve()
 }
