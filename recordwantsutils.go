@@ -12,6 +12,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
 		if !want.Staged {
 			if want.Active {
+				s.Log(fmt.Sprintf("Unwanting %v as it's not staged but active", want.Release.Id))
 				s.recordGetter.unwant(ctx, want)
 			}
 			if !want.Demoted {
@@ -27,9 +28,11 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 		} else {
 			if overBudget && want.Active && !want.Superwant {
 				s.lastProc = want.Release.Id
+				s.Log(fmt.Sprintf("Unwanting %v because we're over budget", want.Release.Id))
 				s.recordGetter.unwant(ctx, want)
 			} else {
 				if want.Active && want.Demoted {
+					s.Log(fmt.Sprintf("Unwanting %v because it's demoted", want.Release.Id))
 					s.recordGetter.unwant(ctx, want)
 				}
 				if !want.Active && !want.Demoted && !overBudget {

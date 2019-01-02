@@ -235,6 +235,7 @@ func (s *Server) getBudget(ctx context.Context) {
 func (s *Server) GetState() []*pbg.State {
 	c := 0
 	super := int64(0)
+	testString := ""
 	for _, w := range s.config.Wants {
 		if w.Staged {
 			c++
@@ -243,11 +244,16 @@ func (s *Server) GetState() []*pbg.State {
 		if w.Superwant {
 			super++
 		}
+
+		if w.Release.Id == 2786194 {
+			testString = fmt.Sprintf("st %v, ac %v, dem %v, super %v", w.Staged, w.Active, w.Demoted, w.Superwant)
+		}
 	}
 	return []*pbg.State{
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
 		&pbg.State{Key: "supercount", Value: super},
+		&pbg.State{Key: "superstring", Text: testString},
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
 		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
