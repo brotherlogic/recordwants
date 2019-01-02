@@ -84,3 +84,17 @@ func TestUnwantActiveWhenNotDemoted(t *testing.T) {
 		t.Errorf("Want has not been unwanted: %v", s.config)
 	}
 }
+
+func TestSuperWantPromoted(t *testing.T) {
+	s := InitTestServer()
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Superwant: true})
+	s.alerter = &testAlerter{}
+
+	//It takes two passes to promote a super want
+	s.alertNoStaging(context.Background(), false)
+	s.alertNoStaging(context.Background(), false)
+
+	if s.recordGetter.(*testRecordGetter).lastWant != 123 {
+		t.Errorf("Want has not been unwanted: %v", s.config)
+	}
+}
