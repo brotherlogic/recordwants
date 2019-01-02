@@ -25,6 +25,11 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 
 				s.alerter.alert(ctx, want, c, len(s.config.Wants))
 			}
+
+			//Superwants don't have to be staged
+			if want.Superwant {
+				want.Staged = true
+			}
 		} else {
 			if overBudget && want.Active && !want.Superwant {
 				s.lastProc = want.Release.Id
