@@ -245,7 +245,7 @@ func (s *Server) GetState() []*pbg.State {
 			super++
 		}
 
-		if w.Release.Id == 2786194 {
+		if w.Release.Id == 4690173 {
 			testString = fmt.Sprintf("st %v, ac %v, dem %v, super %v", w.Staged, w.Active, w.Demoted, w.Superwant)
 		}
 	}
