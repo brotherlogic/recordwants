@@ -236,7 +236,9 @@ func (s *Server) GetState() []*pbg.State {
 	c := 0
 	super := int64(0)
 	testString := ""
+	counts := make(map[int32]int)
 	for _, w := range s.config.Wants {
+		counts[w.Release.Id]++
 		if w.Staged {
 			c++
 		}
@@ -249,6 +251,14 @@ func (s *Server) GetState() []*pbg.State {
 			testString = fmt.Sprintf("st %v, ac %v, dem %v, super %v", w.Staged, w.Active, w.Demoted, w.Superwant)
 		}
 	}
+
+	doubleCounts := 0
+	for _, val := range counts {
+		if val > 1 {
+			doubleCounts++
+		}
+	}
+
 	return []*pbg.State{
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
@@ -262,6 +272,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "month", Value: int64(s.mmonth)},
 		&pbg.State{Key: "last_want", Text: s.lastUnwant},
 		&pbg.State{Key: "budget_pull_time", Text: fmt.Sprintf("%v", s.budgetPull)},
+		&pbg.State{Key: "double_counts", Value: int64(doubleCounts)},
 	}
 }
 
