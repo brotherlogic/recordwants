@@ -175,7 +175,27 @@ func (s *Server) load(ctx context.Context) error {
 		return err
 	}
 
+	//Clean out the wants here
+	wmap := make(map[int32]*pb.MasterWant)
+	config = data.(*pb.Config)
+	for _, want := range config.Wants {
+		if val, ok := wmap[want.Release.Id]; ok {
+			val.Superwant = val.Superwant || want.Superwant
+		} else {
+			wmap[want.Release.Id] = want
+		}
+	}
+
 	s.config = data.(*pb.Config)
+	s.config.Wants = []*pb.MasterWant{}
+	for _, want := range wmap {
+		s.config.Wants = append(s.config.Wants, want)
+	}
+
+	if len(config.Wants) > len(s.config.Wants) {
+		log.Fatalf("Fatal error loading wants")
+	}
+
 	return nil
 }
 
