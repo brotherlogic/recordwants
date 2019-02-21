@@ -15,7 +15,6 @@ import (
 	"github.com/brotherlogic/keystore/client"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
-	pbt "github.com/brotherlogic/tracer/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -65,7 +64,6 @@ func (p *prodGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	utils.SendTrace(ctx, "Calling Get Records", time.Now(), pbt.Milestone_MARKER, "recordwants")
 	resp, err := client.GetRecords(ctx, &pbrc.GetRecordsRequest{Strip: true, Filter: &pbrc.Record{}}, grpc.MaxCallRecvMsgSize(1024*1024*1024))
 	if err != nil {
 		return nil, err
@@ -86,7 +84,6 @@ func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	utils.SendTrace(ctx, "Calling Get Wants", time.Now(), pbt.Milestone_MARKER, "recordwants")
 	resp, err := client.GetWants(ctx, &pbrc.GetWantsRequest{})
 	if err != nil {
 		return nil, err

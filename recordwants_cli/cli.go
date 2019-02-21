@@ -5,15 +5,12 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
 
 	pbgd "github.com/brotherlogic/godiscogs"
-	pbgs "github.com/brotherlogic/goserver/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
-	pbt "github.com/brotherlogic/tracer/proto"
 
 	//Needed to pull in gzip encoding init
 	_ "google.golang.org/grpc/encoding/gzip"
@@ -32,7 +29,7 @@ func main() {
 	}
 
 	client := pb.NewWantServiceClient(conn)
-	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants", pbgs.ContextType_LONG)
+	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants")
 	defer cancel()
 
 	switch os.Args[1] {
@@ -68,6 +65,4 @@ func main() {
 		}
 
 	}
-
-	utils.SendTrace(ctx, "End of CLI", time.Now(), pbt.Milestone_END, "recordwants-cli")
 }
