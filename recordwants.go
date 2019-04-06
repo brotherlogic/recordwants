@@ -222,11 +222,12 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 	return nil
 }
 
-func (s *Server) runUpdate(ctx context.Context) {
+func (s *Server) runUpdate(ctx context.Context) error {
 	s.alertNoStaging(ctx, s.config.Budget <= 0)
+	return nil
 }
 
-func (s *Server) getBudget(ctx context.Context) {
+func (s *Server) getBudget(ctx context.Context) error {
 	t := time.Now()
 	spends, err := s.GetSpending(ctx, &pb.SpendingRequest{})
 
@@ -252,6 +253,7 @@ func (s *Server) getBudget(ctx context.Context) {
 	}
 
 	s.budgetPull = time.Now().Sub(t)
+	return nil
 }
 
 // GetState gets the state of the server

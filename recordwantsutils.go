@@ -49,7 +49,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	}
 }
 
-func (s *Server) updateWants(ctx context.Context) {
+func (s *Server) updateWants(ctx context.Context) error {
 	s.lastRun = time.Now()
 	wants, err := s.recordGetter.getWants(ctx)
 	s.lastPull = int32(len(wants))
@@ -86,4 +86,5 @@ func (s *Server) updateWants(ctx context.Context) {
 	}
 
 	s.save(ctx)
+	return nil
 }
