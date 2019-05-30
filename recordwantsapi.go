@@ -35,7 +35,7 @@ func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.
 	}
 	for _, r := range r {
 		d := time.Unix(r.Metadata.DateAdded, 0)
-		if d.Year() == 2018 {
+		if d.Year() == 2019 {
 			resp.Spends[int(d.Month()-1)].Spend += r.Metadata.Cost
 		}
 	}

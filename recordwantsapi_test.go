@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/brotherlogic/keystore/client"
 	"golang.org/x/net/context"
@@ -31,7 +32,7 @@ func (t *testRecordGetter) getRecords(ctx context.Context) ([]*pbrc.Record, erro
 	if t.fail {
 		return make([]*pbrc.Record, 0), fmt.Errorf("Built to fail")
 	}
-	return []*pbrc.Record{&pbrc.Record{Release: &pbgd.Release{Id: 123}, Metadata: &pbrc.ReleaseMetadata{DateAdded: 1515888000, Cost: 1234}}}, nil
+	return []*pbrc.Record{&pbrc.Record{Release: &pbgd.Release{Id: 123}, Metadata: &pbrc.ReleaseMetadata{DateAdded: time.Now().Unix(), Cost: 1234}}}, nil
 }
 
 func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
@@ -68,7 +69,7 @@ func TestGetSpending(t *testing.T) {
 		t.Fatalf("Error: %v", err)
 	}
 
-	if len(spends.Spends) != 12 || spends.Spends[0].Spend != 1234 {
+	if len(spends.Spends) != 12 || spends.Spends[4].Spend != 1234 {
 		t.Errorf("Error in spend amount! %v", spends.Spends)
 	}
 }
