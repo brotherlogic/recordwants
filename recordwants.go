@@ -48,15 +48,12 @@ type recordGetter interface {
 	want(ctx context.Context, want *pb.MasterWant) error
 }
 
-type prodGetter struct{}
+type prodGetter struct {
+	dial func(server string) (*grpc.ClientConn, error)
+}
 
 func (p *prodGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
-	ip, port, err := utils.Resolve("recordcollection")
-	if err != nil {
-		return nil, err
-	}
-
-	conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	conn, err := p.dial("recordcollection")
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +68,7 @@ func (p *prodGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
 }
 
 func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
-	ip, port, err := utils.Resolve("recordcollection")
-	if err != nil {
-		return nil, err
-	}
-
-	conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	conn, err := p.dial("recordcollection")
 	if err != nil {
 		return nil, err
 	}
@@ -93,12 +85,7 @@ func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 }
 
 func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
-	ip, port, err := utils.Resolve("recordcollection")
-	if err != nil {
-		return err
-	}
-
-	conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	conn, err := p.dial("recordcollection")
 	if err != nil {
 		return err
 	}
@@ -110,12 +97,7 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 }
 
 func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
-	ip, port, err := utils.Resolve("recordcollection")
-	if err != nil {
-		return err
-	}
-
-	conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
+	conn, err := p.dial("recordcollection")
 	if err != nil {
 		return err
 	}
@@ -156,6 +138,7 @@ func Init() *Server {
 		"",
 		0,
 	}
+	s.recordGetter = &prodGetter{dial: s.DialMaster}
 	return s
 }
 
