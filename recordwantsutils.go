@@ -10,7 +10,7 @@ import (
 
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
-		if !want.Staged {
+		if !want.Staged && !want.Superwant {
 			if want.Active {
 				s.Log(fmt.Sprintf("Unwanting %v as it's not staged but active", want.Release.Id))
 				s.recordGetter.unwant(ctx, want)
@@ -26,10 +26,6 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 				s.alerter.alert(ctx, want, c, len(s.config.Wants))
 			}
 
-			//Superwants don't have to be staged
-			if want.Superwant {
-				want.Staged = true
-			}
 		} else {
 			if overBudget && want.Active && !want.Superwant {
 				s.lastProc = want.Release.Id
