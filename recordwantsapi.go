@@ -50,6 +50,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 			want.Staged = true
 			want.Demoted = !req.KeepWant
 			want.Superwant = req.Super
+			s.Log(fmt.Sprintf("Updated want: %v", want))
 			return &pb.UpdateResponse{}, nil
 		}
 	}
