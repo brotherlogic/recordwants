@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"strconv"
 	"time"
 
 	pbgh "github.com/brotherlogic/githubcard/proto"
 	"github.com/brotherlogic/goserver"
 	pbg "github.com/brotherlogic/goserver/proto"
-	"github.com/brotherlogic/goserver/utils"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 	"golang.org/x/net/context"
@@ -27,17 +25,16 @@ type alerter interface {
 	alert(ctx context.Context, want *pb.MasterWant, c, total int)
 }
 
-type prodAlerter struct{}
+type prodAlerter struct {
+	dial func(server string) (*grpc.ClientConn, error)
+}
 
 func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total int) {
-	ip, port, _ := utils.Resolve("githubcard")
-	if port > 0 {
-		conn, err := grpc.Dial(ip+":"+strconv.Itoa(int(port)), grpc.WithInsecure())
-		if err == nil {
-			defer conn.Close()
-			client := pbgh.NewGithubClient(conn)
-			client.AddIssue(ctx, &pbgh.Issue{Service: "recordwants", Title: fmt.Sprintf("Want Processing Needed!"), Body: fmt.Sprintf("%v/%v - %v", c, total, want)}, grpc.FailFast(false))
-		}
+	conn, err := p.dial("githubcard")
+	if err == nil {
+		defer conn.Close()
+		client := pbgh.NewGithubClient(conn)
+		client.AddIssue(ctx, &pbgh.Issue{Service: "recordwants", Title: fmt.Sprintf("Want Processing Needed!"), Body: fmt.Sprintf("%v/%v - %v", c, total, want)}, grpc.FailFast(false))
 	}
 }
 
@@ -139,6 +136,7 @@ func Init() *Server {
 		0,
 	}
 	s.recordGetter = &prodGetter{dial: s.DialMaster}
+	s.alerter = &prodAlerter{dial: s.DialMaster}
 	return s
 }
 
