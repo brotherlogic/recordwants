@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	host, port, err := utils.Resolve("recordwants")
+	host, port, err := utils.Resolve("recordwants", "resolve-cli")
 	if err != nil {
 		log.Fatalf("Unable to reach organiser: %v", err)
 	}
