@@ -10,6 +10,7 @@ import (
 	pbgh "github.com/brotherlogic/githubcard/proto"
 	"github.com/brotherlogic/goserver"
 	pbg "github.com/brotherlogic/goserver/proto"
+	"github.com/brotherlogic/goserver/utils"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 	"golang.org/x/net/context"
@@ -283,6 +284,7 @@ func (s *Server) GetState() []*pbg.State {
 
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
+	var clear = flag.Bool("clear_suuper", false, "Clears all super wants")
 	flag.Parse()
 
 	//Turn off logging
@@ -295,6 +297,24 @@ func main() {
 	server.Register = server
 
 	server.RegisterServer("recordwants", false)
+
+	if *clear {
+		ctx, cancel := utils.BuildContext("recordwants", "recordwants")
+		defer cancel()
+
+		err := server.load(ctx)
+		if err != nil {
+			log.Fatalf("Unable to read wants: %v", err)
+		}
+
+		for _, w := range server.config.Wants {
+			w.Superwant = false
+		}
+
+		server.save(ctx)
+		log.Fatalf("Saved out cleared wants")
+	}
+
 	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Hour)
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
