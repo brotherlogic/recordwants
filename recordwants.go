@@ -40,7 +40,6 @@ func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total i
 }
 
 type recordGetter interface {
-	getRecords(ctx context.Context) ([]*pbrc.Record, error)
 	getWants(ctx context.Context) ([]*pbrc.Want, error)
 	unwant(ctx context.Context, want *pb.MasterWant) error
 	want(ctx context.Context, want *pb.MasterWant) error
@@ -48,21 +47,6 @@ type recordGetter interface {
 
 type prodGetter struct {
 	dial func(server string) (*grpc.ClientConn, error)
-}
-
-func (p *prodGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
-	conn, err := p.dial("recordcollection")
-	if err != nil {
-		return nil, err
-	}
-	defer conn.Close()
-
-	client := pbrc.NewRecordCollectionServiceClient(conn)
-	resp, err := client.GetRecords(ctx, &pbrc.GetRecordsRequest{Caller: "wants", Strip: true, Filter: &pbrc.Record{}}, grpc.MaxCallRecvMsgSize(1024*1024*1024))
-	if err != nil {
-		return nil, err
-	}
-	return resp.GetRecords(), nil
 }
 
 func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
@@ -156,6 +140,11 @@ func (s *Server) load(ctx context.Context) error {
 	//Clean out the wants here
 	wmap := make(map[int32]*pb.MasterWant)
 	config = data.(*pb.Config)
+
+	if config.Spends == nil {
+		config.Spends = make(map[int32]*pb.RecordSpend)
+	}
+
 	for _, want := range config.Wants {
 		if val, ok := wmap[want.Release.Id]; ok {
 			val.Superwant = val.Superwant || want.Superwant
@@ -266,6 +255,7 @@ func (s *Server) GetState() []*pbg.State {
 	}
 
 	return []*pbg.State{
+		&pbg.State{Key: "spends", Value: int64(len(s.config.Spends))},
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
 		&pbg.State{Key: "supercount", Value: super},

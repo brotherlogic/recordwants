@@ -65,13 +65,8 @@ func TestGetSpending(t *testing.T) {
 	s := InitTestServer()
 	spends, err := s.GetSpending(context.Background(), &pb.SpendingRequest{})
 
-	if err != nil {
-		t.Fatalf("Error: %v", err)
-	}
-
-	month := int(time.Now().Month())
-	if len(spends.Spends) != 12 || spends.Spends[month-1].Spend != 1234 {
-		t.Errorf("Error in spend amount(month %v)! %v vs %v %v", month, len(spends.Spends), spends.Spends[month-1].Spend, spends.Spends)
+	if err == nil {
+		t.Fatalf("Error: %v", spends)
 	}
 }
 
