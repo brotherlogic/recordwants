@@ -8,6 +8,24 @@ import (
 	"golang.org/x/net/context"
 )
 
+func (s *Server) updateSpending(ctx context.Context) error {
+	recs, err := s.recordGetter.getRecordsSince(ctx, s.config.LastSpendUpdate)
+	if err != nil {
+		return err
+	}
+
+	for _, id := range recs {
+		rec, err := s.recordGetter.getRecord(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		s.config.Spends[id] = &pb.RecordSpend{Cost: rec.GetMetadata().Cost, DateAdded: rec.GetMetadata().DateAdded}
+	}
+
+	return nil
+}
+
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	for _, want := range s.config.Wants {
 		if !want.Staged && !want.Superwant {

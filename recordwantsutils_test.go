@@ -98,3 +98,35 @@ func TestSuperWantPromoted(t *testing.T) {
 		t.Errorf("Want has not been unwanted: %v", s.config)
 	}
 }
+
+func TestUpdateSpending(t *testing.T) {
+	s := InitTestServer()
+
+	err := s.updateSpending(context.Background())
+
+	if err != nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateSpendingFailSince(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{fail: true}
+
+	err := s.updateSpending(context.Background())
+
+	if err == nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateSpendingFailGet(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{failGet: true}
+
+	err := s.updateSpending(context.Background())
+
+	if err == nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
