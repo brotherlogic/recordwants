@@ -31,6 +31,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 		if !want.Staged && !want.Superwant {
 			if want.Active {
 				s.Log(fmt.Sprintf("Unwanting %v as it's not staged but active", want.Release.Id))
+				s.config.LastPush = time.Now().Unix()
 				s.recordGetter.unwant(ctx, want)
 			}
 			if !want.Demoted {
@@ -48,14 +49,17 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 			if overBudget && want.Active && !want.Superwant {
 				s.lastProc = want.Release.Id
 				s.Log(fmt.Sprintf("Unwanting %v because we're over budget", want.Release.Id))
+				s.config.LastPush = time.Now().Unix()
 				s.recordGetter.unwant(ctx, want)
 			} else {
 				if want.Active && want.Demoted {
 					s.Log(fmt.Sprintf("Unwanting %v because it's demoted", want.Release.Id))
+					s.config.LastPush = time.Now().Unix()
 					s.recordGetter.unwant(ctx, want)
 				}
 				if !want.Active && !want.Demoted && (!overBudget || want.Superwant) {
 					s.Log(fmt.Sprintf("WANTING %v -> %v, %v, %v", want.Release.Id, want.Active, want.Demoted, overBudget))
+					s.config.LastPush = time.Now().Unix()
 					s.recordGetter.want(ctx, want)
 				}
 			}
