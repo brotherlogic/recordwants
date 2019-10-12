@@ -8,6 +8,7 @@ message Config {
   repeated MasterWant wants = 1;
   int32 budget = 2;
   map<int32, RecordSpend> spends = 3;
+  int64 last_spend_update = 4;
 }
 
 message RecordSpend {

@@ -19,20 +19,29 @@ func InitTestServer() *Server {
 	s.alerter = &testAlerter{}
 	s.SkipLog = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
+	s.config.Spends = make(map[int32]*pb.RecordSpend)
 	return s
 }
 
 type testRecordGetter struct {
 	fail       bool
+	failGet    bool
 	lastUnwant int32
 	lastWant   int32
 }
 
-func (t *testRecordGetter) getRecords(ctx context.Context) ([]*pbrc.Record, error) {
+func (t *testRecordGetter) getRecordsSince(ctx context.Context, since int64) ([]int32, error) {
 	if t.fail {
-		return make([]*pbrc.Record, 0), fmt.Errorf("Built to fail")
+		return []int32{}, fmt.Errorf("Built to fail")
 	}
-	return []*pbrc.Record{&pbrc.Record{Release: &pbgd.Release{Id: 123}, Metadata: &pbrc.ReleaseMetadata{DateAdded: time.Now().Unix(), Cost: 1234}}}, nil
+	return []int32{12}, nil
+}
+
+func (t *testRecordGetter) getRecord(ctx context.Context, id int32) (*pbrc.Record, error) {
+	if t.failGet {
+		return nil, fmt.Errorf("Built to fail")
+	}
+	return &pbrc.Record{Metadata: &pbrc.ReleaseMetadata{Cost: 100, DateAdded: time.Now().Unix()}}, nil
 }
 
 func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
