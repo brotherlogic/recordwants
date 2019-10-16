@@ -41,6 +41,7 @@ func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total i
 
 type recordGetter interface {
 	getRecordsSince(ctx context.Context, since int64) ([]int32, error)
+	getRecords(ctx context.Context, id int32) ([]int32, error)
 	getRecord(ctx context.Context, id int32) (*pbrc.Record, error)
 	getWants(ctx context.Context) ([]*pbrc.Want, error)
 	unwant(ctx context.Context, want *pb.MasterWant) error
@@ -67,6 +68,23 @@ func (p *prodGetter) getRecordsSince(ctx context.Context, since int64) ([]int32,
 
 	return resp.GetInstanceIds(), err
 }
+func (p *prodGetter) getRecords(ctx context.Context, id int32) ([]int32, error) {
+	conn, err := p.dial("recordcollection")
+	if err != nil {
+		return []int32{}, err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	resp, err := client.QueryRecords(ctx, &pbrc.QueryRecordsRequest{Query: &pbrc.QueryRecordsRequest_ReleaseId{id}})
+
+	if err != nil {
+		return []int32{}, err
+	}
+
+	return resp.GetInstanceIds(), err
+}
+
 func (p *prodGetter) getRecord(ctx context.Context, instanceID int32) (*pbrc.Record, error) {
 	conn, err := p.dial("recordcollection")
 	if err != nil {
