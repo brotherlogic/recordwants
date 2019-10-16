@@ -87,6 +87,17 @@ func (s *Server) updateWants(ctx context.Context) error {
 		}
 	}
 
+	// Demote any wants we already own
+	for _, w := range s.config.Wants {
+		if !w.Demoted {
+			records, err := s.recordGetter.getRecords(ctx, w.GetRelease().Id)
+			if err == nil && len(records) > 0 {
+				w.Demoted = true
+				w.Staged = true
+			}
+		}
+	}
+
 	s.save(ctx)
 	return nil
 }

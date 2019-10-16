@@ -37,6 +37,13 @@ func (t *testRecordGetter) getRecordsSince(ctx context.Context, since int64) ([]
 	return []int32{12}, nil
 }
 
+func (t *testRecordGetter) getRecords(ctx context.Context, id int32) ([]int32, error) {
+	if t.fail {
+		return []int32{}, fmt.Errorf("Built to fail")
+	}
+	return []int32{12}, nil
+}
+
 func (t *testRecordGetter) getRecord(ctx context.Context, id int32) (*pbrc.Record, error) {
 	if t.failGet {
 		return nil, fmt.Errorf("Built to fail")
