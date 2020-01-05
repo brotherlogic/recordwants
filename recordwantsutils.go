@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"time"
 
 	pb "github.com/brotherlogic/recordwants/proto"
@@ -27,6 +28,12 @@ func (s *Server) updateSpending(ctx context.Context) error {
 }
 
 func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
+
+	//Order the wants in time order
+	sort.SliceStable(s.config.Wants, func(i, j int) bool {
+		return s.config.Wants[i].DateAdded < s.config.Wants[j].DateAdded
+	})
+
 	for _, want := range s.config.Wants {
 		if !want.Staged && !want.Superwant {
 			if want.Active {
