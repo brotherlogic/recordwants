@@ -347,7 +347,10 @@ func main() {
 	server.PrepServer()
 	server.Register = server
 
-	server.RegisterServerV2("recordwants", false, false)
+	err := server.RegisterServerV2("recordwants", false, false)
+	if err != nil {
+		return
+	}
 
 	if *clear {
 		ctx, cancel := utils.BuildContext("recordwants", "recordwants")
