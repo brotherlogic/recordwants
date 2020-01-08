@@ -31,7 +31,7 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 
 	//Order the wants in time order
 	sort.SliceStable(s.config.Wants, func(i, j int) bool {
-		return s.config.Wants[i].DateAdded < s.config.Wants[j].DateAdded
+		return s.config.Wants[i].DateAdded > s.config.Wants[j].DateAdded
 	})
 
 	for _, want := range s.config.Wants {
