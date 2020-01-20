@@ -16,11 +16,24 @@ import (
 func InitTestServer() *Server {
 	s := Init()
 	s.recordGetter = &testRecordGetter{}
+	s.recordAdder = &testRecordAdder{}
 	s.alerter = &testAlerter{}
 	s.SkipLog = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	s.config.Spends = make(map[int32]*pb.RecordSpend)
 	return s
+}
+
+type testRecordAdder struct {
+	fail bool
+}
+
+func (t *testRecordAdder) getAdds(ctx context.Context) ([]int32, error) {
+	if t.fail {
+		return []int32{}, fmt.Errorf("Built to fail")
+	}
+
+	return []int32{123}, nil
 }
 
 type testRecordGetter struct {

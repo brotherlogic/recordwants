@@ -15,7 +15,14 @@ import (
 	pb "github.com/brotherlogic/recordwants/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/resolver"
+
+	rapb "github.com/brotherlogic/recordadder/proto"
 )
+
+func init() {
+	resolver.Register(&utils.DiscoveryServerResolverBuilder{})
+}
 
 const (
 	// KEY - where the wants are stored
@@ -37,6 +44,31 @@ func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total i
 		client := pbgh.NewGithubClient(conn)
 		client.AddIssue(ctx, &pbgh.Issue{Service: "recordwants", Title: fmt.Sprintf("Want Processing Needed!"), Body: fmt.Sprintf("%v/%v - %v", c, total, want)}, grpc.FailFast(false))
 	}
+}
+
+type recordAdder interface {
+	getAdds(ctx context.Context) ([]int32, error)
+}
+
+type prodRecordAdder struct{}
+
+func (p *prodRecordAdder) getAdds(ctx context.Context) ([]int32, error) {
+	conn, err := grpc.Dial("discovery:///recordadder", grpc.WithInsecure())
+	if err != nil {
+		return []int32{}, err
+	}
+
+	client := rapb.NewAddRecordServiceClient(conn)
+	resp, err := client.ListQueue(ctx, &rapb.ListQueueRequest{})
+	if err != nil {
+		return []int32{}, err
+	}
+
+	nums := []int32{}
+	for _, add := range resp.GetRequests() {
+		nums = append(nums, add.GetId())
+	}
+	return nums, err
 }
 
 type recordGetter interface {
@@ -156,6 +188,7 @@ type Server struct {
 	mmonth       int32
 	lastUnwant   string
 	budgetPull   time.Duration
+	recordAdder  recordAdder
 }
 
 // Init builds the server
@@ -172,14 +205,15 @@ func Init() *Server {
 		0,
 		"",
 		0,
+		&prodRecordAdder{},
 	}
 	s.recordGetter = &prodGetter{dial: s.DialMaster}
 	s.alerter = &prodAlerter{dial: s.DialMaster}
 	return s
 }
 
-func (s *Server) save(ctx context.Context) {
-	s.KSclient.Save(ctx, KEY, s.config)
+func (s *Server) save(ctx context.Context) error {
+	return s.KSclient.Save(ctx, KEY, s.config)
 }
 
 func (s *Server) load(ctx context.Context) error {
@@ -373,6 +407,7 @@ func main() {
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
 	server.RegisterRepeatingTask(server.checkPush, "check_push", time.Hour)
+	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
 
 	server.Serve()
 }
