@@ -130,3 +130,28 @@ func TestUpdateSpendingFailGet(t *testing.T) {
 		t.Errorf("Bad update: %v", err)
 	}
 }
+
+func TestUpdate(t *testing.T) {
+	s := InitTestServer()
+
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Superwant: true})
+
+	err := s.dealWithAddedRecords(context.Background())
+
+	if err != nil {
+		t.Errorf("Bad add: %v", err)
+	}
+}
+
+func TestBadUpdate(t *testing.T) {
+	s := InitTestServer()
+	s.recordAdder = &testRecordAdder{fail: true}
+
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Superwant: true})
+
+	err := s.dealWithAddedRecords(context.Background())
+
+	if err == nil {
+		t.Errorf("Bad add: %v", err)
+	}
+}

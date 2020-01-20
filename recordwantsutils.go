@@ -108,3 +108,21 @@ func (s *Server) updateWants(ctx context.Context) error {
 	s.save(ctx)
 	return nil
 }
+
+func (s *Server) dealWithAddedRecords(ctx context.Context) error {
+	nums, err := s.recordAdder.getAdds(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, num := range nums {
+		for _, w := range s.config.Wants {
+			if w.GetRelease().Id == num {
+				w.Demoted = true
+				w.Staged = true
+			}
+		}
+	}
+
+	return s.save(ctx)
+}
