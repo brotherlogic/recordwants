@@ -360,13 +360,6 @@ func (s *Server) GetState() []*pbg.State {
 	}
 }
 
-func (s *Server) checkPush(ctx context.Context) error {
-	if time.Now().Sub(time.Unix(s.config.LastPush, 0)) > time.Hour*24 {
-		s.RaiseIssue(ctx, "No pushes", fmt.Sprintf("No pushes since %v", time.Unix(s.config.LastPush, 0)), false)
-	}
-	return nil
-}
-
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	var clear = flag.Bool("clear_suuper", false, "Clears all super wants")
@@ -406,7 +399,6 @@ func main() {
 	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Hour)
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
-	server.RegisterRepeatingTask(server.checkPush, "check_push", time.Hour)
 	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
 
 	server.Serve()
