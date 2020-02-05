@@ -25,8 +25,8 @@ func TestMainTest(t *testing.T) {
 	s.alerter = ta
 	s.alertNoStaging(context.Background(), false)
 
-	if ta.count != 1 {
-		t.Errorf("Not enough alerts!")
+	if ta.count != 3 {
+		t.Errorf("Not enough alerts!: %v", ta.count)
 	}
 }
 
@@ -37,8 +37,8 @@ func TestMainTestOverBudget(t *testing.T) {
 	s.alerter = ta
 	s.alertNoStaging(context.Background(), true)
 
-	if ta.count != 0 {
-		t.Errorf("Not enough alerts!")
+	if ta.count != 1 {
+		t.Errorf("Not enough alerts!: %v", ta.count)
 	}
 }
 

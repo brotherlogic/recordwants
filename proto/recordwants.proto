@@ -24,6 +24,16 @@ message MasterWant {
   bool active = 4;
   bool demoted = 5;
   bool superwant = 6;
+
+  enum Level {
+    UNKNOWN = 0;
+    ANYTIME = 1;
+    LIST = 2;
+    ALWAYS = 3;
+  }
+
+  Level level = 7;
+  int64 date_purchased = 8;
 }
 
 message Spend {
