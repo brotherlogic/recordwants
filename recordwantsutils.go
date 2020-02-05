@@ -35,6 +35,12 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 	})
 
 	for _, want := range s.config.Wants {
+		if want.GetLevel() == pb.MasterWant_UNKNOWN {
+			s.alerter.alert(ctx, want, 0, len(s.config.Wants))
+		}
+	}
+
+	for _, want := range s.config.Wants {
 		if !want.Staged && !want.Superwant {
 			if want.Active {
 				s.Log(fmt.Sprintf("Unwanting %v as it's not staged but active", want.Release.Id))
