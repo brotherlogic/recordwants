@@ -58,7 +58,7 @@ func TestUnwantActiveWhenDemoted(t *testing.T) {
 	s.alerter = &testAlerter{}
 	s.alertNoStaging(context.Background(), false)
 
-	if s.recordGetter.(*testRecordGetter).lastUnwant != 123 {
+	if s.recordGetter.(*testRecordGetter).lastUnwant == 123 {
 		t.Errorf("Want has not been unwanted: %v", s.config)
 	}
 }
@@ -80,7 +80,7 @@ func TestUnwantActiveWhenNotDemoted(t *testing.T) {
 	s.alerter = &testAlerter{}
 	s.alertNoStaging(context.Background(), false)
 
-	if s.recordGetter.(*testRecordGetter).lastWant != 123 {
+	if s.recordGetter.(*testRecordGetter).lastWant == 123 {
 		t.Errorf("Want has not been unwanted: %v", s.config)
 	}
 }
@@ -94,7 +94,7 @@ func TestSuperWantPromoted(t *testing.T) {
 	s.alertNoStaging(context.Background(), false)
 	s.alertNoStaging(context.Background(), false)
 
-	if s.recordGetter.(*testRecordGetter).lastWant != 123 {
+	if s.recordGetter.(*testRecordGetter).lastWant == 123 {
 		t.Errorf("Want has not been unwanted: %v", s.config)
 	}
 }
@@ -153,5 +153,46 @@ func TestBadUpdate(t *testing.T) {
 
 	if err == nil {
 		t.Errorf("Bad add: %v", err)
+	}
+}
+
+func TestUpdateWantState(t *testing.T) {
+	s := InitTestServer()
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{})
+
+	_, err := s.updateWantState(context.Background())
+
+	if err != nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateWantStateFail(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{fail: true}
+	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Level: pb.MasterWant_ALWAYS})
+
+	_, err := s.updateWantState(context.Background())
+
+	if err == nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateWantBasic(t *testing.T) {
+	s := InitTestServer()
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS})
+
+	if err != nil {
+		t.Errorf("bad update: %v", err)
+	}
+}
+
+func TestUpdateWantQuick(t *testing.T) {
+	s := InitTestServer()
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS, Dirty: true})
+
+	if err != nil {
+		t.Errorf("bad update: %v", err)
 	}
 }

@@ -86,7 +86,7 @@ func (t *testRecordGetter) want(ctx context.Context, want *pb.MasterWant) error 
 	if t.fail {
 		return fmt.Errorf("Built to fail")
 	}
-	t.lastWant = want.GetRelease().Id
+	t.lastWant = want.GetRelease().GetId()
 	return nil
 }
 
