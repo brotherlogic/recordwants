@@ -53,7 +53,14 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 			}
 			want.Dirty = true
 		}
-
+	case pb.MasterWant_STAGED_TO_BE_ADDED:
+		if want.GetActive() {
+			err := s.recordGetter.unwant(ctx, want)
+			if err != nil {
+				return err
+			}
+			want.Dirty = true
+		}
 	}
 
 	return nil
@@ -156,6 +163,7 @@ func (s *Server) dealWithAddedRecords(ctx context.Context) error {
 	for _, num := range nums {
 		for _, w := range s.config.Wants {
 			if w.GetRelease().Id == num {
+				w.Level = pb.MasterWant_STAGED_TO_BE_ADDED
 				w.Demoted = true
 				w.Staged = true
 			}
