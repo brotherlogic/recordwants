@@ -78,7 +78,7 @@ func (t *testRecordGetter) unwant(ctx context.Context, want *pb.MasterWant) erro
 	if t.fail {
 		return fmt.Errorf("Built to fail")
 	}
-	t.lastUnwant = want.GetRelease().Id
+	t.lastUnwant = want.GetRelease().GetId()
 	return nil
 }
 
