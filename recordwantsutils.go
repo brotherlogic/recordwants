@@ -45,6 +45,14 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 	}
 
 	switch want.GetLevel() {
+	case pb.MasterWant_UNKNOWN:
+		if want.GetActive() {
+			err := s.recordGetter.unwant(ctx, want)
+			if err != nil {
+				return err
+			}
+			want.Dirty = true
+		}
 	case pb.MasterWant_ALWAYS:
 		if !want.GetActive() {
 			err := s.recordGetter.want(ctx, want)
