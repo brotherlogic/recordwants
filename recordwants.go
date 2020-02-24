@@ -404,5 +404,7 @@ func main() {
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
 	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
 
+	server.RegisterLockingTask(server.updateWantState, "update_want_state")
+
 	server.Serve()
 }
