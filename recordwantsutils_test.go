@@ -191,6 +191,25 @@ func TestUpdateWantBasic(t *testing.T) {
 func TestUpdateWantStateFailLISTTED(t *testing.T) {
 	s := InitTestServer()
 	s.recordGetter = &testRecordGetter{fail: true}
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Active: true})
+
+	if err == nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateWantBasicUNKNOWN(t *testing.T) {
+	s := InitTestServer()
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Active: true})
+
+	if err != nil {
+		t.Errorf("bad update: %v", err)
+	}
+}
+
+func TestUpdateWantStateFailUNKNOWN(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{fail: true}
 	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_STAGED_TO_BE_ADDED, Active: true})
 
 	if err == nil {
