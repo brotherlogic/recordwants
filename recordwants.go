@@ -236,10 +236,10 @@ func (s *Server) load(ctx context.Context) error {
 	}
 
 	for _, want := range config.Wants {
-		if val, ok := wmap[want.Release.Id]; ok {
+		if val, ok := wmap[want.GetRelease().GetId()]; ok {
 			val.Superwant = val.Superwant || want.Superwant
 		} else {
-			wmap[want.Release.Id] = want
+			wmap[want.GetRelease().GetId()] = want
 		}
 	}
 
