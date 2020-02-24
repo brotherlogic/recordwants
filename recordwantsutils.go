@@ -28,6 +28,11 @@ func (s *Server) updateSpending(ctx context.Context) error {
 }
 
 func (s *Server) updateWantState(ctx context.Context) (time.Time, error) {
+	err := s.load(ctx)
+	if err != nil {
+		return time.Now().Add(time.Minute * 5), err
+	}
+
 	s.Log(fmt.Sprintf("Updating %v wants", len(s.config.Wants)))
 	for _, want := range s.config.Wants {
 		err := s.updateWant(ctx, want)

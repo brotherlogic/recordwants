@@ -20,6 +20,7 @@ func InitTestServer() *Server {
 	s.alerter = &testAlerter{}
 	s.SkipLog = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
+	s.GoServer.KSclient.Save(context.Background(), KEY, &pb.Config{})
 	s.config.Spends = make(map[int32]*pb.RecordSpend)
 	return s
 }

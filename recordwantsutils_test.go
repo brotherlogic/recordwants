@@ -171,6 +171,7 @@ func TestUpdateWantStateFail(t *testing.T) {
 	s := InitTestServer()
 	s.recordGetter = &testRecordGetter{fail: true}
 	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Level: pb.MasterWant_ALWAYS})
+	s.save(context.Background())
 
 	_, err := s.updateWantState(context.Background())
 
@@ -232,5 +233,16 @@ func TestUpdateWantQuick(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
+	}
+}
+
+func TestUpdateFailRead(t *testing.T) {
+	s := InitTestServer()
+	s.GoServer.KSclient.Fail = true
+
+	_, err := s.updateWantState(context.Background())
+
+	if err == nil {
+		t.Errorf("Bad load no fail")
 	}
 }
