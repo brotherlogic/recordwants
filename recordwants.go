@@ -50,10 +50,12 @@ type recordAdder interface {
 	getAdds(ctx context.Context) ([]int32, error)
 }
 
-type prodRecordAdder struct{}
+type prodRecordAdder struct {
+	dial func(server string) (*grpc.ClientConn, error)
+}
 
 func (p *prodRecordAdder) getAdds(ctx context.Context) ([]int32, error) {
-	conn, err := grpc.Dial("discovery:///recordadder", grpc.WithInsecure())
+	conn, err := p.dial("recordadder")
 	if err != nil {
 		return []int32{}, err
 	}
@@ -209,6 +211,7 @@ func Init() *Server {
 	}
 	s.recordGetter = &prodGetter{dial: s.DialMaster}
 	s.alerter = &prodAlerter{dial: s.DialMaster}
+	s.recordAdder = &prodRecordAdder{dial: s.BaseDial}
 	return s
 }
 
