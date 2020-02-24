@@ -211,7 +211,7 @@ func Init() *Server {
 	}
 	s.recordGetter = &prodGetter{dial: s.DialMaster}
 	s.alerter = &prodAlerter{dial: s.DialMaster}
-	s.recordAdder = &prodRecordAdder{dial: s.BaseDial}
+	s.recordAdder = &prodRecordAdder{dial: s.NewBaseDial}
 	return s
 }
 
