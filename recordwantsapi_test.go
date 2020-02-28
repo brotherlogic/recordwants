@@ -141,4 +141,18 @@ func TestAddWant(t *testing.T) {
 	if len(s.config.Wants) != 1 {
 		t.Errorf("Want did not get added")
 	}
+
+	_, err = s.GetWant(context.Background(), &pb.GetWantRequest{ReleaseId: 123})
+	if err != nil {
+		t.Errorf("Fail: %v", err)
+	}
+}
+
+func TestEmptyGet(t *testing.T) {
+	s := InitTestServer()
+	want, err := s.GetWant(context.Background(), &pb.GetWantRequest{ReleaseId: 123})
+	if err == nil {
+		t.Errorf("Fail: %v", want)
+	}
+
 }
