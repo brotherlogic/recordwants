@@ -44,6 +44,9 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 			want.Staged = true
 			want.Demoted = !req.KeepWant
 			want.Superwant = req.Super
+			if req.GetLevel() != pb.MasterWant_UNKNOWN {
+				want.Level = req.GetLevel()
+			}
 			s.Log(fmt.Sprintf("Updated want: %v", want))
 			return &pb.UpdateResponse{}, nil
 		}

@@ -54,6 +54,7 @@ message UpdateRequest {
   godiscogs.Release want = 1;
   bool keep_want = 2;
   bool super = 3;
+  MasterWant.Level level = 4;
 }
 
 message UpdateResponse {}
