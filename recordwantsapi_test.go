@@ -137,6 +137,10 @@ func TestAddWant(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error adding want: %v", err)
 	}
+	_, err = s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 123, Superwant: true})
+	if err != nil {
+		t.Errorf("Error adding want: %v", err)
+	}
 
 	if len(s.config.Wants) != 1 {
 		t.Errorf("Want did not get added")

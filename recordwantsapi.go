@@ -11,6 +11,12 @@ import (
 
 //AddWant adds a want into the system
 func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWantResponse, error) {
+	for _, w := range s.config.Wants {
+		if req.ReleaseId == w.GetRelease().GetId() {
+			return &pb.AddWantResponse{}, nil
+		}
+	}
+
 	s.config.Wants = append(s.config.Wants,
 		&pb.MasterWant{
 			Superwant: req.Superwant,
@@ -48,7 +54,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 				want.Level = req.GetLevel()
 			}
 			s.Log(fmt.Sprintf("Updated want: %v", want))
-			return &pb.UpdateResponse{}, nil
+			return &pb.UpdateResponse{}, s.save(ctx)
 		}
 	}
 	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
