@@ -11,6 +11,12 @@ import (
 
 //AddWant adds a want into the system
 func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWantResponse, error) {
+	for _, w := range s.config.Wants {
+		if req.ReleaseId == w.GetRelease().GetId() {
+			return &pb.AddWantResponse{}, nil
+		}
+	}
+
 	s.config.Wants = append(s.config.Wants,
 		&pb.MasterWant{
 			Superwant: req.Superwant,
