@@ -48,7 +48,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 				want.Level = req.GetLevel()
 			}
 			s.Log(fmt.Sprintf("Updated want: %v", want))
-			return &pb.UpdateResponse{}, nil
+			return &pb.UpdateResponse{}, s.save(ctx)
 		}
 	}
 	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
