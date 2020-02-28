@@ -67,6 +67,15 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 			}
 			want.Dirty = true
 		}
+	case pb.MasterWant_LIST:
+		if !want.GetActive() {
+			err := s.recordGetter.want(ctx, want)
+			if err != nil {
+				return err
+			}
+			want.Dirty = true
+		}
+
 	case pb.MasterWant_STAGED_TO_BE_ADDED:
 		if want.GetActive() {
 			err := s.recordGetter.unwant(ctx, want)
