@@ -113,7 +113,7 @@ func TestGetSpendingFail(t *testing.T) {
 func TestSimpleUpdate(t *testing.T) {
 	s := InitTestServer()
 	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
-	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true})
+	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true, Level: pb.MasterWant_LIST})
 }
 
 func TestSimpleUpdateFail(t *testing.T) {
