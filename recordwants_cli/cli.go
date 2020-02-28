@@ -51,6 +51,13 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
+	case "get":
+		iv, _ := strconv.Atoi(os.Args[2])
+		wa, err := client.GetWant(ctx, &pb.GetWantRequest{ReleaseId: int32(iv)})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+		fmt.Printf("GOT: %v\n", wa.GetWant())
 	case "super":
 		iv, _ := strconv.Atoi(os.Args[2])
 		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Super: true})
