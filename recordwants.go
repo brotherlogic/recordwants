@@ -399,7 +399,7 @@ func main() {
 		log.Fatalf("Saved out cleared wants")
 	}
 
-	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Hour)
+	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Minute*5)
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
 	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
