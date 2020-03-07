@@ -153,6 +153,7 @@ func (s *Server) updateWants(ctx context.Context) error {
 				if mw.Release.Id == w.Release.Id {
 					found = true
 					mw.Active = w.GetMetadata().Active
+					mw.Dirty = false
 				}
 			}
 			if !found {

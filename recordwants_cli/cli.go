@@ -47,10 +47,17 @@ func main() {
 		fmt.Printf("TOTAL = %v\n", total)
 	case "want":
 		iv, _ := strconv.Atoi(os.Args[2])
-		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, KeepWant: true})
+		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_ANYTIME})
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
+	case "list":
+		iv, _ := strconv.Atoi(os.Args[2])
+		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_LIST})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+
 	case "get":
 		iv, _ := strconv.Atoi(os.Args[2])
 		wa, err := client.GetWant(ctx, &pb.GetWantRequest{ReleaseId: int32(iv)})
