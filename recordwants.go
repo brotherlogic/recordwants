@@ -7,17 +7,18 @@ import (
 	"log"
 	"time"
 
-	pbgh "github.com/brotherlogic/githubcard/proto"
 	"github.com/brotherlogic/goserver"
-	pbg "github.com/brotherlogic/goserver/proto"
 	"github.com/brotherlogic/goserver/utils"
-	pbrc "github.com/brotherlogic/recordcollection/proto"
-	pb "github.com/brotherlogic/recordwants/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/resolver"
 
+	pbgh "github.com/brotherlogic/githubcard/proto"
+	pbg "github.com/brotherlogic/goserver/proto"
 	rapb "github.com/brotherlogic/recordadder/proto"
+	rbpb "github.com/brotherlogic/recordbudget/proto"
+	pbrc "github.com/brotherlogic/recordcollection/proto"
+	pb "github.com/brotherlogic/recordwants/proto"
 )
 
 func init() {
@@ -288,31 +289,19 @@ func (s *Server) runUpdate(ctx context.Context) error {
 }
 
 func (s *Server) getBudget(ctx context.Context) error {
-	t := time.Now()
-	spends, err := s.GetSpending(ctx, &pb.SpendingRequest{})
-
-	if err == nil {
-		s.mmonth = int32(0)
-		for _, sp := range spends.Spends {
-			if sp.Spend > 0 && sp.Month > s.mmonth {
-				s.mmonth = sp.Month
-			}
-		}
-
-		spendSum := int32(0)
-		for _, sp := range spends.Spends {
-			if sp.Month > s.mmonth-3 {
-				spendSum += sp.Spend
-			}
-		}
-
-		s.config.Budget = 30000*3 - spendSum
-		s.save(ctx)
-	} else {
-		s.Log(fmt.Sprintf("Error getting spending: %v", err))
+	conn, err := s.NewBaseDial("recordbudget")
+	if err != nil {
+		return err
 	}
 
-	s.budgetPull = time.Now().Sub(t)
+	client := rbpb.NewRecordBudgetServiceClient(conn)
+	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{})
+
+	if err != nil {
+		return err
+	}
+
+	s.config.Budget = budg.GetBudget() - budg.GetSpends() - budg.GetPreSpends()
 	return nil
 }
 
@@ -405,7 +394,7 @@ func main() {
 
 	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Minute*5)
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
-	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
+	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Minute)
 	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
 
 	server.RegisterLockingTask(server.updateWantState, "update_want_state")
