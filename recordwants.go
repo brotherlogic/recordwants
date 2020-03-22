@@ -295,7 +295,7 @@ func (s *Server) getBudget(ctx context.Context) error {
 	}
 
 	client := rbpb.NewRecordBudgetServiceClient(conn)
-	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{})
+	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{Year: int32(time.Now().Year())})
 
 	if err != nil {
 		return err
