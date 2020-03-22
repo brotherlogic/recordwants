@@ -268,3 +268,45 @@ func TestUpdateFailRead(t *testing.T) {
 		t.Errorf("Bad load no fail")
 	}
 }
+
+func TestUpdateWantStateANYTIMEUp(t *testing.T) {
+	s := InitTestServer()
+	s.config.Budget = 10
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: false})
+
+	if err != nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateWantBasicANYTIMEDown(t *testing.T) {
+	s := InitTestServer()
+	s.config.Budget = -10
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: true})
+
+	if err != nil {
+		t.Errorf("bad update: %v", err)
+	}
+}
+
+func TestUpdateWantStateANYTIMEUpFail(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{fail: true}
+	s.config.Budget = 10
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: false})
+
+	if err == nil {
+		t.Errorf("Bad update: %v", err)
+	}
+}
+
+func TestUpdateWantBasicANYTIMEDownFail(t *testing.T) {
+	s := InitTestServer()
+	s.recordGetter = &testRecordGetter{fail: true}
+	s.config.Budget = -10
+	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: true})
+
+	if err == nil {
+		t.Errorf("bad update: %v", err)
+	}
+}
