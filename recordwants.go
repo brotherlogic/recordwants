@@ -301,6 +301,7 @@ func (s *Server) getBudget(ctx context.Context) error {
 		return err
 	}
 
+	s.Log(fmt.Sprintf("Got %v", budg))
 	s.config.Budget = budg.GetBudget() - budg.GetSpends() - budg.GetPreSpends()
 	return nil
 }
