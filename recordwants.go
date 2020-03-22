@@ -322,6 +322,7 @@ func (s *Server) GetState() []*pbg.State {
 	super := int64(0)
 	testString := ""
 	counts := make(map[int32]int)
+	anytime := int64(0)
 	for _, w := range s.config.Wants {
 		counts[w.Release.Id]++
 		if w.Staged {
@@ -334,6 +335,9 @@ func (s *Server) GetState() []*pbg.State {
 
 		if w.Release.Id == 370858 {
 			testString = fmt.Sprintf("st %v, ac %v, dem %v, super %v", w.Staged, w.Active, w.Demoted, w.Superwant)
+		}
+		if w.GetLevel() == pb.MasterWant_ANYTIME {
+			anytime++
 		}
 	}
 
@@ -349,7 +353,7 @@ func (s *Server) GetState() []*pbg.State {
 		&pbg.State{Key: "spends", Value: int64(len(s.config.Spends))},
 		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
 		&pbg.State{Key: "stagedcount", Value: int64(c)},
-		&pbg.State{Key: "supercount", Value: super},
+		&pbg.State{Key: "anytime", Value: anytime},
 		&pbg.State{Key: "superstring", Text: testString},
 		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
 		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
