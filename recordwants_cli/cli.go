@@ -74,7 +74,7 @@ func main() {
 
 	case "unwant":
 		iv, _ := strconv.Atoi(os.Args[2])
-		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}})
+		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv), Level: pb.MasterWant_NEVER}})
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}

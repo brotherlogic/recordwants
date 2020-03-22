@@ -31,6 +31,7 @@ message MasterWant {
     LIST = 2;
     ALWAYS = 3;
     STAGED_TO_BE_ADDED = 4;
+    NEVER = 5;
   }
 
   Level level = 7;
