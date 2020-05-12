@@ -51,7 +51,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 	}
 
 	switch want.GetLevel() {
-	case pb.MasterWant_UNKNOWN:
+	case pb.MasterWant_UNKNOWN, pb.MasterWant_BOUGHT:
 		if want.GetActive() {
 			err := s.recordGetter.unwant(ctx, want)
 			if err != nil {
@@ -184,6 +184,7 @@ func (s *Server) updateWants(ctx context.Context) error {
 			if err == nil && len(records) > 0 {
 				w.Demoted = true
 				w.Staged = true
+				w.Level = pb.MasterWant_BOUGHT
 			}
 		}
 	}
