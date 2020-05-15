@@ -9,6 +9,8 @@ import (
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/resolver"
@@ -24,6 +26,14 @@ import (
 func init() {
 	resolver.Register(&utils.DiscoveryServerResolverBuilder{})
 }
+
+var (
+	//wants - the print queue
+	wants = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_total_wants",
+		Help: "The size of the print queue",
+	})
+)
 
 const (
 	// KEY - where the wants are stored
@@ -357,6 +367,11 @@ func (s *Server) GetState() []*pbg.State {
 	}
 }
 
+func (s *Server) monitor(ctx context.Context) error {
+	wants.Set(float64(len(s.config.GetWants())))
+	return nil
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	var clear = flag.Bool("clear_suuper", false, "Clears all super wants")
@@ -397,6 +412,7 @@ func main() {
 	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
 	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
 	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
+	server.RegisterRepeatingTask(server.monitor, "monitor", time.Minute)
 
 	server.RegisterLockingTask(server.updateWantState, "update_want_state")
 
