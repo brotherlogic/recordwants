@@ -70,6 +70,7 @@ func (p *prodRecordAdder) getAdds(ctx context.Context) ([]int32, error) {
 	if err != nil {
 		return []int32{}, err
 	}
+	defer conn.Close()
 
 	client := rapb.NewAddRecordServiceClient(conn)
 	resp, err := client.ListQueue(ctx, &rapb.ListQueueRequest{})
@@ -303,6 +304,7 @@ func (s *Server) getBudget(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	defer conn.Close()
 
 	client := rbpb.NewRecordBudgetServiceClient(conn)
 	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{Year: int32(time.Now().Year())})
