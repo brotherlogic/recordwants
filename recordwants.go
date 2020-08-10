@@ -388,7 +388,7 @@ func main() {
 	server.PrepServer()
 	server.Register = server
 
-	err := server.RegisterServerV2("recordwants", false, false)
+	err := server.RegisterServerV2("recordwants", false, true)
 	if err != nil {
 		return
 	}
@@ -409,14 +409,6 @@ func main() {
 		server.save(ctx)
 		log.Fatalf("Saved out cleared wants")
 	}
-
-	server.RegisterRepeatingTask(server.updateWants, "update_wants", time.Hour)
-	server.RegisterRepeatingTask(server.runUpdate, "run_update", time.Hour)
-	server.RegisterRepeatingTask(server.getBudget, "get_budget", time.Hour)
-	server.RegisterRepeatingTask(server.dealWithAddedRecords, "deal_with_added_records", time.Hour)
-	server.RegisterRepeatingTask(server.monitor, "monitor", time.Minute)
-
-	server.RegisterLockingTask(server.updateWantState, "update_want_state")
 
 	server.Serve()
 }
