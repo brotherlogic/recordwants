@@ -7,33 +7,33 @@ import (
 	"strconv"
 
 	"github.com/brotherlogic/goserver/utils"
-	"google.golang.org/grpc"
 
 	pbgd "github.com/brotherlogic/godiscogs"
+	rcpb "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 
 	//Needed to pull in gzip encoding init
 	_ "google.golang.org/grpc/encoding/gzip"
-	"google.golang.org/grpc/resolver"
 )
 
-func init() {
-	resolver.Register(&utils.DiscoveryClientResolverBuilder{})
-}
-
 func main() {
-	conn, err := grpc.Dial("discovery:///recordwants", grpc.WithInsecure())
-	defer conn.Close()
+	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants")
+	defer cancel()
+
+	conn, err := utils.LFDialServer(ctx, "recordwants")
 
 	if err != nil {
 		log.Fatalf("Unable to dial: %v", err)
 	}
+	defer conn.Close()
 
 	client := pb.NewWantServiceClient(conn)
-	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants")
-	defer cancel()
 
 	switch os.Args[1] {
+	case "ping":
+		client := rcpb.NewClientUpdateServiceClient(conn)
+		_, err := client.ClientUpdate(ctx, &rcpb.ClientUpdateRequest{})
+		fmt.Printf("Ping: %v", err)
 	case "spend":
 		res, err := client.GetSpending(ctx, &pb.SpendingRequest{})
 		if err != nil {

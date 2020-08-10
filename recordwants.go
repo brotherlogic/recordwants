@@ -20,6 +20,7 @@ import (
 	rapb "github.com/brotherlogic/recordadder/proto"
 	rbpb "github.com/brotherlogic/recordbudget/proto"
 	pbrc "github.com/brotherlogic/recordcollection/proto"
+	rcpb "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 )
 
