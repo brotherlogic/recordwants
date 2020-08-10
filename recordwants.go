@@ -46,11 +46,11 @@ type alerter interface {
 }
 
 type prodAlerter struct {
-	dial func(server string) (*grpc.ClientConn, error)
+	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 }
 
 func (p *prodAlerter) alert(ctx context.Context, want *pb.MasterWant, c, total int) {
-	conn, err := p.dial("githubcard")
+	conn, err := p.dial(ctx, "githubcard")
 	if err == nil {
 		defer conn.Close()
 		client := pbgh.NewGithubClient(conn)
@@ -63,11 +63,11 @@ type recordAdder interface {
 }
 
 type prodRecordAdder struct {
-	dial func(server string) (*grpc.ClientConn, error)
+	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 }
 
 func (p *prodRecordAdder) getAdds(ctx context.Context) ([]int32, error) {
-	conn, err := p.dial("recordadder")
+	conn, err := p.dial(ctx, "recordadder")
 	if err != nil {
 		return []int32{}, err
 	}
@@ -96,11 +96,11 @@ type recordGetter interface {
 }
 
 type prodGetter struct {
-	dial func(server string) (*grpc.ClientConn, error)
+	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 }
 
 func (p *prodGetter) getRecordsSince(ctx context.Context, since int64) ([]int32, error) {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return []int32{}, err
 	}
@@ -116,7 +116,7 @@ func (p *prodGetter) getRecordsSince(ctx context.Context, since int64) ([]int32,
 	return resp.GetInstanceIds(), err
 }
 func (p *prodGetter) getRecords(ctx context.Context, id int32) ([]int32, error) {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return []int32{}, err
 	}
@@ -133,7 +133,7 @@ func (p *prodGetter) getRecords(ctx context.Context, id int32) ([]int32, error) 
 }
 
 func (p *prodGetter) getRecord(ctx context.Context, instanceID int32) (*pbrc.Record, error) {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func (p *prodGetter) getRecord(ctx context.Context, instanceID int32) (*pbrc.Rec
 }
 
 func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 }
 
 func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 }
 
 func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
-	conn, err := p.dial("recordcollection")
+	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return err
 	}
@@ -222,9 +222,9 @@ func Init() *Server {
 		0,
 		&prodRecordAdder{},
 	}
-	s.recordGetter = &prodGetter{dial: s.DialMaster}
-	s.alerter = &prodAlerter{dial: s.DialMaster}
-	s.recordAdder = &prodRecordAdder{dial: s.NewBaseDial}
+	s.recordGetter = &prodGetter{dial: s.FDialServer}
+	s.alerter = &prodAlerter{dial: s.FDialServer}
+	s.recordAdder = &prodRecordAdder{dial: s.FDialServer}
 	return s
 }
 
