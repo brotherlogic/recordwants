@@ -228,16 +228,16 @@ func Init() *Server {
 	return s
 }
 
-func (s *Server) save(ctx context.Context) error {
-	return s.KSclient.Save(ctx, KEY, s.config)
+func (s *Server) save(ctx context.Context, config *pb.Config) error {
+	return s.KSclient.Save(ctx, KEY, config)
 }
 
-func (s *Server) load(ctx context.Context) error {
+func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	config := &pb.Config{}
 	data, _, err := s.KSclient.Read(ctx, KEY, config)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	//Clean out the wants here
@@ -256,17 +256,13 @@ func (s *Server) load(ctx context.Context) error {
 		}
 	}
 
-	s.config = data.(*pb.Config)
-	s.config.Wants = []*pb.MasterWant{}
+	config = data.(*pb.Config)
+	config.Wants = []*pb.MasterWant{}
 	for _, want := range wmap {
-		s.config.Wants = append(s.config.Wants, want)
+		config.Wants = append(config.Wants, want)
 	}
 
-	if len(config.Wants) > len(s.config.Wants) {
-		log.Fatalf("Fatal error loading wants")
-	}
-
-	return nil
+	return config, err
 }
 
 // DoRegister does RPC registration
@@ -282,17 +278,11 @@ func (s *Server) ReportHealth() bool {
 
 // Shutdown close the server
 func (s *Server) Shutdown(ctx context.Context) error {
-	s.save(ctx)
 	return nil
 }
 
 // Mote promotes/demotes this server
 func (s *Server) Mote(ctx context.Context, master bool) error {
-	if master {
-		err := s.load(ctx)
-		return err
-	}
-
 	return nil
 }
 
@@ -399,7 +389,7 @@ func main() {
 		ctx, cancel := utils.BuildContext("recordwants", "recordwants")
 		defer cancel()
 
-		err := server.load(ctx)
+		config, err := server.load(ctx)
 		if err != nil {
 			log.Fatalf("Unable to read wants: %v", err)
 		}
@@ -408,7 +398,7 @@ func main() {
 			w.Superwant = false
 		}
 
-		server.save(ctx)
+		server.save(ctx, config)
 		log.Fatalf("Saved out cleared wants")
 	}
 
