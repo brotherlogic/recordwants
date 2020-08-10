@@ -170,8 +170,9 @@ func TestUpdateWantState(t *testing.T) {
 func TestUpdateWantStateFail(t *testing.T) {
 	s := InitTestServer()
 	s.recordGetter = &testRecordGetter{fail: true}
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Level: pb.MasterWant_ALWAYS})
-	s.save(context.Background())
+	config := &pb.Config{}
+	config.Wants = append(s.config.Wants, &pb.MasterWant{Level: pb.MasterWant_ALWAYS})
+	s.save(context.Background(), config)
 
 	_, err := s.updateWantState(context.Background())
 
@@ -192,8 +193,9 @@ func TestUpdateWantBasic(t *testing.T) {
 func TestUpdateWantStateFailList(t *testing.T) {
 	s := InitTestServer()
 	s.recordGetter = &testRecordGetter{fail: true}
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Level: pb.MasterWant_LIST})
-	s.save(context.Background())
+	config := &pb.Config{}
+	config.Wants = append(config.Wants, &pb.MasterWant{Level: pb.MasterWant_LIST})
+	s.save(context.Background(), config)
 
 	_, err := s.updateWantState(context.Background())
 

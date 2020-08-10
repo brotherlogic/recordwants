@@ -28,13 +28,13 @@ func (s *Server) updateSpending(ctx context.Context) error {
 }
 
 func (s *Server) updateWantState(ctx context.Context) (time.Time, error) {
-	err := s.load(ctx)
+	config, err := s.load(ctx)
 	if err != nil {
 		return time.Now().Add(time.Minute * 5), err
 	}
 
-	s.Log(fmt.Sprintf("Updating %v wants", len(s.config.Wants)))
-	for _, want := range s.config.Wants {
+	s.Log(fmt.Sprintf("Updating %v wants", len(config.Wants)))
+	for _, want := range config.Wants {
 		err := s.updateWant(ctx, want)
 		if err != nil {
 			return time.Now().Add(time.Minute * 5), err
@@ -157,13 +157,17 @@ func (s *Server) alertNoStaging(ctx context.Context, overBudget bool) {
 }
 
 func (s *Server) updateWants(ctx context.Context) error {
+	config, err := s.load(ctx)
+	if err != nil {
+		return err
+	}
 	s.lastRun = time.Now()
 	wants, err := s.recordGetter.getWants(ctx)
 	s.lastPull = int32(len(wants))
 	if err == nil {
 		for _, w := range wants {
 			found := false
-			for _, mw := range s.config.Wants {
+			for _, mw := range config.Wants {
 				if mw.Release.Id == w.Release.Id {
 					found = true
 					mw.Active = w.GetMetadata().Active
@@ -171,14 +175,14 @@ func (s *Server) updateWants(ctx context.Context) error {
 				}
 			}
 			if !found {
-				s.config.Wants = append(s.config.Wants,
+				config.Wants = append(config.Wants,
 					&pb.MasterWant{Release: w.Release, DateAdded: time.Now().Unix()})
 			}
 		}
 	}
 
 	// Demote any wants we already own
-	for _, w := range s.config.Wants {
+	for _, w := range config.Wants {
 		if w.Level != pb.MasterWant_BOUGHT {
 			records, err := s.recordGetter.getRecords(ctx, w.GetRelease().Id)
 			if err == nil && len(records) > 0 {
@@ -189,8 +193,7 @@ func (s *Server) updateWants(ctx context.Context) error {
 		}
 	}
 
-	s.save(ctx)
-	return nil
+	return s.save(ctx, config)
 }
 
 func (s *Server) dealWithAddedRecords(ctx context.Context) error {
@@ -199,8 +202,13 @@ func (s *Server) dealWithAddedRecords(ctx context.Context) error {
 		return err
 	}
 
+	config, err := s.load(ctx)
+	if err != nil {
+		return err
+	}
+
 	for _, num := range nums {
-		for _, w := range s.config.Wants {
+		for _, w := range config.Wants {
 			if w.GetRelease().Id == num {
 				w.Level = pb.MasterWant_STAGED_TO_BE_ADDED
 				w.Demoted = true
@@ -209,5 +217,5 @@ func (s *Server) dealWithAddedRecords(ctx context.Context) error {
 		}
 	}
 
-	return s.save(ctx)
+	return s.save(ctx, config)
 }
