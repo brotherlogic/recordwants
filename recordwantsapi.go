@@ -6,6 +6,7 @@ import (
 	"golang.org/x/net/context"
 
 	pbgd "github.com/brotherlogic/godiscogs"
+	rcpb "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
 )
 
@@ -58,4 +59,9 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 		}
 	}
 	return nil, fmt.Errorf("Not found: %v", s.config.Wants)
+}
+
+//ClientUpdate on an updated record
+func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest) (*rcpb.ClientUpdateResponse, error) {
+	return &rcpb.ClientUpdateResponse{}, s.updateWants(ctx)
 }
