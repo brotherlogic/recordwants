@@ -36,7 +36,7 @@ func (s *Server) GetWant(ctx context.Context, req *pb.GetWantRequest) (*pb.GetWa
 		}
 	}
 
-	return nil, fmt.Errorf("Could not locate want")
+	return nil, fmt.Errorf("Could not locate want - example want is %v", s.config.Wants[0])
 }
 
 //GetSpending gets the spending over the course of months
