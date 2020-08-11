@@ -160,7 +160,7 @@ func TestUpdateWantState(t *testing.T) {
 	s := InitTestServer()
 	s.config.Wants = append(s.config.Wants, &pb.MasterWant{})
 
-	_, err := s.updateWantState(context.Background())
+	err := s.updateWantState(context.Background())
 
 	if err != nil {
 		t.Errorf("Bad update: %v", err)
@@ -174,7 +174,7 @@ func TestUpdateWantStateFail(t *testing.T) {
 	config.Wants = append(s.config.Wants, &pb.MasterWant{Level: pb.MasterWant_ALWAYS})
 	s.save(context.Background(), config)
 
-	_, err := s.updateWantState(context.Background())
+	err := s.updateWantState(context.Background())
 
 	if err == nil {
 		t.Errorf("Bad update: %v", err)
@@ -197,7 +197,7 @@ func TestUpdateWantStateFailList(t *testing.T) {
 	config.Wants = append(config.Wants, &pb.MasterWant{Level: pb.MasterWant_LIST})
 	s.save(context.Background(), config)
 
-	_, err := s.updateWantState(context.Background())
+	err := s.updateWantState(context.Background())
 
 	if err == nil {
 		t.Errorf("Bad update: %v", err)
@@ -264,7 +264,7 @@ func TestUpdateFailRead(t *testing.T) {
 	s := InitTestServer()
 	s.GoServer.KSclient.Fail = true
 
-	_, err := s.updateWantState(context.Background())
+	err := s.updateWantState(context.Background())
 
 	if err == nil {
 		t.Errorf("Bad load no fail")
