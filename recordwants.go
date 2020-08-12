@@ -291,10 +291,10 @@ func (s *Server) runUpdate(ctx context.Context) error {
 	return nil
 }
 
-func (s *Server) getBudget(ctx context.Context) error {
-	conn, err := s.NewBaseDial("recordbudget")
+func (s *Server) getBudget(ctx context.Context) (int32, error) {
+	conn, err := s.FDialServer(ctx, "recordbudget")
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer conn.Close()
 
@@ -302,12 +302,10 @@ func (s *Server) getBudget(ctx context.Context) error {
 	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{Year: int32(time.Now().Year())})
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	s.Log(fmt.Sprintf("Got %v", budg))
-	s.config.Budget = budg.GetBudget() - budg.GetSpends() - budg.GetPreSpends()
-	return nil
+	return budg.GetBudget() - budg.GetSpends() - budg.GetPreSpends(), nil
 }
 
 // GetState gets the state of the server
