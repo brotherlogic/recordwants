@@ -21,7 +21,6 @@ func InitTestServer() *Server {
 	s.SkipLog = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	s.GoServer.KSclient.Save(context.Background(), KEY, &pb.Config{})
-	s.config.Spends = make(map[int32]*pb.RecordSpend)
 	return s
 }
 
@@ -112,14 +111,12 @@ func TestGetSpendingFail(t *testing.T) {
 
 func TestSimpleUpdate(t *testing.T) {
 	s := InitTestServer()
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
 	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true, Level: pb.MasterWant_LIST})
 }
 
 func TestSimpleUpdateFail(t *testing.T) {
 	s := InitTestServer()
 	s.recordGetter = &testRecordGetter{fail: true}
-	s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}})
 	s.Update(context.Background(), &pb.UpdateRequest{Want: &pbgd.Release{Id: 123}, KeepWant: true})
 }
 
@@ -140,10 +137,6 @@ func TestAddWant(t *testing.T) {
 	_, err = s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 123, Superwant: true})
 	if err != nil {
 		t.Errorf("Error adding want: %v", err)
-	}
-
-	if len(s.config.Wants) != 1 {
-		t.Errorf("Want did not get added")
 	}
 
 	_, err = s.GetWant(context.Background(), &pb.GetWantRequest{ReleaseId: 123})

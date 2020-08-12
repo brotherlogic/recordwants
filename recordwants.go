@@ -194,7 +194,6 @@ func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
 type Server struct {
 	*goserver.GoServer
 	recordGetter recordGetter
-	config       *pb.Config
 	alerter      alerter
 	lastRun      time.Time
 	lastProc     int32
@@ -211,7 +210,6 @@ func Init() *Server {
 	s := &Server{
 		&goserver.GoServer{},
 		&prodGetter{},
-		&pb.Config{},
 		&prodAlerter{},
 		time.Now(),
 		-1,
@@ -286,11 +284,6 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 	return nil
 }
 
-func (s *Server) runUpdate(ctx context.Context) error {
-	s.alertNoStaging(ctx, s.config.Budget <= 0)
-	return nil
-}
-
 func (s *Server) getBudget(ctx context.Context) (int32, error) {
 	conn, err := s.FDialServer(ctx, "recordbudget")
 	if err != nil {
@@ -310,58 +303,8 @@ func (s *Server) getBudget(ctx context.Context) (int32, error) {
 
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
-	c := 0
-	super := int64(0)
-	testString := ""
-	counts := make(map[int32]int)
-	anytime := int64(0)
-	for _, w := range s.config.Wants {
-		counts[w.Release.Id]++
-		if w.Staged {
-			c++
-		}
 
-		if w.Superwant {
-			super++
-		}
-
-		if w.Release.Id == 370858 {
-			testString = fmt.Sprintf("st %v, ac %v, dem %v, super %v", w.Staged, w.Active, w.Demoted, w.Superwant)
-		}
-		if w.GetLevel() == pb.MasterWant_ANYTIME {
-			anytime++
-		}
-	}
-
-	doubleCounts := 0
-	for _, val := range counts {
-		if val > 1 {
-			doubleCounts++
-		}
-	}
-
-	return []*pbg.State{
-		&pbg.State{Key: "last_push", TimeValue: s.config.LastPush},
-		&pbg.State{Key: "spends", Value: int64(len(s.config.Spends))},
-		&pbg.State{Key: "wantcount", Value: int64(len(s.config.Wants))},
-		&pbg.State{Key: "stagedcount", Value: int64(c)},
-		&pbg.State{Key: "anytime", Value: anytime},
-		&pbg.State{Key: "superstring", Text: testString},
-		&pbg.State{Key: "lastwantrun", TimeValue: s.lastRun.Unix()},
-		&pbg.State{Key: "lastproc", Value: int64(s.lastProc)},
-		&pbg.State{Key: "lastpull", Value: int64(s.lastPull)},
-		&pbg.State{Key: "pull", Text: s.pull},
-		&pbg.State{Key: "budget", Value: int64(s.config.Budget)},
-		&pbg.State{Key: "month", Value: int64(s.mmonth)},
-		&pbg.State{Key: "last_want", Text: s.lastUnwant},
-		&pbg.State{Key: "budget_pull_time", Text: fmt.Sprintf("%v", s.budgetPull)},
-		&pbg.State{Key: "double_counts", Value: int64(doubleCounts)},
-	}
-}
-
-func (s *Server) monitor(ctx context.Context) error {
-	wants.Set(float64(len(s.config.GetWants())))
-	return nil
+	return []*pbg.State{}
 }
 
 func main() {
@@ -392,7 +335,7 @@ func main() {
 			log.Fatalf("Unable to read wants: %v", err)
 		}
 
-		for _, w := range server.config.Wants {
+		for _, w := range config.Wants {
 			w.Superwant = false
 		}
 
