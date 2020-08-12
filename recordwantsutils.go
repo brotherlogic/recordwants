@@ -69,6 +69,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 			want.Dirty = true
 		}
 	case pb.MasterWant_ANYTIME:
+		s.Log(fmt.Sprintf("%v and budget %v", want, s.config.GetBudget()))
 		if !want.GetActive() && s.config.GetBudget() > 0 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
