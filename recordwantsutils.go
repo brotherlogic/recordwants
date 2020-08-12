@@ -40,7 +40,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		}
 	}
 
-	return nil
+	return s.save(ctx, config)
 }
 
 func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
