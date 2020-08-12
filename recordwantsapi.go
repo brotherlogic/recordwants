@@ -77,5 +77,5 @@ func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest
 		return nil, err
 	}
 	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)*/
-	return &rcpb.ClientUpdateResponse{}, nil
+	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)
 }

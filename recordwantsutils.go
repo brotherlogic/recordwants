@@ -45,6 +45,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 }
 
 func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
+	s.Log(fmt.Sprintf("Updating %v", want))
 
 	if want.GetDirty() {
 		return nil
