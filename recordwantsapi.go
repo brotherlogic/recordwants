@@ -75,11 +75,11 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 
 //ClientUpdate on an updated record
 func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest) (*rcpb.ClientUpdateResponse, error) {
+	return &rcpb.ClientUpdateResponse{}, nil
 
 	err := s.updateWants(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)
 	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)
 }
