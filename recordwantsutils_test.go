@@ -43,7 +43,7 @@ func TestMainTestOverBudget(t *testing.T) {
 func TestUpdateWants(t *testing.T) {
 	s := InitTestServer()
 	//s.config.Wants = append(s.config.Wants, &pb.MasterWant{Release: &pbgd.Release{Id: 123}, Active: true})
-	s.updateWants(context.Background())
+	s.updateWants(context.Background(), int32(1234))
 
 }
 

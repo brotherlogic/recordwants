@@ -88,7 +88,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 	return nil
 }
 
-func (s *Server) updateWants(ctx context.Context) error {
+func (s *Server) updateWants(ctx context.Context, iid int32) error {
 	config, err := s.load(ctx)
 	if err != nil {
 		return err
@@ -114,14 +114,15 @@ func (s *Server) updateWants(ctx context.Context) error {
 	}
 
 	// Demote any wants we already own
+	record, err := s.recordGetter.getRecord(ctx, iid)
+	if err != nil {
+		return err
+	}
 	for _, w := range config.Wants {
-		if w.Level != pb.MasterWant_BOUGHT {
-			records, err := s.recordGetter.getRecords(ctx, w.GetRelease().Id)
-			if err == nil && len(records) > 0 {
-				w.Demoted = true
-				w.Staged = true
-				w.Level = pb.MasterWant_BOUGHT
-			}
+		if w.Level != pb.MasterWant_BOUGHT && record.GetRelease().GetId() == w.GetRelease().GetId() {
+			w.Demoted = true
+			w.Staged = true
+			w.Level = pb.MasterWant_BOUGHT
 		}
 	}
 
