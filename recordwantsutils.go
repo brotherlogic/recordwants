@@ -102,7 +102,7 @@ func (s *Server) updateWants(ctx context.Context) error {
 			for _, mw := range config.Wants {
 				if mw.Release.Id == w.Release.Id {
 					found = true
-					mw.Active = w.GetMetadata().Active
+					mw.Active = w.GetMetadata().GetActive()
 					mw.Dirty = false
 				}
 			}
