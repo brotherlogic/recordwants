@@ -67,14 +67,25 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 			want.Dirty = true
 		}
 	case pb.MasterWant_LIST:
-		if !want.GetActive() {
+		budget, err := s.getBudget(ctx)
+		s.Log(fmt.Sprintf("%v and budget %v, %v", want, budget, err))
+		if err != nil {
+			return err
+		}
+
+		if !want.GetActive() && budget > -2000 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
 				return err
 			}
 			want.Dirty = true
+		} else if want.GetActive() && budget < -2000 {
+			err := s.recordGetter.unwant(ctx, want)
+			if err != nil {
+				return err
+			}
+			want.Dirty = true
 		}
-
 	case pb.MasterWant_STAGED_TO_BE_ADDED:
 		if want.GetActive() {
 			err := s.recordGetter.unwant(ctx, want)
