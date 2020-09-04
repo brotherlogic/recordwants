@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"golang.org/x/net/context"
 
@@ -75,7 +76,15 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 
 //ClientUpdate on an updated record
 func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest) (*rcpb.ClientUpdateResponse, error) {
+	t := time.Now()
+	defer func() {
+		s.Log(fmt.Sprintf("Client Update in %v", time.Now().Sub(t)))
+	}()
 	err := s.updateWants(ctx, req.GetInstanceId())
+	if err != nil {
+		return nil, err
+	}
+	err = s.dealWithAddedRecords(ctx)
 	if err != nil {
 		return nil, err
 	}
