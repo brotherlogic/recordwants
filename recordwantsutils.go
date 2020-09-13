@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	pb "github.com/brotherlogic/recordwants/proto"
@@ -14,8 +13,13 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		return err
 	}
 
+	budget, err := s.getBudget(ctx)
+	if err != nil {
+		return err
+	}
+
 	for _, want := range config.Wants {
-		err := s.updateWant(ctx, want)
+		err := s.updateWant(ctx, want, budget)
 		if err != nil {
 			return err
 		}
@@ -24,7 +28,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	return s.save(ctx, config)
 }
 
-func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
+func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int32) error {
 
 	if want.GetDirty() {
 		return nil
@@ -48,11 +52,6 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 			want.Dirty = true
 		}
 	case pb.MasterWant_ANYTIME:
-		budget, err := s.getBudget(ctx)
-		s.Log(fmt.Sprintf("%v and budget %v, %v", want, budget, err))
-		if err != nil {
-			return err
-		}
 		if !want.GetActive() && budget > 0 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
@@ -67,11 +66,6 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant) error {
 			want.Dirty = true
 		}
 	case pb.MasterWant_LIST:
-		budget, err := s.getBudget(ctx)
-		s.Log(fmt.Sprintf("%v and budget %v, %v", want, budget, err))
-		if err != nil {
-			return err
-		}
 
 		if !want.GetActive() && budget > -2000 {
 			err := s.recordGetter.want(ctx, want)
