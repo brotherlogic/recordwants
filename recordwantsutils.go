@@ -35,7 +35,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 	}
 
 	switch want.GetLevel() {
-	case pb.MasterWant_UNKNOWN, pb.MasterWant_BOUGHT:
+	case pb.MasterWant_UNKNOWN, pb.MasterWant_BOUGHT, pb.MasterWant_NEVER:
 		if want.GetActive() {
 			err := s.recordGetter.unwant(ctx, want)
 			if err != nil {
