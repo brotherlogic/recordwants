@@ -149,9 +149,9 @@ func TestAddWant(t *testing.T) {
 
 func TestEmptyGet(t *testing.T) {
 	s := InitTestServer()
-	want, err := s.GetWants(context.Background(), &pb.GetWantsRequest{ReleaseId: []int32{123}})
-	if err == nil {
-		t.Errorf("Fail: %v", want)
+	_, err := s.GetWants(context.Background(), &pb.GetWantsRequest{ReleaseId: []int32{123}})
+	if err != nil {
+		t.Errorf("Fail: %v", err)
 	}
 
 }
