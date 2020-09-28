@@ -136,14 +136,19 @@ func TestAddWant(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error adding want: %v", err)
 	}
-	_, err = s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 123, Superwant: true})
+	_, err = s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 12345, Superwant: true})
 	if err != nil {
 		t.Errorf("Error adding want: %v", err)
 	}
 
-	_, err = s.GetWants(context.Background(), &pb.GetWantsRequest{ReleaseId: []int32{123}})
+	// An empty request should get all the wants
+	wants, err := s.GetWants(context.Background(), &pb.GetWantsRequest{})
 	if err != nil {
 		t.Errorf("Fail: %v", err)
+	}
+
+	if len(wants.GetWant()) != 2 {
+		t.Errorf("Did not get all the wants: %v", len(wants.GetWant()))
 	}
 }
 
