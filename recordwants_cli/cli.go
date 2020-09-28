@@ -61,7 +61,7 @@ func main() {
 
 	case "get":
 		iv, _ := strconv.Atoi(os.Args[2])
-		wa, err := client.GetWant(ctx, &pb.GetWantRequest{ReleaseId: int32(iv)})
+		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{ReleaseId: []int32{int32(iv)}})
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
