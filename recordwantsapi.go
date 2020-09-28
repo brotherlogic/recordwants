@@ -33,19 +33,27 @@ func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWa
 
 }
 
-//GetWant gets a want
-func (s *Server) GetWant(ctx context.Context, req *pb.GetWantRequest) (*pb.GetWantResponse, error) {
+//GetWants gets a want
+func (s *Server) GetWants(ctx context.Context, req *pb.GetWantsRequest) (*pb.GetWantsResponse, error) {
 	config, err := s.load(ctx)
 	if err != nil {
 		return nil, err
 	}
+	wants := []*pb.MasterWant{}
 	for _, w := range config.Wants {
-		if w.GetRelease().GetId() == req.GetReleaseId() {
-			return &pb.GetWantResponse{Want: w}, nil
+		found := len(req.GetReleaseId()) == 0
+		for _, wr := range req.GetReleaseId() {
+			if w.GetRelease().GetId() == wr {
+				found = true
+			}
+		}
+
+		if found {
+			wants = append(wants, w)
 		}
 	}
 
-	return nil, fmt.Errorf("Could not locate want - example want is %v", config.Wants[0])
+	return &pb.GetWantsResponse{Want: wants}, nil
 }
 
 //GetSpending gets the spending over the course of months

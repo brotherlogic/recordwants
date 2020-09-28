@@ -203,6 +203,7 @@ type Server struct {
 	lastUnwant   string
 	budgetPull   time.Duration
 	recordAdder  recordAdder
+	testing      bool
 }
 
 // Init builds the server
@@ -219,6 +220,7 @@ func Init() *Server {
 		"",
 		0,
 		&prodRecordAdder{},
+		true,
 	}
 	s.recordGetter = &prodGetter{dial: s.FDialServer}
 	s.alerter = &prodAlerter{dial: s.FDialServer}
@@ -285,6 +287,9 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 }
 
 func (s *Server) getBudget(ctx context.Context) (int32, error) {
+	if s.testing {
+		return 0, nil
+	}
 	conn, err := s.FDialServer(ctx, "recordbudget")
 	if err != nil {
 		return 0, err

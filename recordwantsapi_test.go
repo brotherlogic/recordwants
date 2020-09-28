@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/brotherlogic/keystore/client"
+	keystoreclient "github.com/brotherlogic/keystore/client"
 	"golang.org/x/net/context"
 
 	pbgd "github.com/brotherlogic/godiscogs"
@@ -19,6 +19,8 @@ func InitTestServer() *Server {
 	s.recordAdder = &testRecordAdder{}
 	s.alerter = &testAlerter{}
 	s.SkipLog = true
+	s.SkipIssue = true
+	s.testing = true
 	s.GoServer.KSclient = *keystoreclient.GetTestClient(".test")
 	s.GoServer.KSclient.Save(context.Background(), KEY, &pb.Config{})
 	return s
@@ -139,7 +141,7 @@ func TestAddWant(t *testing.T) {
 		t.Errorf("Error adding want: %v", err)
 	}
 
-	_, err = s.GetWant(context.Background(), &pb.GetWantRequest{ReleaseId: 123})
+	_, err = s.GetWants(context.Background(), &pb.GetWantsRequest{ReleaseId: []int32{123}})
 	if err != nil {
 		t.Errorf("Fail: %v", err)
 	}
@@ -147,9 +149,9 @@ func TestAddWant(t *testing.T) {
 
 func TestEmptyGet(t *testing.T) {
 	s := InitTestServer()
-	want, err := s.GetWant(context.Background(), &pb.GetWantRequest{ReleaseId: 123})
-	if err == nil {
-		t.Errorf("Fail: %v", want)
+	_, err := s.GetWants(context.Background(), &pb.GetWantsRequest{ReleaseId: []int32{123}})
+	if err != nil {
+		t.Errorf("Fail: %v", err)
 	}
 
 }
