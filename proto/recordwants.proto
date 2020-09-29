@@ -41,6 +41,8 @@ message MasterWant {
   int64 date_purchased = 8;
 
   bool dirty = 9;
+  int64 retire_time = 10;
+  Level retire_level = 11;
 }
 
 message Spend {
@@ -59,6 +61,8 @@ message UpdateRequest {
   bool keep_want = 2;
   bool super = 3;
   MasterWant.Level level = 4;
+  int64 retire_time = 5;
+  MasterWant.Level retire_level = 6;
 }
 
 message UpdateResponse {}
@@ -66,6 +70,9 @@ message UpdateResponse {}
 message AddWantRequest {
   int32 release_id = 1;
   bool superwant = 2;
+  MasterWant.Level level = 3;
+  int64 retire_time = 4;
+  MasterWant.Level retire_level = 5;
 }
 
 message AddWantResponse {}

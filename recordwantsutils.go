@@ -19,7 +19,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	}
 
 	for _, want := range config.Wants {
-		err := s.updateWant(ctx, want, budget)
+		err := s.updateWant(ctx, want, budget, time.Now())
 		if err != nil {
 			return err
 		}
@@ -28,10 +28,17 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	return s.save(ctx, config)
 }
 
-func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int32) error {
+func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int32, ti time.Time) error {
 
 	if want.GetDirty() {
 		return nil
+	}
+
+	if want.GetRetireTime() > 0 {
+		if ti.After(time.Unix(want.GetRetireTime(), 0)) {
+			want.Dirty = true
+			want.Level = want.GetRetireLevel()
+		}
 	}
 
 	switch want.GetLevel() {
