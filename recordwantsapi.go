@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	pbgd "github.com/brotherlogic/godiscogs"
 	rcpb "github.com/brotherlogic/recordcollection/proto"
@@ -19,14 +21,16 @@ func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWa
 	}
 	for _, w := range config.Wants {
 		if req.ReleaseId == w.GetRelease().GetId() {
-			return &pb.AddWantResponse{}, nil
+			return &pb.AddWantResponse{}, status.Errorf(codes.FailedPrecondition, "Want already exists")
 		}
 	}
 
 	config.Wants = append(config.Wants,
 		&pb.MasterWant{
-			Superwant: req.Superwant,
-			Release:   &pbgd.Release{Id: req.ReleaseId},
+			Release:     &pbgd.Release{Id: req.ReleaseId},
+			Level:       req.Level,
+			RetireTime:  req.RetireTime,
+			RetireLevel: req.RetireLevel,
 		})
 
 	return &pb.AddWantResponse{}, s.save(ctx, config)
