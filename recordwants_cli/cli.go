@@ -66,6 +66,20 @@ func main() {
 		for i, w := range wa.GetWant() {
 			fmt.Printf("%v. %v\n", i, w)
 		}
+	case "clearall":
+		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+		for i, w := range wa.GetWant() {
+			if w.GetLevel() == pb.MasterWant_ANYTIME {
+				_, err := client.Update(ctx, &pb.UpdateRequest{Want: w.GetRelease(), Level: pb.MasterWant_NEVER})
+				if err != nil {
+					log.Fatalf("ERROR ON UPDATE: %v", err)
+				}
+				log.Printf("%v. %v", i, w)
+			}
+		}
 	case "get":
 		iv, _ := strconv.Atoi(os.Args[2])
 		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{ReleaseId: []int32{int32(iv)}})
@@ -79,7 +93,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
-
 	case "unwant":
 		iv, _ := strconv.Atoi(os.Args[2])
 		w, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_NEVER})
