@@ -35,6 +35,8 @@ message MasterWant {
     STAGED_TO_BE_ADDED = 4;
     NEVER = 5;
     BOUGHT = 6;
+    WANT_OG = 7;
+    WANT_DIGITAL = 8;
   }
 
   Level level = 7;
