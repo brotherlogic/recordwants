@@ -77,7 +77,7 @@ func main() {
 				if err != nil {
 					log.Fatalf("ERROR ON UPDATE: %v", err)
 				}
-				log.Printf("%v. %v", i, w)
+				fmt.Printf("%v. %v\n", i, w)
 			}
 		}
 	case "get":
