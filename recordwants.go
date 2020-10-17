@@ -288,10 +288,12 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 
 func (s *Server) getBudget(ctx context.Context) (int32, error) {
 	if s.testing {
+		s.Log(fmt.Sprintf("TESTING"))
 		return 0, nil
 	}
 	conn, err := s.FDialServer(ctx, "recordbudget")
 	if err != nil {
+		s.Log(fmt.Sprintf("%v", err))
 		return 0, err
 	}
 	defer conn.Close()
@@ -300,9 +302,11 @@ func (s *Server) getBudget(ctx context.Context) (int32, error) {
 	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{Year: int32(time.Now().Year())})
 
 	if err != nil {
+		s.Log(fmt.Sprintf("%v", err))
 		return 0, err
 	}
 
+	s.Log(fmt.Sprintf("BUDGET %v %v %v", budg.GetBudget(), budg.GetSpends(), budg.GetPreSpends()))
 	return budg.GetBudget() - budg.GetSpends() - budg.GetPreSpends(), nil
 }
 

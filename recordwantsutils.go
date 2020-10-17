@@ -67,7 +67,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 				return err
 			}
 			want.Dirty = true
-		} else if want.GetActive() && budget < 0 {
+		} else if want.GetActive() && budget <= 0 {
 			err := s.recordGetter.unwant(ctx, want)
 			if err != nil {
 				return err
