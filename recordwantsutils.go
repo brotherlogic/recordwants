@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	pb "github.com/brotherlogic/recordwants/proto"
@@ -18,6 +19,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		return err
 	}
 
+	s.Log(fmt.Sprintf("Updating Wants with %v in the bank", budget))
 	for _, want := range config.Wants {
 		err := s.updateWant(ctx, want, budget, time.Now())
 		if err != nil {
