@@ -220,7 +220,7 @@ func Init() *Server {
 		"",
 		0,
 		&prodRecordAdder{},
-		true,
+		false,
 	}
 	s.recordGetter = &prodGetter{dial: s.FDialServer}
 	s.alerter = &prodAlerter{dial: s.FDialServer}
