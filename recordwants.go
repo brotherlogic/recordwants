@@ -97,6 +97,7 @@ type recordGetter interface {
 
 type prodGetter struct {
 	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
+	Log  func(message string)
 }
 
 func (p *prodGetter) getRecordsSince(ctx context.Context, since int64) ([]int32, error) {
@@ -175,6 +176,7 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease()}, Remove: true})
+	p.Log(fmt.Sprintf("UNWANT %v -> %v", want.GetRelease().GetId(), err))
 	return err
 }
 
@@ -187,6 +189,7 @@ func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease(), EnableWant: true}})
+	p.Log(fmt.Sprintf("WANT %v -> %v", want.GetRelease().GetId(), err))
 	return err
 }
 
@@ -222,7 +225,7 @@ func Init() *Server {
 		&prodRecordAdder{},
 		false,
 	}
-	s.recordGetter = &prodGetter{dial: s.FDialServer}
+	s.recordGetter = &prodGetter{dial: s.FDialServer, Log: s.Log}
 	s.alerter = &prodAlerter{dial: s.FDialServer}
 	s.recordAdder = &prodRecordAdder{dial: s.FDialServer}
 	return s
