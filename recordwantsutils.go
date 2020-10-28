@@ -25,6 +25,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
+
 	}
 
 	return s.save(ctx, config)
@@ -76,13 +77,13 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 		}
 	case pb.MasterWant_LIST:
 
-		if !want.GetActive() && budget > -10000 {
+		if !want.GetActive() && budget > -50000 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
 				return err
 			}
 			want.Dirty = true
-		} else if want.GetActive() && budget <= -10000 {
+		} else if want.GetActive() && budget <= -50000 {
 			err := s.recordGetter.unwant(ctx, want)
 			if err != nil {
 				return err
