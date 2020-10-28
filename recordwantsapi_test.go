@@ -132,7 +132,7 @@ func TestUpdateEmpty(t *testing.T) {
 
 func TestAddWant(t *testing.T) {
 	s := InitTestServer()
-	_, err := s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 123, Superwant: true})
+	s.AddWant(context.Background(), &pb.AddWantRequest{ReleaseId: 123, Superwant: true})
 	if err != nil {
 		t.Errorf("Error adding want: %v", err)
 	}
