@@ -37,6 +37,7 @@ message MasterWant {
     BOUGHT = 6;
     WANT_OG = 7;
     WANT_DIGITAL = 8;
+    ANYTIME_LIST = 9;
   }
 
   Level level = 7;
