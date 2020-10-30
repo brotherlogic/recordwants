@@ -61,7 +61,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			}
 			want.Dirty = true
 		}
-	case pb.MasterWant_ANYTIME:
+	case pb.MasterWant_ANYTIME, pb.MasterWant_ANYTIME_LIST:
 		if !want.GetActive() && budget > 0 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
