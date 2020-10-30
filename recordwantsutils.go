@@ -61,7 +61,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			}
 			want.Dirty = true
 		}
-	case pb.MasterWant_ANYTIME, pb.MasterWant_ANYTIME_LIST:
+	case pb.MasterWant_ANYTIME:
 		if !want.GetActive() && budget > 0 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
@@ -75,7 +75,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			}
 			want.Dirty = true
 		}
-	case pb.MasterWant_LIST:
+	case pb.MasterWant_LIST, pb.MasterWant_ANYTIME_LIST:
 		baseline := int32(-20000)
 		if want.GetLevel() == pb.MasterWant_ANYTIME_LIST {
 			baseline = -50000
