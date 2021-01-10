@@ -87,6 +87,7 @@ func (p *prodRecordAdder) getAdds(ctx context.Context) ([]int32, error) {
 }
 
 type recordGetter interface {
+	getAllRecords(ctx context.Context, id int32) ([]int32, error)
 	getRecordsSince(ctx context.Context, since int64) ([]int32, error)
 	getRecords(ctx context.Context, id int32) ([]int32, error)
 	getRecord(ctx context.Context, id int32) (*pbrc.Record, error)
@@ -131,6 +132,22 @@ func (p *prodGetter) getRecords(ctx context.Context, id int32) ([]int32, error) 
 	}
 
 	return resp.GetInstanceIds(), err
+}
+
+func (p *prodGetter) getAllRecords(ctx context.Context, id int32) ([]int32, error) {
+	conn, err := p.dial(ctx, "recordcollection")
+	if err != nil {
+		return []int32{}, err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	resp, err := client.GetRecord(ctx, &pbrc.GetRecordRequest{ReleaseId: id})
+	if err != nil {
+		return []int32{}, err
+	}
+
+	return resp.GetRecord().GetRelease().GetOtherVersions(), nil
 }
 
 func (p *prodGetter) getRecord(ctx context.Context, instanceID int32) (*pbrc.Record, error) {
