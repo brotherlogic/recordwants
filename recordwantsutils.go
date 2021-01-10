@@ -61,8 +61,22 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			}
 			want.Dirty = true
 		}
-	case pb.MasterWant_ANYTIME:
+	case pb.MasterWant_WANT_OG:
 		if !want.GetActive() && budget > 0 {
+			err := s.recordGetter.want(ctx, want)
+			if err != nil {
+				return err
+			}
+			want.Dirty = true
+		} else if want.GetActive() && budget <= 0 {
+			err := s.recordGetter.unwant(ctx, want)
+			if err != nil {
+				return err
+			}
+			want.Dirty = true
+		}
+	case pb.MasterWant_ANYTIME:
+		if !want.GetActive() && budget > 100 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
 				return err
@@ -101,6 +115,8 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			}
 			want.Dirty = true
 		}
+	default:
+		s.RaiseIssue("Cannot handle want", fmt.Sprintf("Have no means of processing %v level want", want.GetLevel()))
 	}
 
 	return nil
