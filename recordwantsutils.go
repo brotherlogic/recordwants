@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	pbgd "github.com/brotherlogic/godiscogs"
 	pb "github.com/brotherlogic/recordwants/proto"
 	"golang.org/x/net/context"
 )
@@ -60,6 +61,30 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 				return err
 			}
 			want.Dirty = true
+		}
+	case pb.MasterWant_WANT_DIGITAL:
+		if !want.GetActive() && budget > 50 {
+			recs, err := s.recordGetter.getAllRecords(ctx, want.GetRelease().GetId())
+			if err != nil {
+				return err
+			}
+			for _, r := range recs {
+				err := s.recordGetter.want(ctx, &pb.MasterWant{Release: &pbgd.Release{Id: r}})
+				if err != nil {
+					return err
+				}
+			}
+		} else if want.GetActive() && budget <= 50 {
+			recs, err := s.recordGetter.getAllRecords(ctx, want.GetRelease().GetId())
+			if err != nil {
+				return err
+			}
+			for _, r := range recs {
+				err := s.recordGetter.unwant(ctx, &pb.MasterWant{Release: &pbgd.Release{Id: r}})
+				if err != nil {
+					return err
+				}
+			}
 		}
 	case pb.MasterWant_WANT_OG:
 		if !want.GetActive() && budget > 0 {
