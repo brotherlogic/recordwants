@@ -117,7 +117,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 	case pb.MasterWant_LIST, pb.MasterWant_ANYTIME_LIST:
 		baseline := int32(-20000)
 		if want.GetLevel() == pb.MasterWant_ANYTIME_LIST {
-			baseline = -60000
+			baseline = -50000
 		}
 		if !want.GetActive() && budget > baseline {
 			err := s.recordGetter.want(ctx, want)
