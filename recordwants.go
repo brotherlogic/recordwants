@@ -32,7 +32,11 @@ var (
 	//wants - the print queue
 	wants = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "recordwants_total_wants",
-		Help: "The size of the print queue",
+		Help: "The size of the wants queue",
+	})
+	covered = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_total_done",
+		Help: "The size of the wants queue",
 	})
 )
 
@@ -281,6 +285,15 @@ func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	for _, want := range wmap {
 		config.Wants = append(config.Wants, want)
 	}
+
+	wants.Set(float64(len(config.Wants)))
+	done := 0
+	for _, want := range config.Wants {
+		if want.Level == pb.MasterWant_UNKNOWN {
+			done++
+		}
+	}
+	covered.Set(float64(done))
 
 	return config, err
 }
