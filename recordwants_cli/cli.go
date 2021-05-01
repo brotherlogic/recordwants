@@ -67,6 +67,16 @@ func main() {
 			fmt.Printf("%v. %v\n", i, w)
 		}
 	case "next":
+		count := 0
+
+		if len(os.Args) > 2 {
+			v, err := strconv.Atoi(os.Args[2])
+			if err != nil {
+				log.Fatalf("Conversion: %v", err)
+			}
+			count = v
+		}
+
 		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
@@ -74,7 +84,10 @@ func main() {
 		for i, w := range wa.GetWant() {
 			if w.GetLevel() == pb.MasterWant_UNKNOWN {
 				fmt.Printf("%v. %v = %v\n", i, w.Release.GetId(), w)
-				return
+				if count == 0 {
+					return
+				}
+				count--
 			}
 		}
 	case "clearall":
