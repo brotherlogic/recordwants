@@ -47,7 +47,7 @@ func main() {
 		fmt.Printf("TOTAL = %v\n", total)
 	case "want":
 		iv, _ := strconv.Atoi(os.Args[2])
-		w, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_ANYTIME})
+		w, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_WANT_DIGITAL})
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
@@ -65,6 +65,17 @@ func main() {
 		}
 		for i, w := range wa.GetWant() {
 			fmt.Printf("%v. %v\n", i, w)
+		}
+	case "next":
+		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+		for i, w := range wa.GetWant() {
+			if w.GetLevel() == pb.MasterWant_UNKNOWN {
+				fmt.Printf("%v. %v = %v\n", i, w.Release.GetId(), w)
+				return
+			}
 		}
 	case "clearall":
 		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
@@ -99,7 +110,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error on GET: %v", err)
 		}
-	case "unwant":
+	case "never":
 		iv, _ := strconv.Atoi(os.Args[2])
 		w, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_NEVER})
 		if err != nil {
