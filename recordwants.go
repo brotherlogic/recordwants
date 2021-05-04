@@ -337,7 +337,7 @@ func (s *Server) getBudget(ctx context.Context) (int32, error) {
 		return 0, err
 	}
 
-	return budg.GetBudget() - budg.GetSpends() - budg.GetPreSpends(), nil
+	return budg.GetBudget() + budg.GetSolds() - budg.GetSpends() - budg.GetPreSpends(), nil
 }
 
 // GetState gets the state of the server
