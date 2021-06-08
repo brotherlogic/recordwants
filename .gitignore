@@ -2,4 +2,6 @@ recordwants
 *~
 recordwants_cli/recordwants_cli
 .test
-list
+list/list
+list/*.txt
+list/*.list
