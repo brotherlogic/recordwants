@@ -38,6 +38,10 @@ var (
 		Name: "recordwants_total_done",
 		Help: "The size of the wants queue",
 	})
+	lists = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_num_lists",
+		Help: "The size of the wants queue",
+	})
 )
 
 const (
@@ -288,12 +292,17 @@ func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 
 	wants.Set(float64(len(config.Wants)))
 	done := 0
+	count := 0
 	for _, want := range config.Wants {
 		if want.Level == pb.MasterWant_UNKNOWN {
 			done++
 		}
+		if want.Level == pb.MasterWant_LIST {
+			count++
+		}
 	}
 	covered.Set(float64(done))
+	lists.Set(float64(count))
 
 	return config, err
 }
