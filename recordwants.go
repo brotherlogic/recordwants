@@ -200,7 +200,7 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease()}, Remove: true})
+	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{ReleaseId: want.GetRelease().GetId()}, Remove: true})
 	p.Log(fmt.Sprintf("UNWANT %v -> %v", want.GetRelease().GetId(), err))
 	return err
 }
@@ -213,7 +213,7 @@ func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
 	defer conn.Close()
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
-	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{Release: want.GetRelease(), EnableWant: true}})
+	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{ReleaseId: want.GetRelease().GetId()}})
 	p.Log(fmt.Sprintf("WANT %v -> %v", want.GetRelease().GetId(), err))
 	return err
 }

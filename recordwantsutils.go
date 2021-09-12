@@ -159,15 +159,15 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 		for _, w := range wants {
 			found := false
 			for _, mw := range config.Wants {
-				if mw.Release.Id == w.Release.Id {
+				if mw.Release.Id == w.GetReleaseId() {
 					found = true
-					mw.Active = w.GetMetadata().GetActive()
+					mw.Active = true
 					mw.Dirty = false
 				}
 			}
 			if !found {
 				config.Wants = append(config.Wants,
-					&pb.MasterWant{Release: w.Release, DateAdded: time.Now().Unix()})
+					&pb.MasterWant{Release: &pbgd.Release{Id: w.GetReleaseId()}, DateAdded: time.Now().Unix()})
 			}
 		}
 	}
