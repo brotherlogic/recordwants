@@ -115,11 +115,15 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 	for _, want := range wants {
 		for _, in := range config.GetWants() {
 			if in.GetRelease().GetId() == want.GetReleaseId() {
-				processed[want.GetReleaseId()] = true
-				if in.GetLevel() != pb.MasterWant_ANYTIME_LIST {
-					err := s.recordGetter.unwant(ctx, in)
-					if err != nil {
-						return nil, err
+				if in.GetRelease().GetId() == 0 {
+					in.Level = pb.MasterWant_NEVER
+				} else {
+					processed[want.GetReleaseId()] = true
+					if in.GetLevel() != pb.MasterWant_ANYTIME_LIST {
+						err := s.recordGetter.unwant(ctx, in)
+						if err != nil {
+							return nil, err
+						}
 					}
 				}
 			}
@@ -133,7 +137,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 
 	// Process anything we've missed
 	for _, want := range config.GetWants() {
-		if !processed[want.GetRelease().GetId()] {
+		if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
 				return nil, err
