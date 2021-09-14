@@ -10,9 +10,10 @@ require (
 	github.com/brotherlogic/recordadder v0.0.0-20210831153546-a4ad0e76ce35
 	github.com/brotherlogic/recordbudget v0.0.0-20210816223920-9a17595386a0
 	github.com/brotherlogic/recordcollection v0.0.0-20210912192222-eaf71f687a19
-	github.com/golang/protobuf v1.5.2
 	github.com/prometheus/client_golang v1.11.0
-	golang.org/x/net v0.0.0-20210908191846-a5e095526f91
+	golang.org/x/net v0.0.0-20210913180222-943fd674d43e
+	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0 // indirect
+	google.golang.org/genproto v0.0.0-20210909211513-a8c4777a87af // indirect
 	google.golang.org/grpc v1.40.0
 	google.golang.org/protobuf v1.27.1
 )
