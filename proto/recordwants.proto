@@ -88,9 +88,13 @@ message GetWantsResponse {
   repeated MasterWant want = 1;
 }
 
+message SyncRequest{}
+message SyncResponse{}
+
 service WantService {
   rpc GetSpending(SpendingRequest) returns (SpendingResponse) {};
   rpc Update(UpdateRequest) returns (UpdateResponse) {};
   rpc AddWant(AddWantRequest) returns (AddWantResponse) {};
   rpc GetWants(GetWantsRequest) returns (GetWantsResponse) {};
+  rpc Sync(SyncRequest) returns (SyncResponse) {};
 }

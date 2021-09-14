@@ -97,9 +97,43 @@ func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest
 	if err != nil {
 		return nil, err
 	}
-	err = s.dealWithAddedRecords(ctx)
+	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)
+}
+
+func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncResponse, error) {
+	config, err := s.load(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)
+	// Pull in existing wants
+	wants, err := s.recordGetter.getWants(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	processed := make(map[int32]bool)
+	for _, want := range wants {
+		for _, in := range config.GetWants() {
+			if in.GetRelease().GetId() == want.GetReleaseId() {
+				processed[want.GetReleaseId()] = true
+				if in.GetLevel() != pb.MasterWant_ANYTIME_LIST {
+					s.Log(fmt.Sprintf("WOULD UNWANT %v", in.GetRelease().GetId()))
+				}
+			}
+		}
+
+		if !processed[want.GetReleaseId()] {
+			// This is a new release
+			config.Wants = append(config.Wants, &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Release: &pbgd.Release{Id: want.GetReleaseId()}})
+		}
+	}
+
+	// Process anything we've missed
+	for _, want := range config.GetWants() {
+		if !processed[want.GetRelease().GetId()] {
+			s.Log(fmt.Sprintf("WOULD WANT %v", want.GetRelease().GetId()))
+		}
+	}
+
+	return &pb.SyncResponse{}, s.save(ctx, config)
 }
