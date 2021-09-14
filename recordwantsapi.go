@@ -79,6 +79,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 			if req.GetLevel() != pb.MasterWant_UNKNOWN {
 				want.Level = req.GetLevel()
 			}
+			want.RetireTime = req.GetRetireTime()
 			s.Log(fmt.Sprintf("Updated want: %v", want))
 			return &pb.UpdateResponse{}, s.save(ctx, config)
 		}
