@@ -66,6 +66,9 @@ func main() {
 		for i, w := range wa.GetWant() {
 			fmt.Printf("%v. %v\n", i, w)
 		}
+	case "sync":
+		wa, err := client.Sync(ctx, &pb.SyncRequest{})
+		fmt.Printf("%v and %v\n", wa, err)
 	case "next":
 		count := 0
 
