@@ -138,9 +138,11 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 	// Process anything we've missed
 	for _, want := range config.GetWants() {
 		if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
-			err := s.recordGetter.want(ctx, want)
-			if err != nil {
-				return nil, err
+			if want.GetLevel() == pb.MasterWant_ANYTIME_LIST {
+				err := s.recordGetter.want(ctx, want)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 	}
