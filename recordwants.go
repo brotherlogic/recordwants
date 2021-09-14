@@ -201,7 +201,7 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{ReleaseId: want.GetRelease().GetId()}, Remove: true})
-	p.Log(fmt.Sprintf("UNWANT %v -> %v", want.GetRelease().GetId(), err))
+	p.Log(fmt.Sprintf("UNWANT PROC %v -> %v", want.GetRelease().GetId(), err))
 	return err
 }
 
