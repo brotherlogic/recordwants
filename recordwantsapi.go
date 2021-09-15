@@ -97,7 +97,7 @@ func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest
 	if err != nil {
 		return nil, err
 	}
-	return &rcpb.ClientUpdateResponse{}, s.updateWantState(ctx)
+	return &rcpb.ClientUpdateResponse{}, nil
 }
 
 func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncResponse, error) {
