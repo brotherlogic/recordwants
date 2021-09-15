@@ -131,6 +131,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 
 		if !processed[want.GetReleaseId()] {
 			// This is a new release
+			s.Log(fmt.Sprintf("ADDING %v", want.GetReleaseId()))
 			config.Wants = append(config.Wants, &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Release: &pbgd.Release{Id: want.GetReleaseId()}})
 		}
 	}
