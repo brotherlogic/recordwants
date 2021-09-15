@@ -7,6 +7,8 @@ import (
 	pbgd "github.com/brotherlogic/godiscogs"
 	pb "github.com/brotherlogic/recordwants/proto"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *Server) updateWantState(ctx context.Context) error {
@@ -49,7 +51,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 	case pb.MasterWant_UNKNOWN, pb.MasterWant_BOUGHT, pb.MasterWant_NEVER:
 		if want.GetActive() {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil {
+			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
 			want.Dirty = true
@@ -81,7 +83,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			}
 			for _, r := range recs {
 				err := s.recordGetter.unwant(ctx, &pb.MasterWant{Release: &pbgd.Release{Id: r}})
-				if err != nil {
+				if err != nil && status.Convert(err).Code() != codes.NotFound {
 					return err
 				}
 			}
@@ -95,7 +97,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			want.Dirty = true
 		} else if want.GetActive() && budget <= 0 {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil {
+			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
 			want.Dirty = true
@@ -109,7 +111,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			want.Dirty = true
 		} else if want.GetActive() && budget <= 0 {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil {
+			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
 			want.Dirty = true
@@ -127,7 +129,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			want.Dirty = true
 		} else if want.GetActive() && budget <= baseline {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil {
+			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
 			want.Dirty = true
@@ -135,7 +137,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 	case pb.MasterWant_STAGED_TO_BE_ADDED:
 		if want.GetActive() {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil {
+			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
 			want.Dirty = true
