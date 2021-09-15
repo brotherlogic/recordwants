@@ -154,25 +154,6 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 	if err != nil {
 		return err
 	}
-	s.lastRun = time.Now()
-	wants, err := s.recordGetter.getWants(ctx)
-	s.lastPull = int32(len(wants))
-	if err == nil {
-		for _, w := range wants {
-			found := false
-			for _, mw := range config.Wants {
-				if mw.Release.Id == w.GetReleaseId() {
-					found = true
-					mw.Active = true
-					mw.Dirty = false
-				}
-			}
-			if !found {
-				config.Wants = append(config.Wants,
-					&pb.MasterWant{Release: &pbgd.Release{Id: w.GetReleaseId()}, DateAdded: time.Now().Unix()})
-			}
-		}
-	}
 
 	// Demote any wants we already own
 	record, err := s.recordGetter.getRecord(ctx, iid)
