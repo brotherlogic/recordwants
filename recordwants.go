@@ -214,7 +214,7 @@ func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
 
 	client := pbrc.NewRecordCollectionServiceClient(conn)
 	_, err = client.UpdateWant(ctx, &pbrc.UpdateWantRequest{Update: &pbrc.Want{ReleaseId: want.GetRelease().GetId()}})
-	p.Log(fmt.Sprintf("WANT %v -> %v", want.GetRelease().GetId(), err))
+	p.Log(fmt.Sprintf("WANT %v (%v) -> %v", want.GetRelease().GetId(), want.GetLevel(), err))
 	return err
 }
 
