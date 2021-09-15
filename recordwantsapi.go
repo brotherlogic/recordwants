@@ -121,7 +121,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 					processed[want.GetReleaseId()] = true
 					if in.GetLevel() != pb.MasterWant_ANYTIME_LIST {
 						err := s.recordGetter.unwant(ctx, in)
-						if err != nil {
+						if err != nil && status.Convert(err).Code() != codes.NotFound {
 							return nil, err
 						}
 					}
