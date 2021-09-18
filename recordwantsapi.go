@@ -7,10 +7,13 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 
 	pbgd "github.com/brotherlogic/godiscogs"
+	qpb "github.com/brotherlogic/queue/proto"
 	rcpb "github.com/brotherlogic/recordcollection/proto"
 	pb "github.com/brotherlogic/recordwants/proto"
+	google_protobuf "github.com/golang/protobuf/ptypes/any"
 )
 
 //AddWant adds a want into the system
@@ -153,5 +156,24 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 		}
 	}
 
-	return &pb.SyncResponse{}, s.save(ctx, config)
+	err = s.save(ctx, config)
+	if err != nil {
+		return nil, err
+	}
+
+	conn2, err2 := s.FDialServer(ctx, "queue")
+	if err2 != nil {
+		return nil, err2
+	}
+	defer conn2.Close()
+	qclient := qpb.NewQueueServiceClient(conn2)
+	syncreq := &pb.SyncRequest{}
+	data, _ := proto.Marshal(syncreq)
+	_, err3 := qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
+		QueueName: "record_adder",
+		RunTime:   time.Now().Add(time.Hour).Unix(),
+		Payload:   &google_protobuf.Any{Value: data},
+		Key:       "syncer",
+	})
+	return &pb.SyncResponse{}, err3
 }
