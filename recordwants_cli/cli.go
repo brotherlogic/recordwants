@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/brotherlogic/goserver/utils"
 
@@ -65,6 +67,26 @@ func main() {
 		}
 		for i, w := range wa.GetWant() {
 			fmt.Printf("%v. %v\n", i, w)
+		}
+	case "random":
+		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+
+		rand.Seed(time.Now().UnixNano())
+		rand.Shuffle(len(wa.GetWant()), func(i, j int) { wa.Want[i], wa.Want[j] = wa.Want[j], wa.Want[i] })
+
+		count := 0
+		for i, want := range wa.GetWant() {
+			if want.GetLevel() == pb.MasterWant_WANT_OG || want.GetLevel() == pb.MasterWant_WANT_DIGITAL {
+				fmt.Printf("%v. %v\n", i, want)
+				count++
+			}
+
+			if count > 5 {
+				return
+			}
 		}
 	case "sync":
 		wa, err := client.Sync(ctx, &pb.SyncRequest{})

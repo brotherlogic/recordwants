@@ -158,6 +158,9 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 	// Demote any wants we already own
 	record, err := s.recordGetter.getRecord(ctx, iid)
 	if err != nil {
+		if status.Convert(err).Code() == codes.OutOfRange {
+			return nil
+		}
 		return err
 	}
 	for _, w := range config.Wants {
