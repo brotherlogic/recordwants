@@ -34,7 +34,8 @@ func main() {
 	switch os.Args[1] {
 	case "ping":
 		client := rcpb.NewClientUpdateServiceClient(conn)
-		_, err := client.ClientUpdate(ctx, &rcpb.ClientUpdateRequest{})
+		id, _ := strconv.Atoi(os.Args[2])
+		_, err := client.ClientUpdate(ctx, &rcpb.ClientUpdateRequest{InstanceId: int32(id)})
 		fmt.Printf("Ping: %v", err)
 	case "spend":
 		res, err := client.GetSpending(ctx, &pb.SpendingRequest{})
