@@ -69,6 +69,33 @@ func main() {
 		for i, w := range wa.GetWant() {
 			fmt.Printf("%v. %v\n", i, w)
 		}
+	case "pingall":
+		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+
+		conn2, err2 := utils.LFDialServer(ctx, "recordcollection")
+		if err2 != nil {
+			log.Fatalf("Pah: %v", err2)
+		}
+		defer conn2.Close()
+		rcclient := rcpb.NewRecordCollectionServiceClient(conn2)
+		rclient := rcpb.NewClientUpdateServiceClient(conn)
+
+		for i, w := range wa.GetWant() {
+			if w.GetLevel() == pb.MasterWant_ANYTIME_LIST || w.GetLevel() == pb.MasterWant_LIST {
+				fmt.Printf("%v. %v\n", i, w)
+				recs, err := rcclient.QueryRecords(ctx, &rcpb.QueryRecordsRequest{Query: &rcpb.QueryRecordsRequest_ReleaseId{int32(w.Release.Id)}})
+				if err != nil {
+					log.Fatalf("Bad get: %v", err)
+				}
+				for _, r := range recs.GetInstanceIds() {
+					_, err := rclient.ClientUpdate(ctx, &rcpb.ClientUpdateRequest{InstanceId: r})
+					fmt.Printf("%v\n", err)
+				}
+			}
+		}
 	case "random":
 		wa, err := client.GetWants(ctx, &pb.GetWantsRequest{})
 		if err != nil {

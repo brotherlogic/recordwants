@@ -130,7 +130,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 					if err != nil {
 						return nil, err
 					}
-					if in.GetLevel() != pb.MasterWant_ANYTIME_LIST || budget < 0 || !in.Active {
+					if in.GetLevel() != pb.MasterWant_ANYTIME_LIST && budget < 0 {
 						err := s.recordGetter.unwant(ctx, in)
 						if err != nil && status.Convert(err).Code() != codes.NotFound {
 							return nil, err
@@ -155,7 +155,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 				return nil, err
 			}
 			s.Log(fmt.Sprintf("WE ARE HERE: (%v) %v and %v (%v)", want.GetRelease().GetId(), want.GetLevel(), budget, want.GetBudget()))
-			if want.GetLevel() == pb.MasterWant_ANYTIME_LIST || (budget > 0 && want.Active) {
+			if want.GetLevel() == pb.MasterWant_ANYTIME_LIST || budget > 0 {
 				err := s.recordGetter.want(ctx, want)
 				if err != nil {
 					return nil, err
