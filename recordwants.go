@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"time"
 
 	"github.com/brotherlogic/goserver"
@@ -358,9 +359,12 @@ func (s *Server) getBudget(ctx context.Context, budget string) (int32, error) {
 		return 0, err
 	}
 
-	s.bCache[budget] = &budgetCache{timestamp: time.Now(), amount: budg.GetChosenBudget().GetRemaining()}
-
-	return budg.GetChosenBudget().GetRemaining(), nil
+	if budg.GetChosenBudget().GetType() == rbpb.BudgetType_INFINITE {
+		s.bCache[budget] = &budgetCache{timestamp: time.Now(), amount: math.MaxInt32}
+	} else {
+		s.bCache[budget] = &budgetCache{timestamp: time.Now(), amount: budg.GetChosenBudget().GetRemaining()}
+	}
+	return s.bCache[budget].amount, nil
 }
 
 // GetState gets the state of the server
