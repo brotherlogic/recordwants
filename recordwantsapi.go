@@ -152,6 +152,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 			if err != nil {
 				return nil, err
 			}
+			s.Log(fmt.Sprintf("WE ARE HERE: %v and %v", want.GetLevel(), budget))
 			if want.GetLevel() == pb.MasterWant_ANYTIME_LIST && budget > 0 {
 				err := s.recordGetter.want(ctx, want)
 				if err != nil {
