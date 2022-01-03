@@ -232,6 +232,12 @@ type Server struct {
 	budgetPull   time.Duration
 	recordAdder  recordAdder
 	testing      bool
+	bCache       map[string]*budgetCache
+}
+
+type budgetCache struct {
+	timestamp time.Time
+	amount    int32
 }
 
 // Init builds the server
@@ -249,6 +255,7 @@ func Init() *Server {
 		0,
 		&prodRecordAdder{},
 		false,
+		make(map[string]*budgetCache),
 	}
 	s.recordGetter = &prodGetter{dial: s.FDialServer, Log: s.Log}
 	s.alerter = &prodAlerter{dial: s.FDialServer}
@@ -333,6 +340,11 @@ func (s *Server) getBudget(ctx context.Context, budget string) (int32, error) {
 		s.RaiseIssue("Testing in Prod", "You Fool")
 		return 0, nil
 	}
+
+	if val, ok := s.bCache[budget]; ok && time.Since(val.timestamp) < time.Hour {
+		return val.amount, nil
+	}
+
 	conn, err := s.FDialServer(ctx, "recordbudget")
 	if err != nil {
 		return 0, err
@@ -345,6 +357,8 @@ func (s *Server) getBudget(ctx context.Context, budget string) (int32, error) {
 	if err != nil {
 		return 0, err
 	}
+
+	s.bCache[budget] = &budgetCache{timestamp: time.Now(), amount: budg.GetChosenBudget().Remaining}
 
 	return budg.GetChosenBudget().GetRemaining(), nil
 }
