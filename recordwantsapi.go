@@ -34,6 +34,7 @@ func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWa
 			Level:       req.Level,
 			RetireTime:  req.RetireTime,
 			RetireLevel: req.RetireLevel,
+			Budget:      req.GetBudget(),
 		})
 
 	return &pb.AddWantResponse{}, s.save(ctx, config)
@@ -114,11 +115,6 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 		return nil, err
 	}
 
-	budget, err := s.getBudget(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	processed := make(map[int32]bool)
 	for _, want := range wants {
 		for _, in := range config.GetWants() {
@@ -127,7 +123,11 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 					in.Level = pb.MasterWant_NEVER
 				} else {
 					processed[want.GetReleaseId()] = true
-					if in.GetLevel() != pb.MasterWant_ANYTIME_LIST || budget < -20000 {
+					budget, err := s.getBudget(ctx, in.GetBudget())
+					if err != nil {
+						return nil, err
+					}
+					if in.GetLevel() != pb.MasterWant_ANYTIME_LIST || budget < 0 {
 						err := s.recordGetter.unwant(ctx, in)
 						if err != nil && status.Convert(err).Code() != codes.NotFound {
 							return nil, err
@@ -147,7 +147,11 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 	// Process anything we've missed
 	for _, want := range config.GetWants() {
 		if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
-			if want.GetLevel() == pb.MasterWant_ANYTIME_LIST && budget > -20000 {
+			budget, err := s.getBudget(ctx, want.GetBudget())
+			if err != nil {
+				return nil, err
+			}
+			if want.GetLevel() == pb.MasterWant_ANYTIME_LIST && budget > 0 {
 				err := s.recordGetter.want(ctx, want)
 				if err != nil {
 					return nil, err

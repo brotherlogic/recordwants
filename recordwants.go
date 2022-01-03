@@ -328,7 +328,7 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 	return nil
 }
 
-func (s *Server) getBudget(ctx context.Context) (int32, error) {
+func (s *Server) getBudget(ctx context.Context, budget string) (int32, error) {
 	if s.testing {
 		s.RaiseIssue("Testing in Prod", "You Fool")
 		return 0, nil
@@ -340,13 +340,13 @@ func (s *Server) getBudget(ctx context.Context) (int32, error) {
 	defer conn.Close()
 
 	client := rbpb.NewRecordBudgetServiceClient(conn)
-	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{Year: int32(time.Now().Year())})
+	budg, err := client.GetBudget(ctx, &rbpb.GetBudgetRequest{Budget: budget})
 
 	if err != nil {
 		return 0, err
 	}
 
-	return budg.GetBudget() + budg.GetSolds() - budg.GetSpends() - budg.GetPreSpends(), nil
+	return budg.GetChosenBudget().GetRemaining(), nil
 }
 
 // GetState gets the state of the server

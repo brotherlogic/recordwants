@@ -46,6 +46,7 @@ message MasterWant {
   bool dirty = 9;
   int64 retire_time = 10;
   Level retire_level = 11;
+  string budget = 12;
 }
 
 message Spend {
@@ -76,6 +77,7 @@ message AddWantRequest {
   MasterWant.Level level = 3;
   int64 retire_time = 4;
   MasterWant.Level retire_level = 5;
+  string budget = 6;
 }
 
 message AddWantResponse {}

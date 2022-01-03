@@ -17,14 +17,12 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		return err
 	}
 
-	budget, err := s.getBudget(ctx)
-	if err != nil {
-		return err
-	}
-
-	s.Log(fmt.Sprintf("Updating Wants with %v in the bank", budget))
 	for _, want := range config.Wants {
-		err := s.updateWant(ctx, want, budget, time.Now())
+		budget, err := s.getBudget(ctx, want.GetBudget())
+		if err != nil {
+			return err
+		}
+		err = s.updateWant(ctx, want, budget, time.Now())
 		if err != nil {
 			return err
 		}
