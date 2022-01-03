@@ -358,7 +358,7 @@ func (s *Server) getBudget(ctx context.Context, budget string) (int32, error) {
 		return 0, err
 	}
 
-	s.bCache[budget] = &budgetCache{timestamp: time.Now(), amount: budg.GetChosenBudget().Remaining}
+	s.bCache[budget] = &budgetCache{timestamp: time.Now(), amount: budg.GetChosenBudget().GetRemaining()}
 
 	return budg.GetChosenBudget().GetRemaining(), nil
 }
