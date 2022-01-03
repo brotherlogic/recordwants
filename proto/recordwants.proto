@@ -67,6 +67,7 @@ message UpdateRequest {
   MasterWant.Level level = 4;
   int64 retire_time = 5;
   MasterWant.Level retire_level = 6;
+  string budget = 7;
 }
 
 message UpdateResponse {}

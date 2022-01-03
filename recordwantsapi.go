@@ -84,6 +84,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 				want.Level = req.GetLevel()
 			}
 			want.RetireTime = req.GetRetireTime()
+			want.Budget = req.GetBudget()
 			s.Log(fmt.Sprintf("Updated want: %v", want))
 			return &pb.UpdateResponse{}, s.save(ctx, config)
 		}
