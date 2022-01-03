@@ -175,10 +175,11 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 	syncreq := &pb.SyncRequest{}
 	data, _ := proto.Marshal(syncreq)
 	_, err3 := qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
-		QueueName: "wants_sync",
-		RunTime:   time.Now().Add(time.Hour).Unix(),
-		Payload:   &google_protobuf.Any{Value: data},
-		Key:       "syncer",
+		QueueName:     "wants_sync",
+		RunTime:       time.Now().Add(time.Hour).Unix(),
+		Payload:       &google_protobuf.Any{Value: data},
+		Key:           "syncer",
+		RequireUnique: true,
 	})
 	return &pb.SyncResponse{}, err3
 }
