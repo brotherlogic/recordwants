@@ -127,13 +127,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 					in.Level = pb.MasterWant_NEVER
 				} else {
 					processed[want.GetReleaseId()] = true
-
-					if !in.GetActive() {
-						err := s.recordGetter.unwant(ctx, in)
-						if err != nil && status.Convert(err).Code() != codes.NotFound {
-							return nil, err
-						}
-					}
+					in.Active = true
 				}
 			}
 		}
@@ -141,23 +135,15 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 		if !processed[want.GetReleaseId()] {
 			// This is a new release
 			s.Log(fmt.Sprintf("ADDING %v", want.GetReleaseId()))
-			config.Wants = append(config.Wants, &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Release: &pbgd.Release{Id: want.GetReleaseId()}})
+			config.Wants = append(config.Wants, &pb.MasterWant{Active: true, Level: pb.MasterWant_UNKNOWN, Release: &pbgd.Release{Id: want.GetReleaseId()}})
 		}
 	}
 
 	// Process anything we've missed
 	for _, want := range config.GetWants() {
 		if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
-			budget, err := s.getBudget(ctx, want.GetBudget())
-			if err != nil {
-				return nil, err
-			}
-			s.Log(fmt.Sprintf("WE ARE HERE: (%v) %v and %v (%v)", want.GetRelease().GetId(), want.GetLevel(), budget, want.GetBudget()))
 			if want.GetActive() {
-				err := s.recordGetter.want(ctx, want)
-				if err != nil {
-					return nil, err
-				}
+				want.Active = false
 			}
 		}
 	}
