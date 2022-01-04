@@ -52,7 +52,6 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
-			want.Dirty = true
 		}
 	case pb.MasterWant_ALWAYS:
 		if !want.GetActive() {
@@ -60,7 +59,6 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int
 			if err != nil {
 				return err
 			}
-			want.Dirty = true
 		}
 	case pb.MasterWant_WANT_DIGITAL:
 		if !want.GetActive() && budget > 50 {
