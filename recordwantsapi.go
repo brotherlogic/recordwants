@@ -78,7 +78,8 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 	for _, want := range config.Wants {
 		if want.GetRelease().Id == req.GetWant().Id {
 			if want.GetLevel() == pb.MasterWant_BOUGHT {
-				return nil, fmt.Errorf("Can't update a bought want: %v", req)
+				s.Log(fmt.Sprintf("Can't update a bought want: %v", req))
+				return &pb.UpdateResponse{}, nil
 			}
 			want.Staged = true
 			want.Demoted = !req.KeepWant
