@@ -159,6 +159,14 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 		}
 		return err
 	}
+
+	// Let's validate the budget for this want (we only started doing strict budgeting in 2022)
+	if time.Unix(record.GetMetadata().GetDateAdded(), 0).Year() > 2021 {
+		if record.GetMetadata().GetPurchaseBudget() == "" {
+			return fmt.Errorf("this purchase has no budget")
+		}
+	}
+
 	for _, w := range config.Wants {
 		if w.Level != pb.MasterWant_BOUGHT && record.GetRelease().GetId() == w.GetRelease().GetId() {
 			w.Demoted = true

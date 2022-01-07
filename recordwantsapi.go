@@ -101,6 +101,7 @@ func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest
 	defer func() {
 		s.Log(fmt.Sprintf("Client Update in %v", time.Now().Sub(t)))
 	}()
+
 	err := s.updateWants(ctx, req.GetInstanceId())
 	if err != nil {
 		return nil, err
