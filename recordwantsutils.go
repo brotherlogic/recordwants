@@ -165,12 +165,17 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 		// Find the budget
 		for _, want := range config.GetWants() {
 			if want.Release.Id == record.GetRelease().GetId() {
-				return fmt.Errorf("Found budget: %v", want)
+				if want.GetBudget() != "" {
+					err := s.recordGetter.updateBudget(ctx, iid, want.GetBudget())
+					if err != nil {
+						return err
+					}
+				}
 			}
 		}
 
 		if record.GetMetadata().GetPurchaseBudget() == "" {
-			return fmt.Errorf("this purchase has no budget")
+			return fmt.Errorf("this purchase has no budget that we can find")
 		}
 	}
 

@@ -8,6 +8,7 @@ import (
 	"math"
 	"time"
 
+	pbgd "github.com/brotherlogic/godiscogs"
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
 	"github.com/prometheus/client_golang/prometheus"
@@ -103,11 +104,30 @@ type recordGetter interface {
 	getWants(ctx context.Context) ([]*pbrc.Want, error)
 	unwant(ctx context.Context, want *pb.MasterWant) error
 	want(ctx context.Context, want *pb.MasterWant) error
+	updateBudget(ctx context.Context, iid int32, budget string) error
 }
 
 type prodGetter struct {
 	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
 	Log  func(message string)
+}
+
+func (p *prodGetter) updateBudget(ctx context.Context, iid int32, budget string) error {
+	conn, err := p.dial(ctx, "recordcollection")
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	client := pbrc.NewRecordCollectionServiceClient(conn)
+	_, err = client.UpdateRecord(ctx, &pbrc.UpdateRecordRequest{
+		Reason: "Setting budget",
+		Update: &pbrc.Record{
+			Release:  &pbgd.Release{InstanceId: iid},
+			Metadata: &pbrc.ReleaseMetadata{PurchaseBudget: budget},
+		},
+	})
+	return err
 }
 
 func (p *prodGetter) getRecordsSince(ctx context.Context, since int64) ([]int32, error) {
