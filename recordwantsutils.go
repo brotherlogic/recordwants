@@ -161,7 +161,7 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 	}
 
 	// Let's validate the budget for this want (we only started doing strict budgeting in 2022)
-	if time.Unix(record.GetMetadata().GetDateAdded(), 0).Year() > 2021 {
+	if time.Unix(record.GetMetadata().GetDateAdded(), 0).Year() > 2021 && record.GetMetadata().GetPurchaseBudget() == "" {
 		// Find the budget
 		for _, want := range config.GetWants() {
 			if want.Release.Id == record.GetRelease().GetId() {
