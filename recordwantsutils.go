@@ -175,7 +175,7 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 		}
 
 		if record.GetMetadata().GetPurchaseBudget() == "" {
-			return fmt.Errorf("this purchase has no budget that we can find")
+			return fmt.Errorf("this purchase (%v) has no budget that we can find", record.GetRelease().GetInstanceId())
 		}
 	}
 
