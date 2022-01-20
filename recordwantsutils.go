@@ -33,7 +33,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 }
 
 func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int32, ti time.Time) error {
-
+	s.CtxLog(ctx, fmt.Sprintf("Updating %v with %v", want.GetRelease().GetId(), budget))
 	if want.GetDirty() {
 		return nil
 	}
