@@ -6,9 +6,18 @@ import (
 
 	pbgd "github.com/brotherlogic/godiscogs"
 	pb "github.com/brotherlogic/recordwants/proto"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+)
+
+var (
+	processed = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_processed",
+		Help: "The size of the wants queue",
+	})
 )
 
 func (s *Server) updateWantState(ctx context.Context) error {
@@ -17,7 +26,8 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		return err
 	}
 
-	for _, want := range config.Wants {
+	for i, want := range config.Wants {
+		processed.Set(float64(i))
 		budget, err := s.getBudget(ctx, want.GetBudget())
 		if err != nil {
 			return err
