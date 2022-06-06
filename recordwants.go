@@ -108,8 +108,9 @@ type recordGetter interface {
 }
 
 type prodGetter struct {
-	dial func(ctx context.Context, server string) (*grpc.ClientConn, error)
-	Log  func(message string)
+	dial     func(ctx context.Context, server string) (*grpc.ClientConn, error)
+	Log      func(message string)
+	lastWant time.Time
 }
 
 func (p *prodGetter) updateBudget(ctx context.Context, iid int32, budget string) error {
@@ -214,6 +215,8 @@ func (p *prodGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 }
 
 func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
+	time.Sleep(time.Second)
+
 	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return err
@@ -230,6 +233,8 @@ func (p *prodGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
 }
 
 func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
+	time.Sleep(time.Second)
+
 	conn, err := p.dial(ctx, "recordcollection")
 	if err != nil {
 		return err
