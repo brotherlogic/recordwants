@@ -78,7 +78,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 	for _, want := range config.Wants {
 		if want.GetRelease().Id == req.GetWant().Id {
 			if want.GetLevel() == pb.MasterWant_BOUGHT {
-				s.Log(fmt.Sprintf("Can't update a bought want: %v", req))
+				s.CtxLog(ctx, fmt.Sprintf("Can't update a bought want: %v", req))
 				return &pb.UpdateResponse{}, nil
 			}
 			want.Staged = true
@@ -99,7 +99,7 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest) (*rcpb.ClientUpdateResponse, error) {
 	t := time.Now()
 	defer func() {
-		s.Log(fmt.Sprintf("Client Update in %v", time.Now().Sub(t)))
+		s.CtxLog(ctx, fmt.Sprintf("Client Update in %v", time.Now().Sub(t)))
 	}()
 
 	err := s.updateWants(ctx, req.GetInstanceId())
@@ -135,7 +135,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 
 		if !processed[want.GetReleaseId()] {
 			// This is a new release
-			s.Log(fmt.Sprintf("ADDING %v", want.GetReleaseId()))
+			s.CtxLog(ctx, fmt.Sprintf("ADDING %v", want.GetReleaseId()))
 			config.Wants = append(config.Wants, &pb.MasterWant{Active: true, Level: pb.MasterWant_UNKNOWN, Release: &pbgd.Release{Id: want.GetReleaseId()}})
 		}
 	}
