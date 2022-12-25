@@ -1269,8 +1269,9 @@ github.com/brotherlogic/lock v0.0.0-20221225035925-d74ed6ee07de/go.mod h1:uIWxze
 github.com/brotherlogic/lock v0.0.0-20221225042207-74c46cc25b55/go.mod h1:Lzv/K0uTcdB9b+ZxdEqmMSw7eSAtiA/RuzrreScg28k=
 github.com/brotherlogic/lock v0.0.0-20221225043041-8169812b7a20/go.mod h1:nwU/wiBJG0etmCq8dR2+XEKHQk/HeTyPasao5WXS+ng=
 github.com/brotherlogic/lock v0.0.0-20221225051533-33399f35d434/go.mod h1:0CGXE/1dzDBMYfSJrsFofOIEE2YkjVePWPPrRId/7as=
-github.com/brotherlogic/lock v0.0.0-20221225052100-7d5e8a40bdca h1:wh55Hf1W1UiCHvXHH1TZOcA0x70PvU7yzj86Uy3Ixi8=
 github.com/brotherlogic/lock v0.0.0-20221225052100-7d5e8a40bdca/go.mod h1:WSuVCbQomH6TvB0lImDjNWfI/vQXwV1uwrGWnVFumiI=
+github.com/brotherlogic/lock v0.0.0-20221225053643-e6fbf2d9b812 h1:D1XH+H0aUotstGNzINqZxNXBE+QAWIaO+4VMjxSrKD4=
+github.com/brotherlogic/lock v0.0.0-20221225053643-e6fbf2d9b812/go.mod h1:huX9yNrPGmGd+DE6Rw8UectiGpMz8cZ23lulbL9CyDg=
 github.com/brotherlogic/logging v0.0.0-20200903150238-67a07e215efe/go.mod h1:cHEM7v1fl8VwwyN4qcrh8hQHR+XNT+xHI4+yOr4l8Wg=
 github.com/brotherlogic/logging v0.0.0-20210606012857-db059830d1dc/go.mod h1:FOXFywySb2dOOhsEFIwxniCxGJltgA395Dhzp2lFXYI=
 github.com/brotherlogic/logging v0.0.0-20210609015032-e6d0ef792137/go.mod h1:FOXFywySb2dOOhsEFIwxniCxGJltgA395Dhzp2lFXYI=
@@ -1510,8 +1511,9 @@ github.com/brotherlogic/recordadder v0.0.0-20221225042725-303f3fd099b1/go.mod h1
 github.com/brotherlogic/recordadder v0.0.0-20221225043654-fa9282008ec9/go.mod h1:YtaPd/wtrOOnoNGRyJbuFX2SELLDVwyUbilrDIhy3Fw=
 github.com/brotherlogic/recordadder v0.0.0-20221225050022-601cd0fda44b/go.mod h1:ko53UOlyZgmM13Ie9tmvok49DfKSUOrFkWLkZg9vjYE=
 github.com/brotherlogic/recordadder v0.0.0-20221225050451-8fab790117da/go.mod h1:c9Q9MKS+7UE/nNd6TMRbuHVidrt3D9CHCbgwbfL7IXY=
-github.com/brotherlogic/recordadder v0.0.0-20221225052701-dbd70eea251d h1:lifkOw7mW/a0pJTu7Srg6bIvmjBsqwqXxj5RIYqBPSk=
 github.com/brotherlogic/recordadder v0.0.0-20221225052701-dbd70eea251d/go.mod h1:9k+qRrxQ8o68igbcV3APsPgbPDnRjdG8mBVKCW/BeRQ=
+github.com/brotherlogic/recordadder v0.0.0-20221225053942-fd4abefb61c4 h1:mI06i5jSgw55SmDY8hCtnxYNleUE18pENrn4jY2+1k8=
+github.com/brotherlogic/recordadder v0.0.0-20221225053942-fd4abefb61c4/go.mod h1:Hxui6LU3EfsD+WOlXahcgTxy0B0//FVHZAPJlyXBzK8=
 github.com/brotherlogic/recordbudget v0.0.0-20210528144821-87c91f81103d/go.mod h1:T3EfUC25aMNu3rL8DHVmUbmxnJ+w0sniDEVAd+RMvRQ=
 github.com/brotherlogic/recordbudget v0.0.0-20210615135603-6d3ee21839a2/go.mod h1:gOhg7mBcsN4jcbVqvre6zn9HNYAlR9bPDfNkaOEqQXI=
 github.com/brotherlogic/recordbudget v0.0.0-20210816223920-9a17595386a0/go.mod h1:YpB3wSs3C0UkWZfM1PLWF7MtsNuZD0+UA9tATNw3pwE=
