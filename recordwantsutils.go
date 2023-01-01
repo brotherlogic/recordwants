@@ -26,13 +26,8 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		return err
 	}
 
-	for i, want := range config.Wants {
-		processed.Set(float64(i))
-		budget, err := s.getBudget(ctx, want.GetBudget())
-		if err != nil {
-			return err
-		}
-		err = s.updateWant(ctx, want, budget, time.Now())
+	for _, want := range config.Wants {
+		err = s.updateWant(ctx, want, time.Now())
 		if err != nil {
 			return err
 		}
@@ -42,8 +37,8 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	return s.save(ctx, config)
 }
 
-func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int32, ti time.Time) error {
-	s.CtxLog(ctx, fmt.Sprintf("Updating %v with %v", want.GetRelease().GetId(), budget))
+func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) error {
+	s.CtxLog(ctx, fmt.Sprintf("Updating %v", want.GetRelease().GetId()))
 	if want.GetDirty() {
 		return nil
 	}
