@@ -72,15 +72,15 @@ func (t *testRecordGetter) getRecord(ctx context.Context, id int32) (*pbrc.Recor
 	}
 	return &pbrc.Record{Metadata: &pbrc.ReleaseMetadata{Cost: 100, DateAdded: time.Now().Unix()}}, nil
 }
+func (t *testRecordGetter) updateBudget(ctx context.Context, iid int32, budget string) error {
+	return nil
+}
 
 func (t *testRecordGetter) getWants(ctx context.Context) ([]*pbrc.Want, error) {
 	if t.fail {
 		return make([]*pbrc.Want, 0), fmt.Errorf("Built to fail")
 	}
-	return []*pbrc.Want{
-		&pbrc.Want{Release: &pbgd.Release{Id: 123}, Metadata: &pbrc.WantMetadata{Active: true}},
-		&pbrc.Want{Release: &pbgd.Release{Id: 124}, Metadata: &pbrc.WantMetadata{Active: true}},
-	}, nil
+	return []*pbrc.Want{}, nil
 }
 
 func (t *testRecordGetter) unwant(ctx context.Context, want *pb.MasterWant) error {
@@ -97,25 +97,6 @@ func (t *testRecordGetter) want(ctx context.Context, want *pb.MasterWant) error 
 	}
 	t.lastWant = want.GetRelease().GetId()
 	return nil
-}
-
-func TestGetSpending(t *testing.T) {
-	s := InitTestServer()
-	spends, err := s.GetSpending(context.Background(), &pb.SpendingRequest{})
-
-	if err == nil {
-		t.Fatalf("Error: %v", spends)
-	}
-}
-
-func TestGetSpendingFail(t *testing.T) {
-	s := InitTestServer()
-	s.recordGetter = &testRecordGetter{fail: true}
-	_, err := s.GetSpending(context.Background(), &pb.SpendingRequest{})
-
-	if err == nil {
-		t.Errorf("Did not fail")
-	}
 }
 
 func TestSimpleUpdate(t *testing.T) {

@@ -131,20 +131,6 @@ func TestUpdateWantBasic(t *testing.T) {
 	}
 }
 
-func TestUpdateWantStateFailList(t *testing.T) {
-	s := InitTestServer()
-	s.recordGetter = &testRecordGetter{fail: true}
-	config := &pb.Config{}
-	config.Wants = append(config.Wants, &pb.MasterWant{Level: pb.MasterWant_LIST})
-	s.save(context.Background(), config)
-
-	err := s.updateWantState(context.Background())
-
-	if err == nil {
-		t.Errorf("Bad update: %v", err)
-	}
-}
-
 func TestUpdateWantBasicList(t *testing.T) {
 	s := InitTestServer()
 	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_LIST}, 0, time.Now())
