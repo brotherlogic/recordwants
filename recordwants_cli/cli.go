@@ -37,17 +37,6 @@ func main() {
 		id, _ := strconv.Atoi(os.Args[2])
 		_, err := client.ClientUpdate(ctx, &rcpb.ClientUpdateRequest{InstanceId: int32(id)})
 		fmt.Printf("Ping: %v", err)
-	case "spend":
-		res, err := client.GetSpending(ctx, &pb.SpendingRequest{})
-		if err != nil {
-			log.Fatalf("Error on GET: %v", err)
-		}
-		total := int32(0)
-		for _, v := range res.Spends {
-			fmt.Printf("%v = %v\n", v.Month, v.Spend)
-			total += v.Spend
-		}
-		fmt.Printf("TOTAL = %v\n", total)
 	case "want":
 		iv, _ := strconv.Atoi(os.Args[2])
 		w, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_WANT_DIGITAL})
