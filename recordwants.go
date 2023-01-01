@@ -250,7 +250,7 @@ func (p *prodGetter) want(ctx context.Context, want *pb.MasterWant) error {
 	return err
 }
 
-//Server main server type
+// Server main server type
 type Server struct {
 	*goserver.GoServer
 	recordGetter recordGetter
