@@ -47,6 +47,14 @@ message MasterWant {
   int64 retire_time = 10;
   Level retire_level = 11;
   string budget = 12;
+
+  enum WantState {
+    STATE_UNKNOWN = 0;
+    WANTED = 1;
+    UNWANTED = 2;
+  }
+  WantState current_state = 13;
+  WantState desired_state = 14;
 }
 
 message Spend {
@@ -68,6 +76,7 @@ message UpdateRequest {
   int64 retire_time = 5;
   MasterWant.Level retire_level = 6;
   string budget = 7;
+  MasterWant.WantState new_state = 8;
 }
 
 message UpdateResponse {}
@@ -95,7 +104,6 @@ message SyncRequest{}
 message SyncResponse{}
 
 service WantService {
-  rpc GetSpending(SpendingRequest) returns (SpendingResponse) {};
   rpc Update(UpdateRequest) returns (UpdateResponse) {};
   rpc AddWant(AddWantRequest) returns (AddWantResponse) {};
   rpc GetWants(GetWantsRequest) returns (GetWantsResponse) {};

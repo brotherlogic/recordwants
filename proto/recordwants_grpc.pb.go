@@ -17,7 +17,6 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WantServiceClient interface {
-	GetSpending(ctx context.Context, in *SpendingRequest, opts ...grpc.CallOption) (*SpendingResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	AddWant(ctx context.Context, in *AddWantRequest, opts ...grpc.CallOption) (*AddWantResponse, error)
 	GetWants(ctx context.Context, in *GetWantsRequest, opts ...grpc.CallOption) (*GetWantsResponse, error)
@@ -30,15 +29,6 @@ type wantServiceClient struct {
 
 func NewWantServiceClient(cc grpc.ClientConnInterface) WantServiceClient {
 	return &wantServiceClient{cc}
-}
-
-func (c *wantServiceClient) GetSpending(ctx context.Context, in *SpendingRequest, opts ...grpc.CallOption) (*SpendingResponse, error) {
-	out := new(SpendingResponse)
-	err := c.cc.Invoke(ctx, "/recordwants.WantService/GetSpending", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *wantServiceClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error) {
@@ -81,7 +71,6 @@ func (c *wantServiceClient) Sync(ctx context.Context, in *SyncRequest, opts ...g
 // All implementations should embed UnimplementedWantServiceServer
 // for forward compatibility
 type WantServiceServer interface {
-	GetSpending(context.Context, *SpendingRequest) (*SpendingResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	AddWant(context.Context, *AddWantRequest) (*AddWantResponse, error)
 	GetWants(context.Context, *GetWantsRequest) (*GetWantsResponse, error)
@@ -92,9 +81,6 @@ type WantServiceServer interface {
 type UnimplementedWantServiceServer struct {
 }
 
-func (UnimplementedWantServiceServer) GetSpending(context.Context, *SpendingRequest) (*SpendingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSpending not implemented")
-}
 func (UnimplementedWantServiceServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
@@ -117,24 +103,6 @@ type UnsafeWantServiceServer interface {
 
 func RegisterWantServiceServer(s grpc.ServiceRegistrar, srv WantServiceServer) {
 	s.RegisterService(&_WantService_serviceDesc, srv)
-}
-
-func _WantService_GetSpending_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SpendingRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(WantServiceServer).GetSpending(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/recordwants.WantService/GetSpending",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WantServiceServer).GetSpending(ctx, req.(*SpendingRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _WantService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -213,10 +181,6 @@ var _WantService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "recordwants.WantService",
 	HandlerType: (*WantServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetSpending",
-			Handler:    _WantService_GetSpending_Handler,
-		},
 		{
 			MethodName: "Update",
 			Handler:    _WantService_Update_Handler,

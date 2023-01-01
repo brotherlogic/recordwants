@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	pbgd "github.com/brotherlogic/godiscogs"
 	pb "github.com/brotherlogic/recordwants/proto"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -26,13 +25,8 @@ func (s *Server) updateWantState(ctx context.Context) error {
 		return err
 	}
 
-	for i, want := range config.Wants {
-		processed.Set(float64(i))
-		budget, err := s.getBudget(ctx, want.GetBudget())
-		if err != nil {
-			return err
-		}
-		err = s.updateWant(ctx, want, budget, time.Now())
+	for _, want := range config.Wants {
+		err = s.updateWant(ctx, want, time.Now())
 		if err != nil {
 			return err
 		}
@@ -42,114 +36,32 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	return s.save(ctx, config)
 }
 
-func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, budget int32, ti time.Time) error {
-	s.CtxLog(ctx, fmt.Sprintf("Updating %v with %v", want.GetRelease().GetId(), budget))
+func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) error {
+	s.CtxLog(ctx, fmt.Sprintf("Updating %v", want.GetRelease().GetId()))
 	if want.GetDirty() {
 		return nil
 	}
 
 	if want.GetRetireTime() > 0 {
 		if ti.After(time.Unix(want.GetRetireTime(), 0)) {
-			want.Dirty = true
-			want.Level = want.GetRetireLevel()
+			want.DesiredState = pb.MasterWant_UNWANTED
 		}
 	}
 
-	switch want.GetLevel() {
-	case pb.MasterWant_UNKNOWN, pb.MasterWant_BOUGHT, pb.MasterWant_NEVER:
-		if want.GetActive() {
-			err := s.recordGetter.unwant(ctx, want)
-			if err != nil && status.Convert(err).Code() != codes.NotFound {
-				return err
-			}
-		}
-	case pb.MasterWant_ALWAYS:
-		if !want.GetActive() {
+	if want.GetDesiredState() != want.GetCurrentState() {
+		if want.GetDesiredState() == pb.MasterWant_WANTED {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
 				return err
 			}
-		}
-	case pb.MasterWant_WANT_DIGITAL:
-		if !want.GetActive() && budget > 50 {
-			recs, err := s.recordGetter.getAllRecords(ctx, want.GetRelease().GetId())
-			if err != nil {
-				return err
-			}
-			for _, r := range recs {
-				err := s.recordGetter.want(ctx, &pb.MasterWant{Release: &pbgd.Release{Id: r}})
-				if err != nil {
-					return err
-				}
-			}
-		} else if want.GetActive() && budget <= 50 {
-			recs, err := s.recordGetter.getAllRecords(ctx, want.GetRelease().GetId())
-			if err != nil {
-				return err
-			}
-			for _, r := range recs {
-				err := s.recordGetter.unwant(ctx, &pb.MasterWant{Release: &pbgd.Release{Id: r}})
-				if err != nil && status.Convert(err).Code() != codes.NotFound {
-					return err
-				}
-			}
-		}
-	case pb.MasterWant_WANT_OG:
-		if !want.GetActive() && budget > 0 {
-			err := s.recordGetter.want(ctx, want)
-			if err != nil {
-				return err
-			}
-			want.Dirty = true
-		} else if want.GetActive() && budget <= 0 {
+			want.CurrentState = want.GetDesiredState()
+		} else {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil && status.Convert(err).Code() != codes.NotFound {
-				return err
-			}
-			want.Dirty = true
-		}
-	case pb.MasterWant_ANYTIME:
-		if !want.GetActive() && budget >= 0 {
-			err := s.recordGetter.want(ctx, want)
 			if err != nil {
 				return err
 			}
-			want.Dirty = true
-		} else if want.GetActive() && budget <= 0 {
-			err := s.recordGetter.unwant(ctx, want)
-			if err != nil && status.Convert(err).Code() != codes.NotFound {
-				return err
-			}
-			want.Dirty = true
+			want.CurrentState = want.GetDesiredState()
 		}
-	case pb.MasterWant_LIST, pb.MasterWant_ANYTIME_LIST:
-		baseline := int32(0)
-		if want.GetLevel() == pb.MasterWant_ANYTIME_LIST {
-			baseline = 0
-		}
-		if !want.GetActive() && budget > baseline {
-			err := s.recordGetter.want(ctx, want)
-			if err != nil {
-				return err
-			}
-			want.Dirty = true
-		} else if want.GetActive() && budget <= baseline {
-			err := s.recordGetter.unwant(ctx, want)
-			if err != nil && status.Convert(err).Code() != codes.NotFound {
-				return err
-			}
-			want.Dirty = true
-		}
-	case pb.MasterWant_STAGED_TO_BE_ADDED:
-		if want.GetActive() {
-			err := s.recordGetter.unwant(ctx, want)
-			if err != nil && status.Convert(err).Code() != codes.NotFound {
-				return err
-			}
-			want.Dirty = true
-		}
-	default:
-		s.RaiseIssue("Cannot handle want", fmt.Sprintf("Have no means of processing %v level want", want.GetLevel()))
 	}
 
 	return nil
@@ -194,30 +106,6 @@ func (s *Server) updateWants(ctx context.Context, iid int32) error {
 			w.Demoted = true
 			w.Staged = true
 			w.Level = pb.MasterWant_BOUGHT
-		}
-	}
-
-	return s.save(ctx, config)
-}
-
-func (s *Server) dealWithAddedRecords(ctx context.Context) error {
-	nums, err := s.recordAdder.getAdds(ctx)
-	if err != nil {
-		return err
-	}
-
-	config, err := s.load(ctx)
-	if err != nil {
-		return err
-	}
-
-	for _, num := range nums {
-		for _, w := range config.Wants {
-			if w.GetRelease().Id == num {
-				w.Level = pb.MasterWant_STAGED_TO_BE_ADDED
-				w.Demoted = true
-				w.Staged = true
-			}
 		}
 	}
 
