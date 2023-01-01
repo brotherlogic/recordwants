@@ -16,7 +16,7 @@ import (
 	google_protobuf "github.com/golang/protobuf/ptypes/any"
 )
 
-//AddWant adds a want into the system
+// AddWant adds a want into the system
 func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWantResponse, error) {
 	config, err := s.load(ctx)
 	if err != nil {
@@ -30,18 +30,18 @@ func (s *Server) AddWant(ctx context.Context, req *pb.AddWantRequest) (*pb.AddWa
 
 	config.Wants = append(config.Wants,
 		&pb.MasterWant{
-			Release:     &pbgd.Release{Id: req.ReleaseId},
-			Level:       req.Level,
-			RetireTime:  req.RetireTime,
-			RetireLevel: req.RetireLevel,
-			Budget:      req.GetBudget(),
+			Release:      &pbgd.Release{Id: req.ReleaseId},
+			Level:        req.Level,
+			RetireTime:   req.RetireTime,
+			Budget:       req.GetBudget(),
+			DesiredState: pb.MasterWant_WANTED,
 		})
 
 	return &pb.AddWantResponse{}, s.save(ctx, config)
 
 }
 
-//GetWants gets a want
+// GetWants gets a want
 func (s *Server) GetWants(ctx context.Context, req *pb.GetWantsRequest) (*pb.GetWantsResponse, error) {
 	config, err := s.load(ctx)
 	if err != nil {
@@ -64,12 +64,7 @@ func (s *Server) GetWants(ctx context.Context, req *pb.GetWantsRequest) (*pb.Get
 	return &pb.GetWantsResponse{Want: wants}, nil
 }
 
-//GetSpending gets the spending over the course of months
-func (s *Server) GetSpending(ctx context.Context, req *pb.SpendingRequest) (*pb.SpendingResponse, error) {
-	return nil, fmt.Errorf("Not implemented yet")
-}
-
-//Update updates a given want
+// Update updates a given want
 func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateResponse, error) {
 	config, err := s.load(ctx)
 	if err != nil {
@@ -77,25 +72,16 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 	}
 	for _, want := range config.Wants {
 		if want.GetRelease().Id == req.GetWant().Id {
-			if want.GetLevel() == pb.MasterWant_BOUGHT {
-				s.CtxLog(ctx, fmt.Sprintf("Can't update a bought want: %v", req))
-				return &pb.UpdateResponse{}, nil
-			}
-			want.Staged = true
-			want.Demoted = !req.KeepWant
-			want.Superwant = req.Super
-			if req.GetLevel() != pb.MasterWant_UNKNOWN {
-				want.Level = req.GetLevel()
-			}
+			want.DesiredState = req.GetNewState()
 			want.RetireTime = req.GetRetireTime()
 			want.Budget = req.GetBudget()
 			return &pb.UpdateResponse{}, s.save(ctx, config)
 		}
 	}
-	return nil, fmt.Errorf("Not found: %v", config.Wants)
+	return nil, fmt.Errorf("not found: %v", config.Wants)
 }
 
-//ClientUpdate on an updated record
+// ClientUpdate on an updated record
 func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest) (*rcpb.ClientUpdateResponse, error) {
 	t := time.Now()
 	defer func() {
@@ -124,28 +110,25 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 	for _, want := range wants {
 		for _, in := range config.GetWants() {
 			if in.GetRelease().GetId() == want.GetReleaseId() {
-				if in.GetRelease().GetId() == 0 {
-					in.Level = pb.MasterWant_NEVER
-				} else {
-					processed[want.GetReleaseId()] = true
-					in.Active = true
-				}
+				in.CurrentState = pb.MasterWant_WANTED
+				processed[want.GetReleaseId()] = true
 			}
 		}
 
 		if !processed[want.GetReleaseId()] {
 			// This is a new release
-			s.CtxLog(ctx, fmt.Sprintf("ADDING %v", want.GetReleaseId()))
-			config.Wants = append(config.Wants, &pb.MasterWant{Active: true, Level: pb.MasterWant_UNKNOWN, Release: &pbgd.Release{Id: want.GetReleaseId()}})
+			config.Wants = append(config.Wants, &pb.MasterWant{
+				DateAdded:    time.Now().Unix(),
+				CurrentState: pb.MasterWant_WANTED,
+				DesiredState: pb.MasterWant_UNWANTED,
+				Release:      &pbgd.Release{Id: want.GetReleaseId()}})
 		}
 	}
 
 	// Process anything we've missed
 	for _, want := range config.GetWants() {
 		if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
-			if want.GetActive() {
-				want.Active = false
-			}
+			want.CurrentState = pb.MasterWant_UNWANTED
 		}
 	}
 
