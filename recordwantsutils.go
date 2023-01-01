@@ -57,7 +57,8 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 			want.CurrentState = want.GetDesiredState()
 		} else {
 			err := s.recordGetter.unwant(ctx, want)
-			if err != nil {
+
+			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err
 			}
 			want.CurrentState = want.GetDesiredState()
