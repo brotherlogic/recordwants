@@ -308,40 +308,13 @@ func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	}
 
 	//Clean out the wants here
-	wmap := make(map[int32]*pb.MasterWant)
 	config = data.(*pb.Config)
 
-	if config.Spends == nil {
-		config.Spends = make(map[int32]*pb.RecordSpend)
-	}
-
-	for _, want := range config.Wants {
-		if val, ok := wmap[want.GetRelease().GetId()]; ok {
-			val.Superwant = val.Superwant || want.Superwant
-		} else {
-			wmap[want.GetRelease().GetId()] = want
+	for _, want := range config.GetWants() {
+		if want.GetDesiredState() == pb.MasterWant_STATE_UNKNOWN {
+			want.DesiredState = pb.MasterWant_UNWANTED
 		}
 	}
-
-	config = data.(*pb.Config)
-	config.Wants = []*pb.MasterWant{}
-	for _, want := range wmap {
-		config.Wants = append(config.Wants, want)
-	}
-
-	wants.Set(float64(len(config.Wants)))
-	done := 0
-	count := 0
-	for _, want := range config.Wants {
-		if want.Level == pb.MasterWant_UNKNOWN {
-			done++
-		}
-		if want.Level == pb.MasterWant_LIST {
-			count++
-		}
-	}
-	covered.Set(float64(done))
-	lists.Set(float64(count))
 
 	return config, err
 }
