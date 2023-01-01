@@ -120,6 +120,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 			config.Wants = append(config.Wants, &pb.MasterWant{
 				DateAdded:    time.Now().Unix(),
 				CurrentState: pb.MasterWant_WANTED,
+				DesiredState: pb.MasterWant_UNWANTED,
 				Release:      &pbgd.Release{Id: want.GetReleaseId()}})
 		}
 	}
