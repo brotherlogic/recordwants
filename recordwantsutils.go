@@ -61,7 +61,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 }
 
 func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) (error, bool) {
-	s.CtxLog(ctx, fmt.Sprintf("Updating %v", want.GetRelease().GetId()))
+	s.CtxLog(ctx, fmt.Sprintf("Updating %v", want))
 	if want.GetDirty() {
 		return nil, false
 	}
