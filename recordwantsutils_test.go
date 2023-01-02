@@ -84,7 +84,7 @@ func TestUpdateWantState(t *testing.T) {
 
 func TestUpdateWantBasic(t *testing.T) {
 	s := InitTestServer()
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS}, time.Now())
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
@@ -93,7 +93,7 @@ func TestUpdateWantBasic(t *testing.T) {
 
 func TestUpdateWantBasicList(t *testing.T) {
 	s := InitTestServer()
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_LIST}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_LIST}, time.Now())
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
@@ -102,7 +102,7 @@ func TestUpdateWantBasicList(t *testing.T) {
 
 func TestUpdateWantBasicUNKNOWN(t *testing.T) {
 	s := InitTestServer()
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Active: true}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_UNKNOWN, Active: true}, time.Now())
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
@@ -111,7 +111,7 @@ func TestUpdateWantBasicUNKNOWN(t *testing.T) {
 
 func TestUpdateWantBasicLISTED(t *testing.T) {
 	s := InitTestServer()
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_STAGED_TO_BE_ADDED, Active: true}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_STAGED_TO_BE_ADDED, Active: true}, time.Now())
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
@@ -120,7 +120,7 @@ func TestUpdateWantBasicLISTED(t *testing.T) {
 
 func TestUpdateWantQuick(t *testing.T) {
 	s := InitTestServer()
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS, Dirty: true}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS, Dirty: true}, time.Now())
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
@@ -141,7 +141,7 @@ func TestUpdateFailRead(t *testing.T) {
 func TestUpdateWantStateANYTIMEUp(t *testing.T) {
 	s := InitTestServer()
 	//s.config.Budget = 10
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: false}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: false}, time.Now())
 
 	if err != nil {
 		t.Errorf("Bad update: %v", err)
@@ -151,7 +151,7 @@ func TestUpdateWantStateANYTIMEUp(t *testing.T) {
 func TestUpdateWantBasicANYTIMEDown(t *testing.T) {
 	s := InitTestServer()
 	//s.config.Budget = -10
-	err := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: true}, time.Now())
+	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ANYTIME, Active: true}, time.Now())
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
