@@ -17,7 +17,28 @@ var (
 		Name: "recordwants_processed",
 		Help: "The size of the wants queue",
 	})
+
+	total = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_total",
+		Help: "The size of the wants queue",
+	})
+	mismatch = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_mismatch",
+		Help: "The size of the wants queue",
+	})
 )
+
+func (s *Server) metrics(config *pb.Config) {
+	mis := 0
+	for _, want := range config.GetWants() {
+		if want.GetCurrentState() != want.GetDesiredState() {
+			mis++
+		}
+	}
+
+	mismatch.Set(float64(mis))
+	total.Set(float64(len(config.GetWants())))
+}
 
 func (s *Server) updateWantState(ctx context.Context) error {
 	config, err := s.load(ctx)
