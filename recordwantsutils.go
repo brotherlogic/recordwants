@@ -52,6 +52,7 @@ func (s *Server) updateWantState(ctx context.Context) error {
 			return err
 		}
 		if done {
+			s.CtxLog(ctx, fmt.Sprintf("COMPLETE: %v", want))
 			break
 		}
 
