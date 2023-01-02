@@ -82,6 +82,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 		} else {
 			err := s.recordGetter.unwant(ctx, want)
 
+			s.CtxLog(ctx, fmt.Sprintf("UPDATE: %v -> %v", err, want))
 			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err, false
 			}
