@@ -135,7 +135,7 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 		}
 	}
 
-	err = s.updateWantState(ctx)
+	err = s.updateWantState(ctx, config)
 	if err != nil {
 		return nil, err
 	}

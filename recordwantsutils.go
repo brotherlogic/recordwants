@@ -40,12 +40,7 @@ func (s *Server) metrics(config *pb.Config) {
 	total.Set(float64(len(config.GetWants())))
 }
 
-func (s *Server) updateWantState(ctx context.Context) error {
-	config, err := s.load(ctx)
-	if err != nil {
-		return err
-	}
-
+func (s *Server) updateWantState(ctx context.Context, config *pb.Config) error {
 	for _, want := range config.Wants {
 		err, done := s.updateWant(ctx, want, time.Now())
 		if err != nil {
