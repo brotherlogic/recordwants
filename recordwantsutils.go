@@ -64,6 +64,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 
 	if want.GetRetireTime() > 0 {
 		if ti.After(time.Unix(want.GetRetireTime(), 0)) {
+			s.CtxLog(ctx, fmt.Sprintf("Resetting because %v is after %v", ti, time.Unix(want.GetRetireTime(), 0)))
 			want.DesiredState = pb.MasterWant_UNWANTED
 		}
 	}
@@ -71,6 +72,7 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 	if want.GetDesiredState() != want.GetCurrentState() {
 		if want.GetDesiredState() == pb.MasterWant_WANTED {
 			err := s.recordGetter.want(ctx, want)
+			s.CtxLog(ctx, fmt.Sprintf("WANT UPDATE: %v -> %v", err, want))
 			if err != nil {
 				return err, false
 			}
