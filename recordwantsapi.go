@@ -100,35 +100,38 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 	if err != nil {
 		return nil, err
 	}
-	// Pull in existing wants
-	wants, err := s.recordGetter.getWants(ctx)
-	if err != nil {
-		return nil, err
-	}
 
-	processed := make(map[int32]bool)
-	for _, want := range wants {
-		for _, in := range config.GetWants() {
-			if in.GetRelease().GetId() == want.GetReleaseId() {
-				in.CurrentState = pb.MasterWant_WANTED
-				processed[want.GetReleaseId()] = true
+	if !req.GetSoft() {
+		// Pull in existing wants
+		wants, err := s.recordGetter.getWants(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		processed := make(map[int32]bool)
+		for _, want := range wants {
+			for _, in := range config.GetWants() {
+				if in.GetRelease().GetId() == want.GetReleaseId() {
+					in.CurrentState = pb.MasterWant_WANTED
+					processed[want.GetReleaseId()] = true
+				}
+			}
+
+			if !processed[want.GetReleaseId()] {
+				// This is a new release
+				config.Wants = append(config.Wants, &pb.MasterWant{
+					DateAdded:    time.Now().Unix(),
+					CurrentState: pb.MasterWant_WANTED,
+					DesiredState: pb.MasterWant_UNWANTED,
+					Release:      &pbgd.Release{Id: want.GetReleaseId()}})
 			}
 		}
 
-		if !processed[want.GetReleaseId()] {
-			// This is a new release
-			config.Wants = append(config.Wants, &pb.MasterWant{
-				DateAdded:    time.Now().Unix(),
-				CurrentState: pb.MasterWant_WANTED,
-				DesiredState: pb.MasterWant_UNWANTED,
-				Release:      &pbgd.Release{Id: want.GetReleaseId()}})
-		}
-	}
-
-	// Process anything we've missed
-	for _, want := range config.GetWants() {
-		if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
-			want.CurrentState = pb.MasterWant_UNWANTED
+		// Process anything we've missed
+		for _, want := range config.GetWants() {
+			if !processed[want.GetRelease().GetId()] && want.GetRelease().GetId() != 0 {
+				want.CurrentState = pb.MasterWant_UNWANTED
+			}
 		}
 	}
 
@@ -142,20 +145,24 @@ func (s *Server) Sync(ctx context.Context, req *pb.SyncRequest) (*pb.SyncRespons
 		return nil, err
 	}
 
-	conn2, err2 := s.FDialServer(ctx, "queue")
-	if err2 != nil {
-		return nil, err2
+	if !req.GetSoft() {
+		conn2, err2 := s.FDialServer(ctx, "queue")
+		if err2 != nil {
+			return nil, err2
+		}
+		defer conn2.Close()
+		qclient := qpb.NewQueueServiceClient(conn2)
+		syncreq := &pb.SyncRequest{}
+		data, _ := proto.Marshal(syncreq)
+		_, err3 := qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
+			QueueName:     "wants_sync",
+			RunTime:       time.Now().Add(time.Hour).Unix(),
+			Payload:       &google_protobuf.Any{Value: data},
+			Key:           "syncer",
+			RequireUnique: true,
+		})
+		return &pb.SyncResponse{}, err3
 	}
-	defer conn2.Close()
-	qclient := qpb.NewQueueServiceClient(conn2)
-	syncreq := &pb.SyncRequest{}
-	data, _ := proto.Marshal(syncreq)
-	_, err3 := qclient.AddQueueItem(ctx, &qpb.AddQueueItemRequest{
-		QueueName:     "wants_sync",
-		RunTime:       time.Now().Add(time.Hour).Unix(),
-		Payload:       &google_protobuf.Any{Value: data},
-		Key:           "syncer",
-		RequireUnique: true,
-	})
-	return &pb.SyncResponse{}, err3
+
+	return &pb.SyncResponse{}, err
 }

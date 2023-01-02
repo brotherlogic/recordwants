@@ -100,7 +100,9 @@ message GetWantsResponse {
   repeated MasterWant want = 1;
 }
 
-message SyncRequest{}
+message SyncRequest{
+  bool soft = 1;
+}
 message SyncResponse{}
 
 service WantService {
