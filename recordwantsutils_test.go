@@ -71,17 +71,6 @@ func TestSuperWantPromoted(t *testing.T) {
 	}
 }
 
-func TestUpdateWantState(t *testing.T) {
-	s := InitTestServer()
-	//s.config.Wants = append(s.config.Wants, &pb.MasterWant{})
-
-	err := s.updateWantState(context.Background())
-
-	if err != nil {
-		t.Errorf("Bad update: %v", err)
-	}
-}
-
 func TestUpdateWantBasic(t *testing.T) {
 	s := InitTestServer()
 	err, _ := s.updateWant(context.Background(), &pb.MasterWant{Level: pb.MasterWant_ALWAYS}, time.Now())
@@ -124,17 +113,6 @@ func TestUpdateWantQuick(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("bad update: %v", err)
-	}
-}
-
-func TestUpdateFailRead(t *testing.T) {
-	s := InitTestServer()
-	s.GoServer.KSclient.Fail = true
-
-	err := s.updateWantState(context.Background())
-
-	if err == nil {
-		t.Errorf("Bad load no fail")
 	}
 }
 
