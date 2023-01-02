@@ -313,6 +313,9 @@ func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	s.metrics(config)
 
 	for _, want := range config.GetWants() {
+		if want.GetRetireTime() > math.MaxInt32 {
+			want.RetireTime = math.MaxInt32
+		}
 		if want.GetDesiredState() == pb.MasterWant_STATE_UNKNOWN {
 			want.DesiredState = pb.MasterWant_UNWANTED
 		}
