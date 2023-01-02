@@ -106,10 +106,10 @@ func main() {
 			}
 		}
 	case "sync":
-		wa, err := client.Sync(ctx, &pb.SyncRequest{Soft: true})
+		wa, err := client.Sync(ctx, &pb.SyncRequest{})
 		fmt.Printf("%v and %v\n", wa, err)
 	case "ssync":
-		wa, err := client.Sync(ctx, &pb.SyncRequest{})
+		wa, err := client.Sync(ctx, &pb.SyncRequest{Soft: true})
 		fmt.Printf("%v and %v\n", wa, err)
 	case "next":
 		count := 0
