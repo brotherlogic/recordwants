@@ -17,7 +17,28 @@ var (
 		Name: "recordwants_processed",
 		Help: "The size of the wants queue",
 	})
+
+	total = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_total",
+		Help: "The size of the wants queue",
+	})
+	mismatch = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "recordwants_mismatch",
+		Help: "The size of the wants queue",
+	})
 )
+
+func (s *Server) metrics(config *pb.Config) {
+	mis := 0
+	for _, want := range config.GetWants() {
+		if want.GetCurrentState() != want.GetDesiredState() {
+			mis++
+		}
+	}
+
+	mismatch.Set(float64(mis))
+	total.Set(float64(len(config.GetWants())))
+}
 
 func (s *Server) updateWantState(ctx context.Context) error {
 	config, err := s.load(ctx)
@@ -26,9 +47,12 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	}
 
 	for _, want := range config.Wants {
-		err = s.updateWant(ctx, want, time.Now())
+		err, done := s.updateWant(ctx, want, time.Now())
 		if err != nil {
 			return err
+		}
+		if done {
+			break
 		}
 
 	}
@@ -36,10 +60,10 @@ func (s *Server) updateWantState(ctx context.Context) error {
 	return s.save(ctx, config)
 }
 
-func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) error {
+func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) (error, bool) {
 	s.CtxLog(ctx, fmt.Sprintf("Updating %v", want.GetRelease().GetId()))
 	if want.GetDirty() {
-		return nil
+		return nil, false
 	}
 
 	if want.GetRetireTime() > 0 {
@@ -52,20 +76,22 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 		if want.GetDesiredState() == pb.MasterWant_WANTED {
 			err := s.recordGetter.want(ctx, want)
 			if err != nil {
-				return err
+				return err, false
 			}
 			want.CurrentState = want.GetDesiredState()
 		} else {
 			err := s.recordGetter.unwant(ctx, want)
 
 			if err != nil && status.Convert(err).Code() != codes.NotFound {
-				return err
+				return err, false
 			}
 			want.CurrentState = pb.MasterWant_UNWANTED
 		}
+
+		return nil, true
 	}
 
-	return nil
+	return nil, false
 }
 
 func (s *Server) updateWants(ctx context.Context, iid int32) error {

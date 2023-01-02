@@ -310,6 +310,8 @@ func (s *Server) load(ctx context.Context) (*pb.Config, error) {
 	//Clean out the wants here
 	config = data.(*pb.Config)
 
+	s.metrics(config)
+
 	for _, want := range config.GetWants() {
 		if want.GetDesiredState() == pb.MasterWant_STATE_UNKNOWN {
 			want.DesiredState = pb.MasterWant_UNWANTED
