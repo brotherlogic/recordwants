@@ -66,6 +66,12 @@ func (s *Server) GetWants(ctx context.Context, req *pb.GetWantsRequest) (*pb.Get
 
 // Update updates a given want
 func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateResponse, error) {
+	if req.GetReason() == "" {
+		return nil, fmt.Errorf("you must provide a reason for this update")
+	}
+
+	s.CtxLog(ctx, fmt.Sprintf("Updating %v to %v -> %v", req.GetWant(), req.GetNewState(), req.GetReason()))
+
 	config, err := s.load(ctx)
 	if err != nil {
 		return nil, err
