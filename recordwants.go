@@ -8,7 +8,7 @@ import (
 	"math"
 	"time"
 
-	pbgd "github.com/brotherlogic/godiscogs"
+	pbgd "github.com/brotherlogic/godiscogs/proto"
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/goserver/utils"
 	"github.com/prometheus/client_golang/prometheus"

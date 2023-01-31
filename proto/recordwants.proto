@@ -4,7 +4,7 @@ package recordwants;
 
 option go_package = "github.com/brotherlogic/recordwants/proto";
 
-import "github.com/brotherlogic/godiscogs/godiscogs.proto";
+import "github.com/brotherlogic/godiscogs/proto/godiscogs.proto";
 
 message Config {
   repeated MasterWant wants = 1;
