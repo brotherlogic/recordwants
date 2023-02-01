@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	pb "github.com/brotherlogic/recordwants/proto"
@@ -47,7 +46,6 @@ func (s *Server) updateWantState(ctx context.Context, config *pb.Config) error {
 			return err
 		}
 		if done {
-			s.CtxLog(ctx, fmt.Sprintf("COMPLETE: %v", want))
 			break
 		}
 
@@ -57,14 +55,12 @@ func (s *Server) updateWantState(ctx context.Context, config *pb.Config) error {
 }
 
 func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) (error, bool) {
-	s.CtxLog(ctx, fmt.Sprintf("Updating %v", want))
 	if want.GetDirty() {
 		return nil, false
 	}
 
 	if want.GetRetireTime() > 0 {
 		if ti.After(time.Unix(want.GetRetireTime(), 0)) {
-			s.CtxLog(ctx, fmt.Sprintf("Resetting because %v is after %v", ti, time.Unix(want.GetRetireTime(), 0)))
 			want.DesiredState = pb.MasterWant_UNWANTED
 		}
 	}
@@ -72,7 +68,6 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 	if want.GetDesiredState() != want.GetCurrentState() {
 		if want.GetDesiredState() == pb.MasterWant_WANTED {
 			err := s.recordGetter.want(ctx, want)
-			s.CtxLog(ctx, fmt.Sprintf("WANT UPDATE: %v -> %v", err, want))
 			if err != nil {
 				return err, false
 			}
@@ -80,7 +75,6 @@ func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Ti
 		} else {
 			err := s.recordGetter.unwant(ctx, want)
 
-			s.CtxLog(ctx, fmt.Sprintf("UPDATE: %v -> %v", err, want))
 			if err != nil && status.Convert(err).Code() != codes.NotFound {
 				return err, false
 			}
