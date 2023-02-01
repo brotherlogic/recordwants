@@ -70,8 +70,6 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 		return nil, fmt.Errorf("you must provide a reason for this update")
 	}
 
-	s.CtxLog(ctx, fmt.Sprintf("Updating %v to %v -> %v", req.GetWant(), req.GetNewState(), req.GetReason()))
-
 	config, err := s.load(ctx)
 	if err != nil {
 		return nil, err
@@ -89,11 +87,6 @@ func (s *Server) Update(ctx context.Context, req *pb.UpdateRequest) (*pb.UpdateR
 
 // ClientUpdate on an updated record
 func (s *Server) ClientUpdate(ctx context.Context, req *rcpb.ClientUpdateRequest) (*rcpb.ClientUpdateResponse, error) {
-	t := time.Now()
-	defer func() {
-		s.CtxLog(ctx, fmt.Sprintf("Client Update in %v", time.Now().Sub(t)))
-	}()
-
 	err := s.updateWants(ctx, req.GetInstanceId())
 	if err != nil {
 		return nil, err
