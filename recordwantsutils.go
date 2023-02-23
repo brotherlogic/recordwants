@@ -55,9 +55,6 @@ func (s *Server) updateWantState(ctx context.Context, config *pb.Config) error {
 }
 
 func (s *Server) updateWant(ctx context.Context, want *pb.MasterWant, ti time.Time) (error, bool) {
-	if want.GetDirty() {
-		return nil, false
-	}
 
 	if want.GetRetireTime() > 0 {
 		if ti.After(time.Unix(want.GetRetireTime(), 0)) {
