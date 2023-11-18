@@ -2232,8 +2232,11 @@ github.com/brotherlogic/gobuildslave v0.0.0-20231117161829-707b12c68e02/go.mod h
 github.com/brotherlogic/gobuildslave v0.0.0-20231117180144-c843d1a25f0c/go.mod h1:AcNX0N8nI4pPis0sJe5MuvS6MMeR9L0o4BFdLLCGgco=
 github.com/brotherlogic/gobuildslave v0.0.0-20231117191327-2409d67017da/go.mod h1:E45jLLkWHw9z9rUhbFpcapkRAfR6jt1zyirKHl/9CxU=
 github.com/brotherlogic/gobuildslave v0.0.0-20231117203055-b1eb2ff31d34/go.mod h1:mZCUplX0yA/5q2Hq3/dEVpJ8u7eyyJ7wHpib9IjEkwA=
-github.com/brotherlogic/gobuildslave v0.0.0-20231117223014-9630d5b0b31b h1:Y8Y/nZiZf7LiSy/4v+h7JXy8n4L3sERIGcJnZPNOtpU=
 github.com/brotherlogic/gobuildslave v0.0.0-20231117223014-9630d5b0b31b/go.mod h1:qg86mIPnrkehS3SthyoLS0eywpEg5RDc+CmCEK7H3rc=
+github.com/brotherlogic/gobuildslave v0.0.0-20231118001706-2fd5552482fa/go.mod h1:GSLdL826DHgP1os+rcpD2scX3HG9IuapeA23Pn/WfWI=
+github.com/brotherlogic/gobuildslave v0.0.0-20231118020435-c12a0c100d29/go.mod h1:5alNNcHfd5u69oNCiTF3d4yXrSos/jwo2APxAkNb4U0=
+github.com/brotherlogic/gobuildslave v0.0.0-20231118035729-fa6cd56eba2e h1:s0O2OkOxna053/XkOSfxVHq9OjmumagpqC9fPjObHQg=
+github.com/brotherlogic/gobuildslave v0.0.0-20231118035729-fa6cd56eba2e/go.mod h1:P0nO/RpsXEMULe1xBDYJVhkElIxP//ggeTEWY7yr9f8=
 github.com/brotherlogic/godiscogs v0.0.0-20201012230422-e6d22566e955/go.mod h1:n/6nBOsxU6shAcHwC8L557pGTmKwfdUx/zueje86vCE=
 github.com/brotherlogic/godiscogs v0.0.0-20210110190906-0bfce639dbb9/go.mod h1:n/6nBOsxU6shAcHwC8L557pGTmKwfdUx/zueje86vCE=
 github.com/brotherlogic/godiscogs v0.0.0-20210518132442-05fcf2d616b0/go.mod h1:n/6nBOsxU6shAcHwC8L557pGTmKwfdUx/zueje86vCE=
@@ -3137,8 +3140,8 @@ github.com/brotherlogic/recordbudget v0.0.0-20231027130438-aae31f451459/go.mod h
 github.com/brotherlogic/recordbudget v0.0.0-20231027153348-c76943524cf2/go.mod h1:xJmN+Or/i3w+nO1jSm/Xl/VrCpwQtIgXerwgHcmSGCE=
 github.com/brotherlogic/recordbudget v0.0.0-20231103161504-03e70d98d154/go.mod h1:7N98EMp1iSRkcPzJlwYMopRwktlPMwIFsURUQU+SiEg=
 github.com/brotherlogic/recordbudget v0.0.0-20231110172637-4fdd7c80d18f/go.mod h1:zzO9XGkidJ4kRNtOolTd9X1Tm+iqQyPHqPAnRf1PqNE=
-github.com/brotherlogic/recordbudget v0.0.0-20231117183923-4de7e8778dad h1:nNODirP5OT0tVyZbEEm2yuWQn93VpxA3tujQor54V1A=
-github.com/brotherlogic/recordbudget v0.0.0-20231117183923-4de7e8778dad/go.mod h1:AergudKUSINiMZi/n86al4ZRXjiBbbpRKGrKkJOf82I=
+github.com/brotherlogic/recordbudget v0.0.0-20231118014904-ac6d1b81b790 h1:YfsZT7T5R2zMu+wZNrTrVlQ0r+176Cc5LvV7yuad1Hs=
+github.com/brotherlogic/recordbudget v0.0.0-20231118014904-ac6d1b81b790/go.mod h1:5kxHVvCPhLEcJRZEo5Q295i2D8olw0hVjgDliwpNjMY=
 github.com/brotherlogic/recordcleaner v0.0.0-20210905010152-1246905f157e/go.mod h1:G0UQlga1wy8O6LLBdlqTGU2tsAkaRgn2UdMfxCAmjqY=
 github.com/brotherlogic/recordcleaner v0.0.0-20210921000556-646aa18a3ed4/go.mod h1:G0UQlga1wy8O6LLBdlqTGU2tsAkaRgn2UdMfxCAmjqY=
 github.com/brotherlogic/recordcleaner v0.0.0-20211017232533-de9cfb5da6ff/go.mod h1:pnZsOEnZ7FDwP+mjLELWCmveQas3Qnf/KjSZG8UcHBQ=
@@ -3640,6 +3643,7 @@ github.com/brotherlogic/recordprocess v0.0.0-20231020051513-a5007a646ec1/go.mod 
 github.com/brotherlogic/recordprocess v0.0.0-20231027121129-80509a922791/go.mod h1:c9T+jXp50GR28q3/XQUuL8LSYe3QJr5IL4+Zb/HsUm4=
 github.com/brotherlogic/recordprocess v0.0.0-20231103132244-9500c715d0f5/go.mod h1:rj5YanvSU4wJj1GIebDTjLvMYbfs3p9mjm8T7s0xWs4=
 github.com/brotherlogic/recordprocess v0.0.0-20231110182700-d867b2a46481/go.mod h1:YhX007UsbDCN2Ebr/pK5SjT/0TaqOgznwP1mbnI9ClU=
+github.com/brotherlogic/recordprocess v0.0.0-20231117222024-f545016a5e48/go.mod h1:ReQHx/nYX0qgBmEOsvANlnRx1HjsIetr5HVBTp+wfI8=
 github.com/brotherlogic/recordsales v0.0.0-20211008040357-bcdb7c5f5db0/go.mod h1:v9yFgu89Rq3p7D7KsmTUS3XUsDsKLhOo96txPKBNfLU=
 github.com/brotherlogic/recordsales v0.0.0-20211009011756-a558f8d4b3b7/go.mod h1:wUixH9B4OYGA+S8Lc1DieTQviouahL99cpwMCw9Kycg=
 github.com/brotherlogic/recordsales v0.0.0-20211020034930-11d8e8ab8946/go.mod h1:wUixH9B4OYGA+S8Lc1DieTQviouahL99cpwMCw9Kycg=
@@ -3772,6 +3776,7 @@ github.com/brotherlogic/recordscores v0.0.0-20231027151638-82dbc15cb661/go.mod h
 github.com/brotherlogic/recordscores v0.0.0-20231027165447-09a14cc446dd/go.mod h1:PKlXv/VNSJ4HVkC2OpEWZaw+9NMAjC5WgSo+FcdXyJ0=
 github.com/brotherlogic/recordscores v0.0.0-20231103212353-b7c54de09174/go.mod h1:YaRV17PlkCFVKh3IzwMruseCW0EuaBNSlEnD2sX6lRY=
 github.com/brotherlogic/recordscores v0.0.0-20231110214548-8619770a3874/go.mod h1:f9Jb6oDEg1kjSZNqumchpG/8wkV3X1xIkZs1SCDYhsI=
+github.com/brotherlogic/recordscores v0.0.0-20231117230536-c169b4c49bf4/go.mod h1:SZ6ez0trgrL8YM/XhdLMJxKLrJ+jPgi3rt+fg220iXo=
 github.com/brotherlogic/recordsorganiser v0.0.0-20210509192121-8c945511edb7/go.mod h1:IOxF9YmkFOGkCZAMitNggNqXK+i9ooy1+FMRNdW9JB0=
 github.com/brotherlogic/recordsorganiser v0.0.0-20210706222422-7d8c036fc939/go.mod h1:i4AwwoFG6HRO+VvHW7gP2e00TIdI3YPaU65KC9WEjT4=
 github.com/brotherlogic/recordsorganiser v0.0.0-20210826185725-9b8165799dda/go.mod h1:KoSWo6gTp+UgIDlksM6T/xpDmbnorSxu+CndhH0efg0=
@@ -4060,6 +4065,9 @@ github.com/brotherlogic/versiontracker v0.0.0-20231117164740-105349e138e8/go.mod
 github.com/brotherlogic/versiontracker v0.0.0-20231117185501-9966c976da68/go.mod h1:ouOuWt9BRP1PrSyErjfjZ79+liBg7DLBvcYnjG0o3r0=
 github.com/brotherlogic/versiontracker v0.0.0-20231117202423-c36d6fac56cc/go.mod h1:rGge4y29dpuJwO7/OO6bWK/KSiOJcU1qfma3I+EhsKk=
 github.com/brotherlogic/versiontracker v0.0.0-20231117221421-a281573bd24b/go.mod h1:SQzSX9L7kqQyuV24lkejfOBBK9k2gza3i8241fReHNw=
+github.com/brotherlogic/versiontracker v0.0.0-20231117235327-e74b8c990b0f/go.mod h1:2B5OyFp9QEzHBT98b/AZcSqs2YQIcH8nOy0n7A3IpVE=
+github.com/brotherlogic/versiontracker v0.0.0-20231118014909-39678ddaf024/go.mod h1:2gfRRiwa8dckgzQ85zb4ynGH2rW3QJaYq8Xa0o4XMs8=
+github.com/brotherlogic/versiontracker v0.0.0-20231118033116-3e48d5f656ef/go.mod h1:tAHP8hG1DBr4bszbsZ8k9RkXfZH1o2tcZQoyUXC0Cmw=
 github.com/bsm/ginkgo/v2 v2.5.0/go.mod h1:AiKlXPm7ItEHNc/2+OkrNG4E0ITzojb9/xWzvQ9XZ9w=
 github.com/bsm/gomega v1.20.0/go.mod h1:JifAceMQ4crZIWYUKrlGcmbN3bqHogVTADMD2ATsbwk=
 github.com/buger/jsonparser v1.1.1/go.mod h1:6RYKKt7H4d4+iWqouImQ9R2FZql3VbhNgx27UK13J/0=
