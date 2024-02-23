@@ -3,18 +3,20 @@ module github.com/brotherlogic/recordwants
 go 1.16
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20240206002157-a50783191824
-	github.com/brotherlogic/gobuildslave v0.0.0-20240212085539-1be8c1aa295e // indirect
-	github.com/brotherlogic/godiscogs v0.0.0-20240116051314-7d3de02a07c4
-	github.com/brotherlogic/goserver v0.0.0-20230726200050-779ae6811580
-	github.com/brotherlogic/keystore v0.0.0-20240206010333-b61b88db45b5
-	github.com/brotherlogic/queue v0.0.0-20240207163208-b1331cbef4ee
+	github.com/brotherlogic/githubcard v0.0.0-20240213021646-eb033c672608
+	github.com/brotherlogic/godiscogs v0.0.0-20240221154042-3003f558870c
+	github.com/brotherlogic/goserver v0.0.0-20240222055603-0ccbf7d6dfeb
+	github.com/brotherlogic/keystore v0.0.0-20240213103345-50262d45c163
+	github.com/brotherlogic/queue v0.0.0-20240222054658-2c3fee90d730
 	github.com/brotherlogic/recordadder v0.0.0-20240210004533-0f8f3f265ba7
-	github.com/brotherlogic/recordbudget v0.0.0-20240207182425-bff9f607a374
-	github.com/brotherlogic/recordcollection v0.0.0-20240209005803-0bcffbcab67b
+	github.com/brotherlogic/recordbudget v0.0.0-20240214235040-d4db5c878bf3
+	github.com/brotherlogic/recordcollection v0.0.0-20240221153235-faf4f6bcd1ad
 	github.com/golang/protobuf v1.5.3
 	github.com/prometheus/client_golang v1.18.0
+	github.com/prometheus/client_model v0.6.0 // indirect
+	github.com/prometheus/common v0.48.0 // indirect
 	golang.org/x/net v0.21.0
-	google.golang.org/grpc v1.61.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240221002015-b0ce06bbee7c // indirect
+	google.golang.org/grpc v1.62.0
 	google.golang.org/protobuf v1.32.0
 )
