@@ -1,8 +1,6 @@
 module github.com/brotherlogic/recordwants
 
-go 1.21
-
-toolchain go1.22.1
+go 1.22.1
 
 require (
 	github.com/brotherlogic/githubcard v0.0.0-20240507151718-1e1b9a5bd975
