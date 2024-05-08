@@ -44,6 +44,13 @@ func main() {
 			log.Fatalf("Error on GET: %v", err)
 		}
 		fmt.Printf("%v\n", w)
+	case "unwant":
+		iv, _ := strconv.Atoi(os.Args[2])
+		w, err := client.Update(ctx, &pb.UpdateRequest{Reason: "unwant", Want: &pbgd.Release{Id: int32(iv)}, NewState: pb.MasterWant_UNWANTED})
+		if err != nil {
+			log.Fatalf("Error on GET: %v", err)
+		}
+		fmt.Printf("%v\n", w)
 	case "list":
 		iv, _ := strconv.Atoi(os.Args[2])
 		_, err := client.Update(ctx, &pb.UpdateRequest{Want: &pbgd.Release{Id: int32(iv)}, Level: pb.MasterWant_LIST})
