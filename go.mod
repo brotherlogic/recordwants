@@ -11,8 +11,8 @@ require (
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
 	github.com/brotherlogic/queue v0.0.0-20240929175943-b3cb07a3f056
 	github.com/brotherlogic/recordadder v0.0.0-20241004172355-d7b9187ded94
-	github.com/brotherlogic/recordbudget v0.0.0-20241004101846-367d9c63281b
-	github.com/brotherlogic/recordcollection v0.0.0-20241004152505-b8d8b7f13779
+	github.com/brotherlogic/recordbudget v0.0.0-20241004172639-135f185bcdcd
+	github.com/brotherlogic/recordcollection v0.0.0-20241004182417-33d231509edf
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.20.4
 	golang.org/x/net v0.30.0
