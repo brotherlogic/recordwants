@@ -28,12 +28,12 @@ github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 h1:hxu2T9JspE
 github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6/go.mod h1:babny4VO2GqFwjXqhJsP4a6la4XJeMT6f4BgLBPq4G8=
 github.com/brotherlogic/queue v0.0.0-20240929175943-b3cb07a3f056 h1:lyG4hNCMqUWz0RjvC+1AqSVq/dOX0hYNYUmxWOIIXFI=
 github.com/brotherlogic/queue v0.0.0-20240929175943-b3cb07a3f056/go.mod h1:ZSjKL/3hUWyLfSPnUlmhsOln47s14LKriELKy2vKYW8=
-github.com/brotherlogic/recordadder v0.0.0-20241004040913-0c8b5780c1c3 h1:w3YbUqEIwWG4WUAJGoU19Fkh1EW6n1G/0sa8xCt/f3Y=
-github.com/brotherlogic/recordadder v0.0.0-20241004040913-0c8b5780c1c3/go.mod h1:zy1egC5Y+bHARoXLPBrvL2i3/IPBGDT6ZcLtgcyqDGk=
+github.com/brotherlogic/recordadder v0.0.0-20241004061350-7e0d2e215cb6 h1:agELONLAklhC/Ky22Kfmz3tq6GhiLNN/+kcZA4TpbkM=
+github.com/brotherlogic/recordadder v0.0.0-20241004061350-7e0d2e215cb6/go.mod h1:OiF3tOHaS9aXsgHFlNahovnbMkhznytiIkwdu9am+1o=
 github.com/brotherlogic/recordbudget v0.0.0-20241004030957-25864c9a4dc8 h1:PapaH8aFlzsXMaoZeHdabYGmwxZQfIq36uI7VKbJhFw=
 github.com/brotherlogic/recordbudget v0.0.0-20241004030957-25864c9a4dc8/go.mod h1:qLYmXNijIfWrGABFhBPR5pJvRO2xOu93d8gbRxiHtQs=
-github.com/brotherlogic/recordcollection v0.0.0-20241004051428-c30f1add7759 h1:2g6Q96nHUZOmwq13McYXUkFCLDTGplVow6vB//azA+4=
-github.com/brotherlogic/recordcollection v0.0.0-20241004051428-c30f1add7759/go.mod h1:PMUg6NpgwAyinydBAx46DjW/IiRX7mCSdp2wl/aeOUo=
+github.com/brotherlogic/recordcollection v0.0.0-20241004072236-1b9f22012844 h1:QBw1un+PklViC8pkQlGxc3xswhq8ii9k+/YMLZB+wac=
+github.com/brotherlogic/recordcollection v0.0.0-20241004072236-1b9f22012844/go.mod h1:B1bqRnNGRYTErt6q2UDWfzp+6ZBfcdevsAYYgU+fNXw=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 h1:YjFE4Sa+wwbl4yJwJaMQVeA4CMzLIDbbIuSMdsEp5/w=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2/go.mod h1:ODrbMDhG+yOp2vie9vE4oaKsKhILDralZMr7PJ4HrJY=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
