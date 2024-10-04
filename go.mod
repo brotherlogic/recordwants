@@ -12,7 +12,7 @@ require (
 	github.com/brotherlogic/queue v0.0.0-20240929175943-b3cb07a3f056
 	github.com/brotherlogic/recordadder v0.0.0-20241004040913-0c8b5780c1c3
 	github.com/brotherlogic/recordbudget v0.0.0-20241004030957-25864c9a4dc8
-	github.com/brotherlogic/recordcollection v0.0.0-20241004034131-8fa296024260
+	github.com/brotherlogic/recordcollection v0.0.0-20241004051428-c30f1add7759
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.20.4
 	golang.org/x/net v0.29.0
