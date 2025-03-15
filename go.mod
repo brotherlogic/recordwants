@@ -3,13 +3,13 @@ module github.com/brotherlogic/recordwants
 go 1.23.2
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20250314222549-9879809cc8c3
+	github.com/brotherlogic/githubcard v0.0.0-20250315003936-e7f0eaf57420
 	github.com/brotherlogic/godiscogs v0.0.0-20250131163651-1e34c776a68e
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
-	github.com/brotherlogic/queue v0.0.0-20250314212449-dca68e2b8cff
+	github.com/brotherlogic/queue v0.0.0-20250314233921-118e4d7d56ba
 	github.com/brotherlogic/recordadder v0.0.0-20250314211759-70b294708f24
-	github.com/brotherlogic/recordbudget v0.0.0-20250314203102-1f9e1552de56
+	github.com/brotherlogic/recordbudget v0.0.0-20250314232809-4e75cc2810f9
 	github.com/brotherlogic/recordcollection v0.0.0-20250227174213-ce20ec909d87
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.21.1
@@ -23,11 +23,11 @@ require (
 	github.com/brotherlogic/buildserver v0.0.0-20250312104212-00c75d4bd632 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250313015544-917b63bdd6ff // indirect
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
-	github.com/brotherlogic/dstore v0.0.0-20250314221548-0a885dd3c508 // indirect
+	github.com/brotherlogic/dstore v0.0.0-20250315012418-6513a3f04631 // indirect
 	github.com/brotherlogic/githubridge v0.2849.0 // indirect
-	github.com/brotherlogic/gobuildslave v0.0.0-20250314222550-5da6c2511191 // indirect
-	github.com/brotherlogic/lock v0.0.0-20250314202949-20092bbd4c72 // indirect
-	github.com/brotherlogic/logging v0.0.0-20250314222425-95e91f006a14 // indirect
+	github.com/brotherlogic/gobuildslave v0.0.0-20250315012506-19dcd27bc8f5 // indirect
+	github.com/brotherlogic/lock v0.0.0-20250315004105-66ade078adba // indirect
+	github.com/brotherlogic/logging v0.0.0-20250314231556-ec06d69bd709 // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
