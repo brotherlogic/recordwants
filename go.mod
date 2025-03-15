@@ -3,7 +3,7 @@ module github.com/brotherlogic/recordwants
 go 1.23.2
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20250315003936-e7f0eaf57420
+	github.com/brotherlogic/githubcard v0.0.0-20250315015157-b89fcdfd89ec
 	github.com/brotherlogic/godiscogs v0.0.0-20250131163651-1e34c776a68e
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
@@ -25,9 +25,9 @@ require (
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
 	github.com/brotherlogic/dstore v0.0.0-20250315012418-6513a3f04631 // indirect
 	github.com/brotherlogic/githubridge v0.2849.0 // indirect
-	github.com/brotherlogic/gobuildslave v0.0.0-20250315012506-19dcd27bc8f5 // indirect
+	github.com/brotherlogic/gobuildslave v0.0.0-20250315015806-01e694bbcbc7 // indirect
 	github.com/brotherlogic/lock v0.0.0-20250315013400-708e1aab878d // indirect
-	github.com/brotherlogic/logging v0.0.0-20250314231556-ec06d69bd709 // indirect
+	github.com/brotherlogic/logging v0.0.0-20250315015708-b21718703620 // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
