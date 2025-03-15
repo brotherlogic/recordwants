@@ -3,11 +3,11 @@ module github.com/brotherlogic/recordwants
 go 1.23.2
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20250315134222-0a5cccf1bab3
+	github.com/brotherlogic/githubcard v0.0.0-20250315144308-82e9cee3ad72
 	github.com/brotherlogic/godiscogs v0.0.0-20250131163651-1e34c776a68e
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
-	github.com/brotherlogic/queue v0.0.0-20250315135555-8772a7a14e62
+	github.com/brotherlogic/queue v0.0.0-20250315144045-cff9798eb128
 	github.com/brotherlogic/recordadder v0.0.0-20250315134719-6f922ea4aa76
 	github.com/brotherlogic/recordbudget v0.0.0-20250315134749-409002477035
 	github.com/brotherlogic/recordcollection v0.0.0-20250227174213-ce20ec909d87
