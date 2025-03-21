@@ -3,7 +3,7 @@ module github.com/brotherlogic/recordwants
 go 1.23.2
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20250321182123-6f9cc5349131
+	github.com/brotherlogic/githubcard v0.0.0-20250321190840-c7075361e5da
 	github.com/brotherlogic/godiscogs v0.0.0-20250131163651-1e34c776a68e
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
@@ -26,7 +26,7 @@ require (
 	github.com/brotherlogic/dstore v0.0.0-20250321170910-c34fe8d0fec4 // indirect
 	github.com/brotherlogic/githubridge v0.2852.0 // indirect
 	github.com/brotherlogic/gobuildslave v0.0.0-20250321171407-f01b17a284a5 // indirect
-	github.com/brotherlogic/lock v0.0.0-20250321174705-36ffa3caa120 // indirect
+	github.com/brotherlogic/lock v0.0.0-20250321190301-95ff149c9e7b // indirect
 	github.com/brotherlogic/logging v0.0.0-20250321180818-5b0a19f0d968 // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
