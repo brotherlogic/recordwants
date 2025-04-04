@@ -3,31 +3,31 @@ module github.com/brotherlogic/recordwants
 go 1.23.2
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20250328212524-d689f348d6c3
+	github.com/brotherlogic/githubcard v0.0.0-20250404214731-f21973d62fe8
 	github.com/brotherlogic/godiscogs v0.0.0-20250327133544-6e4c3d175e8c
 	github.com/brotherlogic/goserver v0.0.0-20250123145056-95c6fbb2310a
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
-	github.com/brotherlogic/queue v0.0.0-20250328220433-6c3b5a1d8797
-	github.com/brotherlogic/recordadder v0.0.0-20250328164834-94cb2fa4797f
-	github.com/brotherlogic/recordbudget v0.0.0-20250328180808-946a93d32745
-	github.com/brotherlogic/recordcollection v0.0.0-20250327232907-c2664eba60ae
+	github.com/brotherlogic/queue v0.0.0-20250404224611-f7ef8dca5b7a
+	github.com/brotherlogic/recordadder v0.0.0-20250404170141-0a3ac7965050
+	github.com/brotherlogic/recordbudget v0.0.0-20250404181819-c68f8f0d9ed9
+	github.com/brotherlogic/recordcollection v0.0.0-20250403234712-41e0dfe79c02
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.21.1
 	golang.org/x/net v0.38.0
-	google.golang.org/grpc v1.71.0
+	google.golang.org/grpc v1.71.1
 	google.golang.org/protobuf v1.36.6
 )
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20250321220955-f3f4a1fcaf4c // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20250328223824-e8737b484be6 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250313015544-917b63bdd6ff // indirect
 	github.com/brotherlogic/discovery v0.0.0-20241109204028-02908558af09 // indirect
-	github.com/brotherlogic/dstore v0.0.0-20250328173226-98a639793b5a // indirect
+	github.com/brotherlogic/dstore v0.0.0-20250404215026-72f9290e93a6 // indirect
 	github.com/brotherlogic/githubridge v0.2852.0 // indirect
-	github.com/brotherlogic/gobuildslave v0.0.0-20250328180619-bb7226d48e17 // indirect
-	github.com/brotherlogic/lock v0.0.0-20250328214435-b16cc98ed236 // indirect
-	github.com/brotherlogic/logging v0.0.0-20250328203415-ed60d08c3d09 // indirect
+	github.com/brotherlogic/gobuildslave v0.0.0-20250404181817-eb2af85b7afe // indirect
+	github.com/brotherlogic/lock v0.0.0-20250404224510-41041b591e74 // indirect
+	github.com/brotherlogic/logging v0.0.0-20250404180452-2f41cade6bf2 // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
 	github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -40,5 +40,5 @@ require (
 	github.com/struCoder/pidusage v0.2.1 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250324211829-b45e905df463 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250404141209-ee84b53bf3d0 // indirect
 )
