@@ -3,7 +3,7 @@ module github.com/brotherlogic/recordwants
 go 1.24.4
 
 require (
-	github.com/brotherlogic/githubcard v0.0.0-20250621025356-34b7978c51ae
+	github.com/brotherlogic/githubcard v0.0.0-20250621040157-d7799ba5e2ed
 	github.com/brotherlogic/godiscogs v0.0.0-20250429182651-404c7473edf8
 	github.com/brotherlogic/goserver v0.0.0-20250608182006-4ace595931a5
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
