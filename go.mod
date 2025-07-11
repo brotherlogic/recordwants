@@ -7,7 +7,7 @@ require (
 	github.com/brotherlogic/godiscogs v0.0.0-20250429182651-404c7473edf8
 	github.com/brotherlogic/goserver v0.0.0-20250608182006-4ace595931a5
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
-	github.com/brotherlogic/queue v0.0.0-20250711170335-dd815c8fc167
+	github.com/brotherlogic/queue v0.0.0-20250711171705-a1a0988ab1e8
 	github.com/brotherlogic/recordadder v0.0.0-20250711165923-03431b52a5af
 	github.com/brotherlogic/recordbudget v0.0.0-20250707133236-dc86a81feeb5
 	github.com/brotherlogic/recordcollection v0.0.0-20250625165631-0ab7d5811bd2
