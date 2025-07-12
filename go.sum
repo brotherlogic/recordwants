@@ -26,12 +26,12 @@ github.com/brotherlogic/logging v0.0.0-20250711231052-0c807c2916f6 h1:F3RFLzBzic
 github.com/brotherlogic/logging v0.0.0-20250711231052-0c807c2916f6/go.mod h1:LqGprjgoFch8ZPtQH6/MgtAjkMbiBQi78jqsvYndhaw=
 github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 h1:hxu2T9JspE76sL3XAx/CNtA9bOO6QCEJkyG9rBXFEVA=
 github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6/go.mod h1:babny4VO2GqFwjXqhJsP4a6la4XJeMT6f4BgLBPq4G8=
-github.com/brotherlogic/queue v0.0.0-20250712144105-ebb1c63d0754 h1:8Dj/WNzLhfl/p7R8oX6jWksMvlO6+P4QFLr+qLac8UM=
-github.com/brotherlogic/queue v0.0.0-20250712144105-ebb1c63d0754/go.mod h1:CNh8wXnjQoLtguh28bPakyYO+bGD/Heo5QlHdkGZHoQ=
+github.com/brotherlogic/queue v0.0.0-20250712160434-805afe34ea2e h1:kdZUQ/8SpKHQJp7SFlWlF7qcdjvRVfm4OZYVhrJRxSY=
+github.com/brotherlogic/queue v0.0.0-20250712160434-805afe34ea2e/go.mod h1:5tsxBCKbFaersM6L/4ITjukZigIOZzQU05uzcsu3reM=
 github.com/brotherlogic/recordadder v0.0.0-20250712133610-ea21e1416a09 h1:tMxqDQWjF5nXrkxSxk8HDqpTRH1ieikqkzACIw6OAnI=
 github.com/brotherlogic/recordadder v0.0.0-20250712133610-ea21e1416a09/go.mod h1:AxtkbcUrNO4Uw4d5sJl2NTfjSLJRiJqK9Dm1bcKhFiU=
-github.com/brotherlogic/recordbudget v0.0.0-20250712140703-bc700fa81d51 h1:CqumKJPcKmSCNpUpk5naibQ66XzS9+ql1JAb2bvA6XM=
-github.com/brotherlogic/recordbudget v0.0.0-20250712140703-bc700fa81d51/go.mod h1:lx6qj/WxIFoNEMFW0KLJkt0ASWQZ5vG6trNPW4VsC50=
+github.com/brotherlogic/recordbudget v0.0.0-20250712150723-4f8d8a5b6f91 h1:x/wOuRymOqViysS4j9I1vZDJmokMWe8is7JFWv2y+A0=
+github.com/brotherlogic/recordbudget v0.0.0-20250712150723-4f8d8a5b6f91/go.mod h1:L+6Z64UtDjXfzEBkjnzU7DaUqEYlyAL/Sngymhhbmp4=
 github.com/brotherlogic/recordcollection v0.0.0-20250625165631-0ab7d5811bd2 h1:ngTMN0yJbwB8PG/LN1fr4JtN4L6K4nrh3eHm13Fz6pE=
 github.com/brotherlogic/recordcollection v0.0.0-20250625165631-0ab7d5811bd2/go.mod h1:NnhvH//ryqGgwgMfI9OXqouzrsSQ9VeYoyUuqxhYH+E=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 h1:YjFE4Sa+wwbl4yJwJaMQVeA4CMzLIDbbIuSMdsEp5/w=
