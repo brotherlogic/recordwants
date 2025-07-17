@@ -30,8 +30,8 @@ github.com/brotherlogic/queue v0.0.0-20250716225837-550baaa1d2dd h1:uR08G034xDEj
 github.com/brotherlogic/queue v0.0.0-20250716225837-550baaa1d2dd/go.mod h1:hDBrCrT7EPHvFV5xjj+/ugAq23F3F/ihTV3EMGvFU68=
 github.com/brotherlogic/recordadder v0.0.0-20250717004028-7f855fff4866 h1:dCqo3J5OcPFbtWKCEFQ9qAktoHBPnO/me9Is+RyQ9wA=
 github.com/brotherlogic/recordadder v0.0.0-20250717004028-7f855fff4866/go.mod h1:wBdUB5a7F2E8h6BqcrcMQWiOYtc8/o+XruYo95PBoEo=
-github.com/brotherlogic/recordbudget v0.0.0-20250716230038-8b2db5130345 h1:0XHy+S/+phbx+bckmnpxW6okonjDBWstjDDXP7rmyX0=
-github.com/brotherlogic/recordbudget v0.0.0-20250716230038-8b2db5130345/go.mod h1:+pQZ48xRY1BZAKdM+GWIx3VyWHGPPowtCZAXsanjT2g=
+github.com/brotherlogic/recordbudget v0.0.0-20250717004648-503362785407 h1:JTgiFXnGv9rTcH76Xb1HpHBjTdORMaIg2YF+8ip9xL0=
+github.com/brotherlogic/recordbudget v0.0.0-20250717004648-503362785407/go.mod h1:2ablhFF4plzipKGm5m3vgcIalyefrg0sB2W3C3HbXF4=
 github.com/brotherlogic/recordcollection v0.0.0-20250715205636-bf74e659d908 h1:fEGnnofUS9gMC+xsOp8C0dEfe/4NoDhYwK/MLb5VvuQ=
 github.com/brotherlogic/recordcollection v0.0.0-20250715205636-bf74e659d908/go.mod h1:NnhvH//ryqGgwgMfI9OXqouzrsSQ9VeYoyUuqxhYH+E=
 github.com/brotherlogic/versionserver v0.0.0-20221025154054-c9bcd41be2f2 h1:YjFE4Sa+wwbl4yJwJaMQVeA4CMzLIDbbIuSMdsEp5/w=
