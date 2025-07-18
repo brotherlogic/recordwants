@@ -9,7 +9,7 @@ require (
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
 	github.com/brotherlogic/queue v0.0.0-20250718025435-bc808ee07b00
 	github.com/brotherlogic/recordadder v0.0.0-20250718025210-94cc527fa443
-	github.com/brotherlogic/recordbudget v0.0.0-20250718020208-51296263c8ff
+	github.com/brotherlogic/recordbudget v0.0.0-20250718030742-26bbe031cec5
 	github.com/brotherlogic/recordcollection v0.0.0-20250715205636-bf74e659d908
 	github.com/golang/protobuf v1.5.4
 	github.com/prometheus/client_golang v1.22.0
